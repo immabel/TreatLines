@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31229.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TreatLines", "TreatLines\TreatLines.csproj", "{AB240C62-02D4-4713-8907-A2ACCABB77F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreatLines.DAL", "TreatLines.DAL\TreatLines.DAL.csproj", "{34421C41-B61C-4AE8-9E83-C7C71CD5C98B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TreatLines.DAL", "TreatLines.DAL\TreatLines.DAL.csproj", "{34421C41-B61C-4AE8-9E83-C7C71CD5C98B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
