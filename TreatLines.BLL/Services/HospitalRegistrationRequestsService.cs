@@ -71,7 +71,7 @@ namespace TreatLines.BLL.Services
         public async Task AddRequestAsync(RequestToCreateHospitalDTO creationInfo)
         {
             RequestToCreateHospital createRequest = mapper.Map<RequestToCreateHospital>(creationInfo);
-            createRequest.DateOfCreation = DateTime.Now;
+            createRequest.DateOfRequestCreation = DateTime.Now;
             await requestsHospitalRepository.AddAsync(createRequest);
             await requestsHospitalRepository.SaveChangesAsync();
         }

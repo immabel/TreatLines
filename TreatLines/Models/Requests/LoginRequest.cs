@@ -7,9 +7,9 @@ namespace TreatLines.Models.Requests
 {
     public class LoginRequest
     {
-        [EmailAddress]
+        [Required, EmailAddress]
         public string Email { get; set; }
-        [RegularExpression("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$", ErrorMessage = "Password is not valid")]
+        [Required, RegularExpression("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$", ErrorMessage = "Password is not valid")]
         public string Password { get; set; }
     }
 }

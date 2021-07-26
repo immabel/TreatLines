@@ -9,10 +9,12 @@ namespace TreatLines.BLL.DTOs.HospitalCreate
         public int Id { get; set; }
         public string HospitalName { get; set; }
         public string Address { get; set; }        
+        public string City { get; set; }        
         public string Country { get; set; }        
         public string SubmitterFirstName { get; set; }        
         public string SubmitterLastName { get; set; }        
         public string Email { get; set; }
-        public DateTimeOffset DateOfCreation { get; set; }
+        public DateTimeOffset CreationDate { get; set; }
+        public DateTimeOffset DateOfRequestCreation { get; set; }
     }
 }

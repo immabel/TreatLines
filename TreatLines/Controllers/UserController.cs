@@ -42,6 +42,17 @@ namespace TreatLines.Controllers
             return View();
         }
 
+        public IActionResult Hospitals()
+        {
+            return View();
+        }
+
+        public IActionResult RegisterAsPatient(int id)
+        {
+
+            return View();
+        }
+
         [AllowAnonymous]
         [HttpPost("Login")]
         public async Task LoginAsync(LoginRequest request)

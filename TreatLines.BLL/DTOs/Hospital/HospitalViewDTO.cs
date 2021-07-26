@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace TreatLines.DAL.Entities
+namespace TreatLines.BLL.DTOs.Hospital
 {
-    public class Hospital : BaseEntity
+    public class HospitalViewDTO
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public double Rating { get; set; }
         public string Type { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
-        public DateTimeOffset RegisterDateTime { get; set; }
-        public DateTimeOffset CreationDate { get; set; }
-        public List<Doctor> Doctors { get; set; }
-        public List<HospitalAdmin> HospitalAdmins { get; set; }
+        public string RegisterDateTime { get; set; }
     }
 }

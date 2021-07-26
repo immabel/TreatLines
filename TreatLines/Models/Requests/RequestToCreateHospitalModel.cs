@@ -1,20 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace TreatLines.DAL.Entities
+namespace TreatLines.Models.Requests
 {
-    public class RequestToCreateHospital
+    public class RequestToCreateHospitalModel
     {
-        public int Id { get; set; }
+        [Required]
         public string HospitalName { get; set; }
+        [Required]
         public string Address { get; set; }
-        public string Country { get; set; }
+        [Required]
         public string City { get; set; }
+        [Required]
+        public string Country { get; set; }
+        [Required]
         public string SubmitterFirstName { get; set; }
+        [Required]
         public string SubmitterLastName { get; set; }
+        [Required, EmailAddress]
         public string Email { get; set; }
         public DateTimeOffset CreationDate { get; set; }
-        public DateTimeOffset DateOfRequestCreation { get; set; }
     }
 }

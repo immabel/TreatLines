@@ -8,25 +8,31 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>*@
 <section class="Form my-5">
-    <div class="container">
+    <div class="border container">
         <div class="flex-column g-0 logForm">
             <div class="col-lg-7 px-5 pt-3">
                 <h5>If You have an account sign in</h5>
                 <form asp-controller="User" asp-action="Login" method="post">
-                    <div class="form-row">
-                        <div class="col-lg-10">
-                            <input type="email" id="loginEmail" placeholder="Email" class="form-control my-2">
-                            <div class="form-control-error-message"></div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label asp-for="Email"></label>
+                        </div>
+                        <div class="col-6">
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="col-lg-10">
-                            <input type="password" id="loginPass" placeholder="Password" class="form-control my-2">
-                            <div class="form-control-error-message"></div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label asp-for="Password"></label>
+                        </div>
+                        <div class="col-6">
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="col-lg-10">
+                    <div class="form-group row">
+                        <div class="col-3">
                             <button type="submit" class="btn-login mb-3">Login</button>
                         </div>
                     </div>
@@ -34,7 +40,20 @@
             </div>
             <hr/>
             <div class="col-lg-7 px-5 pt-3">
-                <p>Don't have an account? <a href="#">Register here</a> and join us!</p>
+                <div class="row g-0">
+                    <p>Don't have an account?</p>
+                </div>
+                <div class="row g-0">
+                    <div class="col-lg-5 px-5 pt-3">
+                        <p><a class="nav-link text-dark" asp-controller="User" asp-action="Hospitals">Choose the hospital</a> you want and join us as patient!</p>
+                    </div>
+                    <div class="col-lg-1 px-5 pt-3">
+                        <p>OR</p>
+                    </div>
+                    <div class="col-lg-7 px-5 pt-3">
+                        <p>Register your hospital <a class="nav-link text-dark" asp-controller="User" asp-action="RegisterHospital">here</a>!</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
