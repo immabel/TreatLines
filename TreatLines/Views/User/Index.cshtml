@@ -3,13 +3,9 @@
 }
 @model TreatLines.Models.Requests.LoginRequest
 
-@*<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>*@
 <section class="Form my-5">
     <div class="border container">
-        <div class="flex-column g-0 logForm">
+        <div class="g-0 logForm">
             <div class="col-lg-7 px-5 pt-3">
                 <h5>If You have an account sign in</h5>
                 <form asp-controller="User" asp-action="Login" method="post">
@@ -39,19 +35,19 @@
                 </form>
             </div>
             <hr/>
-            <div class="col-lg-7 px-5 pt-3">
-                <div class="row g-0">
+            <div class="col-lg-10 justify-content-center px-5 pt-3">
+                <div class="row px-5">
                     <p>Don't have an account?</p>
                 </div>
-                <div class="row g-0">
+                <div class="row">
                     <div class="col-lg-5 px-5 pt-3">
-                        <p><a class="nav-link text-dark" asp-controller="User" asp-action="Hospitals">Choose the hospital</a> you want and join us as patient!</p>
+                        <p><a asp-controller="User" asp-action="Hospitals">Choose the hospital</a> you want and join us as patient!</p>
                     </div>
-                    <div class="col-lg-1 px-5 pt-3">
+                    <div class="col-lg-1 px-4 pt-3">
                         <p>OR</p>
                     </div>
-                    <div class="col-lg-7 px-5 pt-3">
-                        <p>Register your hospital <a class="nav-link text-dark" asp-controller="User" asp-action="RegisterHospital">here</a>!</p>
+                    <div class="col-lg-5 px-5 pt-3">
+                        <p>Register your hospital <a asp-controller="User" asp-action="RegisterHospital">here</a>!</p>
                     </div>
                 </div>
             </div>

@@ -11,6 +11,8 @@ using TreatLines.BLL.DTOs.Auth;
 using TreatLines.BLL.Interfaces;
 using TreatLines.Models;
 using TreatLines.Models.Requests;
+using TreatLines.Models.Response;
+using TreatLines.Models.Tables;
 
 namespace TreatLines.Controllers
 {
@@ -20,6 +22,8 @@ namespace TreatLines.Controllers
 
         private readonly IHospitalRegistrationRequestsService hospitalRegistrationRequestsService;
 
+        private readonly IHospitalService hospitalService;
+
         private readonly IMapper mapper;
 
         private readonly ILogger<UserController> _logger;
@@ -28,12 +32,14 @@ namespace TreatLines.Controllers
             ILogger<UserController> logger,
             IAuthService authService,
             IHospitalRegistrationRequestsService hospitalRegistrationRequestsService,
+            IHospitalService hospitalService,
             IMapper mapper
             )
         {
             this.authService = authService;
             this.hospitalRegistrationRequestsService = hospitalRegistrationRequestsService;
             this.mapper = mapper;
+            this.hospitalService = hospitalService;
             _logger = logger;
         }
 
@@ -42,9 +48,11 @@ namespace TreatLines.Controllers
             return View();
         }
 
-        public IActionResult Hospitals()
+        public async Task<IActionResult> Hospitals()
         {
-            return View();
+            var hospitals = await hospitalService.GetHospitals();
+            IEnumerable<HospitalModel_UserControler> hospitalsModels = mapper.Map<IEnumerable<HospitalModel_UserControler>>(hospitals);
+            return View(hospitalsModels);
         }
 
         public IActionResult RegisterAsPatient(int id)
@@ -55,10 +63,12 @@ namespace TreatLines.Controllers
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        public async Task LoginAsync(LoginRequest request)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
-            var response = await authService.LoginAsync(new LoginRequestDTO { Email = request.Email, Password = request.Password });
-                //var result = mapper.Map<LoginResponse>(response);
+            var dto = mapper.Map<LoginRequestDTO>(request);
+            var response = await authService.LoginAsync(dto);
+            var result = mapper.Map<LoginResponse>(response);
+            return RedirectToAction("ProfilePage");//will change to redirecting depending on user role
         }
 
         public IActionResult Privacy()

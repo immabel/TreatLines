@@ -16,6 +16,8 @@ namespace TreatLines.Configuration
     {
         public MappingProfile()
         {
+            CreateMap<LoginRequest, LoginRequestDTO>();
+
             CreateMap<RequestToCreateHospitalModel, RequestToCreateHospitalDTO>();
             CreateMap<RequestToCreateHospitalDTO, RequestToCreateHospital>();
             CreateMap<RequestToCreateHospital, RequestToCreateHospitalViewDTO>();

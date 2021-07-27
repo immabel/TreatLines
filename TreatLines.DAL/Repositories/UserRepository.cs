@@ -47,5 +47,15 @@ namespace TreatLines.DAL.Repositories
         {
             return userManager.GetUsersInRoleAsync(roleName);
         }
+
+        public async Task UpdateAsync(User user)
+        {
+            await userManager.UpdateAsync(user);
+        }
+
+        public async Task DeleteAsync(User user)
+        {
+            await userManager.DeleteAsync(user);
+        }
     }
 }

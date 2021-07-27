@@ -43,12 +43,14 @@ namespace TreatLines.Extensions
             services.AddTransient<UserRepository>();
             services.AddScoped<IRepository<RequestToCreateHospital>, Repository<RequestToCreateHospital>>();
             services.AddScoped<IRepository<Hospital>, Repository<Hospital>>();
+            services.AddScoped<IHospitalAdminRepository, HospitalAdminRepository>();
             services.AddScoped<IDoctorRepository, DoctorRepository>();
             services.AddScoped<IPatientRepository, PatientRepository>();
 
             services.AddSingleton<IMailService, MailService>();
 
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IHospitalService, HospitalService>();
             services.AddScoped<IHospitalRegistrationRequestsService, HospitalRegistrationRequestsService>();
 
             services.AddAutoMapper(typeof(MappingProfile));
