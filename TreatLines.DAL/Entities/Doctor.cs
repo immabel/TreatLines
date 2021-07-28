@@ -11,7 +11,7 @@ namespace TreatLines.DAL.Entities
         public User User { get; set; }
         public int HospitalId { get; set; }
         public Hospital Hospital { get; set; }
-        public int Price { get; set; }
+        public decimal Price { get; set; }
         public string Position { get; set; }
         public bool OnHoliday { get; set; }
         public double Experience { get; set; }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using TreatLines.DAL.Entities;
+using TreatLines.DAL.Extentions;
 
 namespace TreatLines.DAL
 {
@@ -20,5 +21,23 @@ namespace TreatLines.DAL
         public DbSet<DoctorPatient> DoctorPatients { get; set; }
         public DbSet<RequestToCreateHospital> RequestsToCreateHospital { get; set; }
         public DbSet<RequestToCreatePatient> RequestsToCreatePatient { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalAdminConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalConfiguration());
+            modelBuilder.ApplyConfiguration(new DoctorConfiguration());
+            modelBuilder.ApplyConfiguration(new ScheduleConfiguration());
+            modelBuilder.ApplyConfiguration(new PatientConfiguration());
+            modelBuilder.ApplyConfiguration(new AppointmentConfiguration());
+            modelBuilder.ApplyConfiguration(new PrescriptionConfiguration());
+            modelBuilder.ApplyConfiguration(new DoctorPatientConfiguration());
+            modelBuilder.ApplyConfiguration(new RequestToCreateHospitalConfiguration());
+            modelBuilder.ApplyConfiguration(new RequestToCreateDoctorConfiguration());
+
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Seed();
+        }
     }
 }
