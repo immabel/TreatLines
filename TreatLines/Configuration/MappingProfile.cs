@@ -29,7 +29,7 @@ namespace TreatLines.Configuration
             CreateMap<Hospital, HospitalViewDTO>()
                 .ForMember(
                 dest => dest.RegisterDateTime,
-                opt => opt.MapFrom(src => src.RegisterDateTime.ToString("g")));
+                opt => opt.MapFrom(src => src.RegisterDateTime.ToString("d")));
             CreateMap<HospitalViewDTO, HospitalModel_UserControler>();
         }
     }

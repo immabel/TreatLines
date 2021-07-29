@@ -3,10 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TreatLines_v1.DAL.Entities;
+using TreatLines.DAL.Entities;
 
-
-namespace TreatLines_v1.DAL.Configurations
+namespace TreatLines.DAL.Configurations
 {
     public class HospitalConfiguration : IEntityTypeConfiguration<Hospital>
     {
@@ -15,7 +14,12 @@ namespace TreatLines_v1.DAL.Configurations
             builder.ToTable("Hospitals").HasKey(k => k.Id);
             builder.Property(p => p.Name).IsRequired().HasMaxLength(100);
             builder.Property(p => p.Address).HasMaxLength(100);
+            builder.Property(p => p.City).HasMaxLength(100);
             builder.Property(p => p.Country).HasMaxLength(100);
+            builder.Property(p => p.Rating);
+            builder.Property(p => p.RegisterDateTime).IsRequired();
+            builder.Property(p => p.CreationDate).IsRequired();
+            builder.Property(p => p.Type).HasMaxLength(30);
             builder
                 .HasMany(h => h.Doctors)
                 .WithOne(o => o.Hospital);

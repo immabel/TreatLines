@@ -21,9 +21,7 @@
                     <th>Country</th>
                     <th>City</th>
                     <th>Address</th>
-                    <th>Type</th>
                     <th>Rating</th>
-                    <th>Register date</th>
                     <th></th>
                 </tr>
             </thead>
@@ -35,13 +33,14 @@
                         <td>@h.Country</td>
                         <td>@h.City</td>
                         <td>@h.Address</td>
-                        <td>@h.Type</td>
                         <td>@h.Rating</td>
-                        <td>@h.RegisterDateTime</td>
                         <td>
-                            <div class="text-center">
-                                <a class="btn nav-link text-dark" style='cursor:pointer; width:70px;' asp-controller="User" asp-action="Hospitals" asp-route-id="@h.Id">
-                                Register
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <a class="btn btn-secondary nav-link" asp-controller="User" asp-action="RegisterAsPatient" asp-route-id="@h.Id">
+                                    Register
+                                </a>
+                                <a class="btn btn-secondary nav-link" style='cursor:pointer;' asp-controller="User" asp-action="HospitalProfileInfo" asp-route-id="@h.Id">
+                                    <i class="fas fa-info-circle"></i>
                                 </a>
                             </div>
                         </td>

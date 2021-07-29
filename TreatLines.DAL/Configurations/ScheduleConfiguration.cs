@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TreatLines_v1.DAL.Entities;
+using TreatLines.DAL.Entities;
 
-namespace TreatLines_v1.DAL.Configurations
+namespace TreatLines.DAL.Configurations
 {
     public class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
     {

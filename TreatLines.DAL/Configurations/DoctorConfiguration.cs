@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TreatLines_v1.DAL.Entities;
+using TreatLines.DAL.Entities;
 
-namespace TreatLines_v1.DAL.Configurations
+namespace TreatLines.DAL.Configurations
 {
     public class DoctorConfiguration : IEntityTypeConfiguration<Doctor>
     {
@@ -14,6 +14,9 @@ namespace TreatLines_v1.DAL.Configurations
             builder.ToTable("Doctors").HasKey(p => p.UserId);
             builder.Property(u => u.Position).HasMaxLength(30);
             builder.Property(u => u.OnHoliday);
+            builder.Property(u => u.Education);
+            builder.Property(u => u.Experience);
+            builder.Property(u => u.Price).HasColumnType("money");
             builder
                 .HasOne(h => h.User)
                 .WithOne();
@@ -23,11 +26,6 @@ namespace TreatLines_v1.DAL.Configurations
             builder
                 .HasOne(h => h.Schedule)
                 .WithMany(m => m.Doctors)
-                .IsRequired(false)
-                .OnDelete(DeleteBehavior.SetNull);
-            builder
-                .HasOne(h => h.Device)
-                .WithOne()
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
             builder

@@ -61,9 +61,14 @@ namespace TreatLines.Controllers
             return View();
         }
 
+        public IActionResult RegisterHospital()
+        {
+            return View();
+        }
+
         [AllowAnonymous]
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(LoginRequest request)
+        public async Task<IActionResult> LoginAsync(LoginRequest request)
         {
             var dto = mapper.Map<LoginRequestDTO>(request);
             var response = await authService.LoginAsync(dto);

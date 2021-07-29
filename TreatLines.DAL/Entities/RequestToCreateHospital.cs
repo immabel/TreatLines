@@ -14,7 +14,7 @@ namespace TreatLines.DAL.Entities
         public string SubmitterFirstName { get; set; }
         public string SubmitterLastName { get; set; }
         public string Email { get; set; }
-        public DateTimeOffset CreationDate { get; set; }
+        public DateTimeOffset HospitalCreationDate { get; set; }
         public DateTimeOffset DateOfRequestCreation { get; set; }
     }
 }

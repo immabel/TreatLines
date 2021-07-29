@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TreatLines_v1.DAL.Entities;
+using TreatLines.DAL.Entities;
 
-namespace TreatLines_v1.DAL.Configurations
+namespace TreatLines.DAL.Configurations
 {
     public class DoctorPatientConfiguration : IEntityTypeConfiguration<DoctorPatient>
     {
@@ -23,11 +23,6 @@ namespace TreatLines_v1.DAL.Configurations
                 .HasOne(h => h.Appointment)
                 .WithOne()
                 .OnDelete(DeleteBehavior.NoAction);
-            builder
-                .HasOne(h => h.Dialog)
-                .WithOne()
-                .IsRequired(false)
-                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

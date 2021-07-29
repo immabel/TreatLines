@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
+using TreatLines.DAL.Configurations;
 using TreatLines.DAL.Entities;
 using TreatLines.DAL.Extentions;
 
@@ -34,7 +35,7 @@ namespace TreatLines.DAL
             modelBuilder.ApplyConfiguration(new PrescriptionConfiguration());
             modelBuilder.ApplyConfiguration(new DoctorPatientConfiguration());
             modelBuilder.ApplyConfiguration(new RequestToCreateHospitalConfiguration());
-            modelBuilder.ApplyConfiguration(new RequestToCreateDoctorConfiguration());
+            modelBuilder.ApplyConfiguration(new RequestToCreatePatientConfiguration());
 
             base.OnModelCreating(modelBuilder);
             modelBuilder.Seed();

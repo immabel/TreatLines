@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TreatLines_v1.DAL.Entities;
+using TreatLines.DAL.Entities;
 
-namespace TreatLines_v1.DAL.Configurations
+namespace TreatLines.DAL.Configurations
 {
     public class PatientConfiguration : IEntityTypeConfiguration<Patient>
     {
@@ -14,6 +14,7 @@ namespace TreatLines_v1.DAL.Configurations
             builder.ToTable("Patients").HasKey(k => k.UserId);
             builder.Property(p => p.BloodType).HasMaxLength(100);
             builder.Property(p => p.Sex).HasMaxLength(30);
+            builder.Property(p => p.Discount);
             builder.Property(p => p.HospitalId);
             builder
                 .HasOne(h => h.User)

@@ -11,14 +11,16 @@ namespace TreatLines.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<RequestToCreateHospital> builder)
         {
-            builder.ToTable("RequestsToCreate").HasKey(k => k.Id);
+            builder.ToTable("RequestsToCreateHospital").HasKey(k => k.Id);
             builder.Property(p => p.HospitalName).IsRequired(); ;
             builder.Property(p => p.SubmitterFirstName).IsRequired();
             builder.Property(p => p.SubmitterLastName).IsRequired();
             builder.Property(p => p.Email).IsRequired();
             builder.Property(p => p.Address).IsRequired();
             builder.Property(p => p.Country).IsRequired();
+            builder.Property(p => p.City).IsRequired();
             builder.Property(p => p.DateOfRequestCreation).IsRequired();
+            builder.Property(p => p.HospitalCreationDate).IsRequired();
         }
     }
 }
