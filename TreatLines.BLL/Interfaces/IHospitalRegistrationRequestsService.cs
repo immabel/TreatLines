@@ -8,7 +8,7 @@ namespace TreatLines.BLL.Interfaces
 {
     public interface IHospitalRegistrationRequestsService
     {
-        Task<HospitalCreationResultDTO> CreateHospitalAsync(RequestToCreateHospitalViewDTO createRequestDTO);
+        Task<HospitalCreationResultDTO> CreateHospitalAsync(RequestToCreateHospitalDTO createRequestDTO);
         Task AddRequestAsync(RequestToCreateHospitalDTO creationInfo);
         Task<IEnumerable<RequestToCreateHospitalViewDTO>> GetAllRequestsAsync();
         Task ApproveRequestAsync(int id);

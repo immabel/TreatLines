@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TreatLines.BLL.DTOs.Auth;
+using TreatLines.BLL.DTOs.HospitalCreate;
+using TreatLines.BLL.DTOs.PatientCreate;
 using TreatLines.BLL.Interfaces;
 using TreatLines.Models;
 using TreatLines.Models.Requests;
@@ -55,9 +57,12 @@ namespace TreatLines.Controllers
             return View(hospitalsModels);
         }
 
-        public IActionResult RegisterAsPatient(int id)
-        {
 
+
+        public IActionResult RegisterPatient(int id, string hospName)
+        {
+            ViewData["HospitalName"] = hospName;
+            ViewData["HospitalId"] = id;
             return View();
         }
 
@@ -74,6 +79,23 @@ namespace TreatLines.Controllers
             var response = await authService.LoginAsync(dto);
             var result = mapper.Map<LoginResponse>(response);
             return RedirectToAction("ProfilePage");//will change to redirecting depending on user role
+        }
+
+        [AllowAnonymous]
+        [HttpPost("SendHospitalRequest")]
+        public async Task<IActionResult> SendHospitalRequestAsync(RequestToCreateHospitalModel request)
+        {
+            var dto = mapper.Map<RequestToCreateHospitalDTO>(request);
+            await hospitalRegistrationRequestsService.AddRequestAsync(dto);
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("SendPatientRequest")]
+        public async Task<IActionResult> SendPatientRequestAsync(RequestToCreatePatientModel request)
+        {
+            var dto = mapper.Map<RequestToCreatePatientDTO>(request);
+            return Ok();
         }
 
         public IActionResult Privacy()

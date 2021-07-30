@@ -22,6 +22,8 @@ namespace TreatLines.Models.Requests
         public string SubmitterLastName { get; set; }
         [Required, EmailAddress]
         public string Email { get; set; }
-        public DateTimeOffset CreationDate { get; set; }
+        [Required, Phone]
+        public string PhoneNumber { get; set; }
+        public DateTimeOffset HospitalCreationDate { get; set; }
     }
 }

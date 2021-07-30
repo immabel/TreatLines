@@ -19,6 +19,7 @@ namespace TreatLines.DAL.Configurations
             builder.Property(p => p.Address).IsRequired();
             builder.Property(p => p.Country).IsRequired();
             builder.Property(p => p.City).IsRequired();
+            builder.Property(p => p.PhoneNumber).IsRequired();
             builder.Property(p => p.DateOfRequestCreation).IsRequired();
             builder.Property(p => p.HospitalCreationDate).IsRequired();
         }

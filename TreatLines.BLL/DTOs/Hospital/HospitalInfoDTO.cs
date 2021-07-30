@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace TreatLines.Models.Tables
+namespace TreatLines.BLL.DTOs.Hospital
 {
-    public class HospitalModel_UserControler
+    public class HospitalInfoDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }

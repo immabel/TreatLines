@@ -35,6 +35,15 @@
                 </div>
                 <div class="form-group row my-2">
                     <div class="col-3">
+                        <label asp-for="PhoneNumber"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row my-2">
+                    <div class="col-3">
                         <label asp-for="HospitalName"></label>
                     </div>
                     <div class="col-6">
@@ -67,6 +76,15 @@
                     <div class="col-6">
                         <input asp-for="Address" class="form-control" />
                         <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row my-2">
+                    <div class="col-3">
+                        <label asp-for="HospitalCreationDate"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="HospitalCreationDate" class="form-control" />
+                        <span asp-validation-for="HospitalCreationDate" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row my-1">

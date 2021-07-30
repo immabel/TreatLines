@@ -36,10 +36,18 @@
                         <td>@h.Rating</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a class="btn btn-secondary nav-link" asp-controller="User" asp-action="RegisterAsPatient" asp-route-id="@h.Id">
+                                <a class="btn btn-secondary nav-link"
+                                   asp-controller="User"
+                                   asp-action="RegisterPatient"
+                                   asp-route-id="@h.Id"
+                                   asp-route-hospName="@h.Name">
                                     Register
                                 </a>
-                                <a class="btn btn-secondary nav-link" style='cursor:pointer;' asp-controller="User" asp-action="HospitalProfileInfo" asp-route-id="@h.Id">
+                                <a class="btn btn-secondary nav-link"
+                                   style='cursor:pointer;'
+                                   asp-controller="User"
+                                   asp-action="HospitalProfileInfo"
+                                   asp-route-id="@h.Id">
                                     <i class="fas fa-info-circle"></i>
                                 </a>
                             </div>

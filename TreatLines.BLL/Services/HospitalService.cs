@@ -33,10 +33,10 @@ namespace TreatLines.BLL.Services
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<HospitalViewDTO>> GetHospitals()
+        public async Task<IEnumerable<HospitalInfoDTO>> GetHospitals()
         {
             var hospitals = await hospitalRepository.GetAllAsync();
-            return mapper.Map<IEnumerable<HospitalViewDTO>>(hospitals);
+            return mapper.Map<IEnumerable<HospitalInfoDTO>>(hospitals);
         }
 
         public async Task<bool> DeleteHospitalByIdAsync(int hospitalId)

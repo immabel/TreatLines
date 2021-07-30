@@ -38,7 +38,7 @@ namespace TreatLines.BLL.Services
             this.mapper = mapper;
         }
 
-        public async Task<HospitalCreationResultDTO> CreateHospitalAsync(RequestToCreateHospitalViewDTO createRequestDTO)
+        public async Task<HospitalCreationResultDTO> CreateHospitalAsync(RequestToCreateHospitalDTO createRequestDTO)
         {
             var hospital = new Hospital
             {
@@ -84,7 +84,7 @@ namespace TreatLines.BLL.Services
                 throw new BadRequestException("Creation request doesn't exist!");
             }
 
-            RequestToCreateHospitalViewDTO registerDto = mapper.Map<RequestToCreateHospitalViewDTO>(request);
+            RequestToCreateHospitalDTO registerDto = mapper.Map<RequestToCreateHospitalDTO>(request);
             HospitalCreationResultDTO result = await CreateHospitalAsync(registerDto);
 
             // TODO: load html letter template and fill it in

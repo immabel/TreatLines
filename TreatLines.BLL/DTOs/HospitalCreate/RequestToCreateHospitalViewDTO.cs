@@ -14,6 +14,7 @@ namespace TreatLines.BLL.DTOs.HospitalCreate
         public string SubmitterFirstName { get; set; }        
         public string SubmitterLastName { get; set; }        
         public string Email { get; set; }
+        public string PhoneNumber { get; set; }
         public DateTimeOffset CreationDate { get; set; }
         public DateTimeOffset DateOfRequestCreation { get; set; }
     }
