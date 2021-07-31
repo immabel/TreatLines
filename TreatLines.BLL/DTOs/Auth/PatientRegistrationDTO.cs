@@ -6,8 +6,8 @@ namespace TreatLines.BLL.DTOs.Auth
 {
     public class PatientRegistrationDTO : RegistrationDTO
     {
-        public string DoctorId { get; set; }
+        public int HospitalId { get; set; }
         public string BloodType { get; set; }
-        public string Sex {get; set;}
+        public string Sex { get; set; }
     }
 }

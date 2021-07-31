@@ -42,6 +42,7 @@ namespace TreatLines.Extensions
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<UserRepository>();
             services.AddScoped<IRepository<RequestToCreateHospital>, Repository<RequestToCreateHospital>>();
+            services.AddScoped<IRepository<RequestToCreatePatient>, Repository<RequestToCreatePatient>>();
             services.AddScoped<IRepository<Hospital>, Repository<Hospital>>();
             services.AddScoped<IHospitalAdminRepository, HospitalAdminRepository>();
             services.AddScoped<IDoctorRepository, DoctorRepository>();
@@ -52,6 +53,7 @@ namespace TreatLines.Extensions
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IHospitalService, HospitalService>();
             services.AddScoped<IHospitalRegistrationRequestsService, HospitalRegistrationRequestsService>();
+            services.AddScoped<IPatientRegistrationRequestsService, PatientRegistrationRequestsService>();
 
             services.AddAutoMapper(typeof(MappingProfile));
 

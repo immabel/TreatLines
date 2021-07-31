@@ -4,13 +4,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using TreatLines.BLL.DTOs.Auth;
-using TreatLines.BLL.DTOs.HospitalCreate;
 using TreatLines.BLL.DTOs.PatientCreate;
 using TreatLines.BLL.Exceptions;
 using TreatLines.BLL.Interfaces;
 using TreatLines.DAL.Entities;
 using TreatLines.DAL.Interfaces;
-using TreatLines.DAL.Repositories;
 
 namespace TreatLines.BLL.Services
 {
@@ -20,6 +18,8 @@ namespace TreatLines.BLL.Services
 
         private readonly IRepository<RequestToCreatePatient> requestsPatientRepository;
 
+        private readonly IRepository<Hospital> hospitalRepository;
+
         private readonly IMailService mailService;
 
         private readonly IMapper mapper;
@@ -27,11 +27,13 @@ namespace TreatLines.BLL.Services
         public PatientRegistrationRequestsService(
             IMailService emailService,
             IMapper mapper,
+            IRepository<RequestToCreatePatient> requestsPatientRepository,
             IRepository<Hospital> hospitalRepository,
             IAuthService authService)
         {
             this.authService = authService;
             this.requestsPatientRepository = requestsPatientRepository;
+            this.hospitalRepository = hospitalRepository;
             this.mailService = emailService;
             this.mapper = mapper;
         }
@@ -52,22 +54,25 @@ namespace TreatLines.BLL.Services
                 throw new BadRequestException("Creation request doesn't exist!");
             }
 
-            var result = authService.RegisterPatientAsync(new PatientRegistrationDTO
+            var result = await authService.RegisterPatientAsync(new PatientRegistrationDTO
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Password = "Qwerty12345",
                 BloodType = request.BloodType,
                 Email = request.Email,
-                Sex = request.Sex
+                Sex = request.Sex,
+                PhoneNumber = request.PhoneNumber
             });
 
+            var hospName = hospitalRepository.GetByIdAsync(request.Id).Result.Name;
+
             // TODO: load html letter template and fill it in
-            /*await mailService.SendAsync(
+            await mailService.SendAsync(
                 receiver: result.Email,
-                subject: $"{result.HospitalName} registration",
-                bodyHtml: "Your hospital is registered! Use these credentials to sign in to the system:" +
-                          $"<br>Email: {result.Email}<br>Password: {result.Password}");*/
+                subject: $"{hospName} registration",
+                bodyHtml: $"You are registered in hospital {hospName}! Use these credentials to sign in to the system:" +
+                          $"<br>Email: {result.Email}<br>Password: {result.Password}");
 
             requestsPatientRepository.Remove(request);
             await requestsPatientRepository.SaveChangesAsync();
@@ -81,11 +86,13 @@ namespace TreatLines.BLL.Services
                 throw new BadRequestException("Creation request doesn't exist!");
             }
 
+            var hospName = hospitalRepository.GetByIdAsync(request.Id).Result.Name;
+
             // TODO: Load email HTML template from file and fill it in
-            /*await mailService.SendAsync(
-                request.Email,
-                "Your request has been denied",
-                $"{request.HospitalName} won't be registered");*/
+            await mailService.SendAsync(
+                receiver: request.Email,
+                subject: $"{hospName} registration",
+                bodyHtml: $"{hospName} denied Your request for registration");
 
             requestsPatientRepository.Remove(request);
             await requestsPatientRepository.SaveChangesAsync();

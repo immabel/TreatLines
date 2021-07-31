@@ -10,6 +10,7 @@ using TreatLines.DAL.Repositories;
 using TreatLines.BLL.DTOs.Auth;
 using TreatLines.BLL.Exceptions;
 using TreatLines.DAL.Constants;
+using System;
 
 namespace TreatLines.BLL.Services
 {
@@ -17,25 +18,25 @@ namespace TreatLines.BLL.Services
     {
         private readonly UserRepository usersRepository;
 
-        private readonly IRepository<Hospital> hospitalRepository;
-
-        private readonly IRepository<HospitalAdmin> hospitalAdminRepository;
+        private readonly IHospitalAdminRepository hospitalAdminRepository;
 
         private readonly IDoctorRepository doctorRepository;
 
-        private readonly IRepository<Patient> patientRepository;
+        private readonly IPatientRepository patientRepository;
 
-        private readonly IRepository<DoctorPatient> doctorPatientRepository;
+        private readonly IRepository<Schedule> scheduleRepository;
+
+        private readonly IRepository<Hospital> hospitalRepository;
 
         private readonly IJwtAuthenticationManager jwtAuthenticationManager;
 
         public AuthService(
             UserRepository usersRepository,
-            IRepository<Hospital> hospitalRepository,
-            IRepository<HospitalAdmin> hospitalAdminRepository,
+            IHospitalAdminRepository hospitalAdminRepository,
             IDoctorRepository doctorRepository,
-            IRepository<Patient> patientRepository,
-            IRepository<DoctorPatient> doctorPatientRepository,
+            IPatientRepository patientRepository,
+            IRepository<Schedule> scheduleRepository,
+            IRepository<Hospital> hospitalRepository,
             IJwtAuthenticationManager jwtAuthenticationManager)
         {
             this.usersRepository = usersRepository;
@@ -43,7 +44,7 @@ namespace TreatLines.BLL.Services
             this.hospitalAdminRepository = hospitalAdminRepository;
             this.doctorRepository = doctorRepository;
             this.patientRepository = patientRepository;
-            this.doctorPatientRepository = doctorPatientRepository;
+            this.scheduleRepository = scheduleRepository;
             this.jwtAuthenticationManager = jwtAuthenticationManager;
         }
 
@@ -54,6 +55,8 @@ namespace TreatLines.BLL.Services
             {
                 throw new BadRequestException("User does not exist!");
             }
+            if (user.Blocked)
+                return null;
 
             bool passwordIsCorrect = await usersRepository.CheckPasswordAsync(user, request.Password);
             if (!passwordIsCorrect)
@@ -64,22 +67,35 @@ namespace TreatLines.BLL.Services
 
             var accessToken = jwtAuthenticationManager.GenerateTokenForClaims(userClaims);
 
+            string role = userClaims[1].Value;
+            int hospitalId = 0;
+
+            if (role.Equals("HospitalAdmin"))
+                hospitalId = hospitalAdminRepository.GetHospitalByHospitalAdminId(user.Id).Id;
+            else if (role.Equals("Doctor"))
+                hospitalId = doctorRepository.GetByIdAsync(user.Id).Result.HospitalId;
+            else if (role.Equals("Patient"))
+                hospitalId = patientRepository.GetByIdAsync(user.Id).Result.HospitalId;
+
             return new LoginResponseDTO
             {
                 UserId = user.Id,
                 Email = user.Email,
                 Token = accessToken,
-                Role = userClaims[1].Value
+                Role = role,
+                HospitalId = hospitalId
             };
         }
 
-        public async Task RegisterHospitalAdminAsync(HospitalAdminRegistrationDTO request)
+        public async Task<RegistrationResponseDTO> RegisterHospitalAdminAsync(HospitalAdminRegistrationDTO request)
         {
             Hospital hospital = await hospitalRepository.GetByIdAsync(request.HospitalId);
             if (hospital == null)
             {
                 throw new BadRequestException("Hospital doesn't exist!");
             }
+
+            request.Password = "Qwerty12345";
 
             User hospitalAdminUser = await RegisterAsync(request);
             await usersRepository.AddUserToRoleAsync(hospitalAdminUser, Rolename.HOSPITAL_ADMIN);
@@ -89,6 +105,8 @@ namespace TreatLines.BLL.Services
                 HospitalId = request.HospitalId
             });
             await hospitalAdminRepository.SaveChangesAsync();
+
+            return new RegistrationResponseDTO { Email = hospitalAdminUser.Email, Password = request.Password };
         }
 
         private async Task<User> RegisterAsync(RegistrationDTO request)
@@ -123,13 +141,34 @@ namespace TreatLines.BLL.Services
             return userClaims;
         }
 
-        public async Task RegisterDoctorAsync(DoctorRegistrationDTO request)
+        public string MySort(string str)
+        {
+            int[] arr = new int[str.Length];
+            for (int i = 0; i < str.Length; i++)
+                arr[i] = str[i];
+            Array.Sort(arr);
+            str = arr.ToString();
+            return str;
+        }
+
+        public async Task<RegistrationResponseDTO> RegisterDoctorAsync(DoctorRegistrationDTO request)
         {
             Hospital hospital = await hospitalRepository.GetByIdAsync(request.HospitalId);
             if (hospital == null)
             {
                 throw new BadRequestException("Hospital doesn't exist!");
             }
+
+            Schedule schedule = new Schedule
+            {
+                StartTime = request.StartTime,
+                EndTime = request.EndTime,
+                WorkDays = request.WorkDays
+            };
+            await scheduleRepository.AddAsync(schedule);
+            await scheduleRepository.SaveChangesAsync();
+
+            request.Password = "Qwerty12345";
 
             User doctor = await RegisterAsync(request);
             await usersRepository.AddUserToRoleAsync(doctor, Rolename.DOCTOR);
@@ -139,33 +178,30 @@ namespace TreatLines.BLL.Services
                 Position = request.Position,
                 OnHoliday = request.OnHoliday,
                 HospitalId = request.HospitalId,
-                ScheduleId = request.ScheduleId
+                ScheduleId = schedule.Id
             });
             await doctorRepository.SaveChangesAsync();
+
+            return new RegistrationResponseDTO { Email = doctor.Email, Password = request.Password };
         }
 
-        public async Task RegisterPatientAsync(PatientRegistrationDTO request)
+        public async Task<RegistrationResponseDTO> RegisterPatientAsync(PatientRegistrationDTO request)
         {
+            request.Password = "Qwerty12345";
+
             User patient = await RegisterAsync(request);
             await usersRepository.AddUserToRoleAsync(patient, Rolename.PATIENT);
             await patientRepository.AddAsync(new Patient
             {
                 UserId = patient.Id,
                 BloodType = request.BloodType,
-                Sex = request.Sex
+                Sex = request.Sex,
+                HospitalId = request.HospitalId
             });
             await patientRepository.SaveChangesAsync();
 
-            Doctor doctor = await doctorRepository.GetByIdAsync(request.DoctorId);
-            if (doctor != null)
-            {
-                await doctorPatientRepository.AddAsync(new DoctorPatient
-                {
-                    DoctorId = request.DoctorId,
-                    PatientId = doctor.User.Id
-                });
-                await doctorPatientRepository.SaveChangesAsync();
-            }
+            return new RegistrationResponseDTO { Email = patient.Email, Password = request.Password };
         }
     }
 }
+

@@ -5,9 +5,9 @@ namespace TreatLines.BLL.Interfaces
 {
     public interface IAuthService
     {
-        Task RegisterHospitalAdminAsync(HospitalAdminRegistrationDTO request);
-        Task RegisterDoctorAsync(DoctorRegistrationDTO request);
-        Task RegisterPatientAsync(PatientRegistrationDTO request);
+        Task<RegistrationResponseDTO> RegisterHospitalAdminAsync(HospitalAdminRegistrationDTO request);
+        Task<RegistrationResponseDTO> RegisterDoctorAsync(DoctorRegistrationDTO request);
+        Task<RegistrationResponseDTO> RegisterPatientAsync(PatientRegistrationDTO request);
         Task<LoginResponseDTO> LoginAsync(LoginRequestDTO request);
     }
 }

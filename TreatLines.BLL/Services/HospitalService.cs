@@ -17,6 +17,8 @@ namespace TreatLines.BLL.Services
 
         private readonly IRepository<Hospital> hospitalRepository;
 
+        private readonly IDoctorRepository doctorRepository;
+
         private readonly IHospitalAdminRepository hospitalAdminRepository;
 
         private readonly IMapper mapper;
@@ -24,11 +26,13 @@ namespace TreatLines.BLL.Services
         public HospitalService(
             UserRepository userRepository,
             IRepository<Hospital> hospitalRepository,
+            IDoctorRepository doctorRepository,
             IHospitalAdminRepository hospitalAdminRepository,
             IMapper mapper)
         {
             this.userRepository = userRepository;
             this.hospitalRepository = hospitalRepository;
+            this.doctorRepository = doctorRepository;
             this.hospitalAdminRepository = hospitalAdminRepository;
             this.mapper = mapper;
         }
@@ -51,10 +55,11 @@ namespace TreatLines.BLL.Services
             return true;
         }
 
-        public IEnumerable<HospitalAdminInfoDTO> GetHospitalAdmins()
+        public IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsById(int hospitalId)
         {
             var admins = hospitalAdminRepository.GetAllHospitalAdminsAsync()
                 .Result
+                .Where(ha => ha.HospitalId == hospitalId)
                 .Select(ha => new HospitalAdminInfoDTO
                 {
                     Id = ha.UserId,
@@ -63,7 +68,8 @@ namespace TreatLines.BLL.Services
                     LastName = ha.User.LastName,
                     HospitalName = ha.Hospital.Name,
                     HospitalId = ha.HospitalId,
-                    Blocked = ha.User.Blocked ? 1 : 0
+                    Blocked = ha.User.Blocked ? 1 : 0,
+                    PhoneNumber = ha.User.PhoneNumber
                 });
             return admins;
         }
@@ -71,7 +77,7 @@ namespace TreatLines.BLL.Services
         public IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsById(string id)
         {
             var hospitalId = GetHospitalIdByHospitalAdminId(id);
-            var hAdmins = GetHospitalAdmins().Where(hadm => hadm.HospitalId == hospitalId);
+            var hAdmins = GetHospitalAdminsById(hospitalId);
             return hAdmins;
         }
 
@@ -91,6 +97,18 @@ namespace TreatLines.BLL.Services
         {
             var user = await userRepository.FindByEmailAsync(email);
             await userRepository.DeleteAsync(user);
+        }
+
+        public async Task<HospitalInfoDTO> GetHospitalInfoById(int id)
+        {
+            var hospital = await hospitalRepository.GetByIdAsync(id);
+            return mapper.Map<HospitalInfoDTO>(hospital);
+        }
+
+        public int GetDoctorsCountById(int hospitalId)
+        {
+            int docCount = doctorRepository.GetAllAsync().Result.Count();
+            return docCount;
         }
     }
 }

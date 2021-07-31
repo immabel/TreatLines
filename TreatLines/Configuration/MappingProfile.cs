@@ -9,6 +9,7 @@ using TreatLines.BLL.DTOs.HospitalAdmin;
 using TreatLines.BLL.DTOs.HospitalCreate;
 using TreatLines.DAL.Entities;
 using TreatLines.Models;
+using TreatLines.Models.ProfileInfo;
 using TreatLines.Models.Requests;
 using TreatLines.Models.Tables;
 
@@ -38,6 +39,10 @@ namespace TreatLines.Configuration
             CreateMap<HospitalInfoDTO, HospitalModel_UserControler>();
 
             CreateMap<HospitalAdminContactInfoDTO, HospitalAdminContactInfoModel>();
+
+            CreateMap<HospitalInfoDTO, HospitalProfileInfoModel>();
+
+            CreateMap<HospitalAdminInfoDTO, HospitalAdminContactInfoModel>();
         }
     }
 }

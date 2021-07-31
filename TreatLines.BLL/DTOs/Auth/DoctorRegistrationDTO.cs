@@ -9,7 +9,8 @@ namespace TreatLines.BLL.DTOs.Auth
         public string Position { get; set; }
         public bool OnHoliday { get; set; }
         public int HospitalId { get; set; }
-        public int? ScheduleId { get; set; }
-        public int? DeviceId { get; set; }
+        public DateTimeOffset StartTime { get; set; }
+        public DateTimeOffset EndTime { get; set; }
+        public string WorkDays { get; set; }
     }
 }

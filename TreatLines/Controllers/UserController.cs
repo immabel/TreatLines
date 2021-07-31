@@ -12,9 +12,11 @@ using TreatLines.BLL.DTOs.HospitalCreate;
 using TreatLines.BLL.DTOs.PatientCreate;
 using TreatLines.BLL.Interfaces;
 using TreatLines.Models;
+using TreatLines.Models.ProfileInfo;
 using TreatLines.Models.Requests;
 using TreatLines.Models.Response;
 using TreatLines.Models.Tables;
+using TreatLines.ViewModels;
 
 namespace TreatLines.Controllers
 {
@@ -23,6 +25,8 @@ namespace TreatLines.Controllers
         private readonly IAuthService authService;
 
         private readonly IHospitalRegistrationRequestsService hospitalRegistrationRequestsService;
+
+        private readonly IPatientRegistrationRequestsService patientRegistrationRequestsService;
 
         private readonly IHospitalService hospitalService;
 
@@ -34,12 +38,14 @@ namespace TreatLines.Controllers
             ILogger<UserController> logger,
             IAuthService authService,
             IHospitalRegistrationRequestsService hospitalRegistrationRequestsService,
+            IPatientRegistrationRequestsService patientRegistrationRequestsService,
             IHospitalService hospitalService,
             IMapper mapper
             )
         {
             this.authService = authService;
             this.hospitalRegistrationRequestsService = hospitalRegistrationRequestsService;
+            this.patientRegistrationRequestsService = patientRegistrationRequestsService;
             this.mapper = mapper;
             this.hospitalService = hospitalService;
             _logger = logger;
@@ -57,17 +63,30 @@ namespace TreatLines.Controllers
             return View(hospitalsModels);
         }
 
-
-
-        public IActionResult RegisterPatient(int id, string hospName)
+        public IActionResult RegisterPatient(int? id, string hospName)
         {
             ViewData["HospitalName"] = hospName;
-            ViewData["HospitalId"] = id;
-            return View();
+            RequestToCreatePatientModel req = new RequestToCreatePatientModel { HospitalId = id };
+            return View(req);
         }
 
         public IActionResult RegisterHospital()
         {
+            return View();
+        }
+
+        public IActionResult HospitalProfileInfo(int? id)
+        {
+            int tempId = (int)id;
+            var hospitalInfo = hospitalService.GetHospitalInfoById(tempId);
+            var doctorsCount = hospitalService.GetDoctorsCountById(tempId);
+            var hospitalAdmins = hospitalService.GetHospitalAdminsById(tempId);
+            var viewModel = new HospitalProfileInfoViewModel
+            {
+                HospitalProfileInfo = mapper.Map<HospitalProfileInfoModel>(hospitalInfo),
+                DoctorsCount = doctorsCount,
+                HospitalAdmins = mapper.Map<IEnumerable<HospitalAdminContactInfoModel>>(hospitalAdmins)
+            };
             return View();
         }
 
@@ -95,6 +114,7 @@ namespace TreatLines.Controllers
         public async Task<IActionResult> SendPatientRequestAsync(RequestToCreatePatientModel request)
         {
             var dto = mapper.Map<RequestToCreatePatientDTO>(request);
+            await patientRegistrationRequestsService.AddRequestAsync(dto);
             return Ok();
         }
 
