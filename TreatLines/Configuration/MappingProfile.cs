@@ -36,13 +36,13 @@ namespace TreatLines.Configuration
                 .ForMember(
                 dest => dest.CreationDate,
                 opt => opt.MapFrom(src => src.CreationDate.ToString("d")));
-            CreateMap<HospitalInfoDTO, HospitalModel_UserControler>();
+            CreateMap<HospitalInfoDTO, HospitalModel>();
 
-            CreateMap<HospitalAdminContactInfoDTO, HospitalAdminContactInfoModel>();
-
-            CreateMap<HospitalInfoDTO, HospitalProfileInfoModel>();
+            CreateMap<HospitalInfoDTO, HospitalProfileInfoModel>().ReverseMap();
 
             CreateMap<HospitalAdminInfoDTO, HospitalAdminContactInfoModel>();
+
+            CreateMap<HospitalAdminInfoDTO, HospitalAdminModel>();
         }
     }
 }

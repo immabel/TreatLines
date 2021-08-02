@@ -58,15 +58,15 @@ namespace TreatLines.Controllers
 
         public async Task<IActionResult> Hospitals()
         {
-            var hospitals = await hospitalService.GetHospitals();
-            IEnumerable<HospitalModel_UserControler> hospitalsModels = mapper.Map<IEnumerable<HospitalModel_UserControler>>(hospitals);
+            var hospitals = await hospitalService.GetHospitalsAsync();
+            IEnumerable<HospitalModel> hospitalsModels = mapper.Map<IEnumerable<HospitalModel>>(hospitals);
             return View(hospitalsModels);
         }
 
         public IActionResult RegisterPatient(int? id, string hospName)
         {
             ViewData["HospitalName"] = hospName;
-            RequestToCreatePatientModel req = new RequestToCreatePatientModel { HospitalId = id };
+            RequestToCreatePatientModel req = new RequestToCreatePatientModel { HospitalId = (int)id };
             return View(req);
         }
 
@@ -75,19 +75,20 @@ namespace TreatLines.Controllers
             return View();
         }
 
-        public IActionResult HospitalProfileInfo(int? id)
+        public async Task<IActionResult> HospitalProfileInfo(int? id)
         {
             int tempId = (int)id;
-            var hospitalInfo = hospitalService.GetHospitalInfoById(tempId);
+            var hospitalInfo = await hospitalService.GetHospitalInfoByIdAsync(tempId);
             var doctorsCount = hospitalService.GetDoctorsCountById(tempId);
             var hospitalAdmins = hospitalService.GetHospitalAdminsById(tempId);
-            var viewModel = new HospitalProfileInfoViewModel
-            {
-                HospitalProfileInfo = mapper.Map<HospitalProfileInfoModel>(hospitalInfo),
-                DoctorsCount = doctorsCount,
-                HospitalAdmins = mapper.Map<IEnumerable<HospitalAdminContactInfoModel>>(hospitalAdmins)
-            };
-            return View();
+            //var tempHInfo = mapper.Map<HospitalProfileInfoModel>(hospitalInfo);
+            var viewModel = new HospitalProfileInfoViewModel();
+            //{
+            viewModel.HospitalProfileInfo = hospitalInfo;
+            viewModel.DoctorsCount = doctorsCount;
+            viewModel.HospitalAdmins = mapper.Map<IEnumerable<HospitalAdminContactInfoModel>>(hospitalAdmins);
+            //};
+            return View(viewModel);
         }
 
         [AllowAnonymous]

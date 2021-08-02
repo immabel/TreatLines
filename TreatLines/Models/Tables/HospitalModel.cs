@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TreatLines.Models.Tables
 {
-    public class HospitalModel_UserControler
+    public class HospitalModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

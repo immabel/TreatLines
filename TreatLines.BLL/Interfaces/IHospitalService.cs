@@ -7,14 +7,14 @@ namespace TreatLines.BLL.Interfaces
 {
     public interface IHospitalService
     {
-        Task<IEnumerable<HospitalInfoDTO>> GetHospitals();
-        Task<HospitalInfoDTO> GetHospitalInfoById(int id);
+        Task<IEnumerable<HospitalInfoDTO>> GetHospitalsAsync();
+        Task<HospitalInfoDTO> GetHospitalInfoByIdAsync(int id);
         Task<bool> DeleteHospitalByIdAsync(int hospitalId);
         IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsById(int hospitalId);
         IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsById(string hospitalAdminId);
-        Task BlockUser(string email);
+        Task BlockUserAsync(string email);
         int GetHospitalIdByHospitalAdminId(string id);
-        Task DeleteUser(string email);
+        Task DeleteUserAsync(string email);
         int GetDoctorsCountById(int hospitalId);
     }
 }

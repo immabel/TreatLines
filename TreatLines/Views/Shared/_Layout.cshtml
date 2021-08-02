@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - TreatLines</title>
     <link rel="stylesheet" href="~/lib/fontawesome/css/fontawesome_all.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-minty.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
     @*<link rel="stylesheet" href="~/css/site.css" />*@
 </head>
 <body>
@@ -18,12 +19,23 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    @*<ul class="navbar-nav flex-grow-1">
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="User" asp-action="Index">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="User" asp-action="Privacy">Privacy</a>
+            </li>
+        </ul>*@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="User" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Requests">Requests</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="User" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Hospitals">Hospitals</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="HospitalAdmins">Hospital admins</a>
                         </li>
                     </ul>
                 </div>
@@ -44,6 +56,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

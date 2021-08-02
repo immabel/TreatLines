@@ -37,7 +37,7 @@ namespace TreatLines.BLL.Services
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<HospitalInfoDTO>> GetHospitals()
+        public async Task<IEnumerable<HospitalInfoDTO>> GetHospitalsAsync()
         {
             var hospitals = await hospitalRepository.GetAllAsync();
             return mapper.Map<IEnumerable<HospitalInfoDTO>>(hospitals);
@@ -86,20 +86,20 @@ namespace TreatLines.BLL.Services
             return hospitalAdminRepository.GetHospitalByHospitalAdminId(id).Id;
         }
 
-        public async Task BlockUser(string email)
+        public async Task BlockUserAsync(string email)
         {
             var user = await userRepository.FindByEmailAsync(email);
             user.Blocked = user.Blocked ? false : true;
             await userRepository.UpdateAsync(user);
         }
 
-        public async Task DeleteUser(string email)
+        public async Task DeleteUserAsync(string email)
         {
             var user = await userRepository.FindByEmailAsync(email);
             await userRepository.DeleteAsync(user);
         }
 
-        public async Task<HospitalInfoDTO> GetHospitalInfoById(int id)
+        public async Task<HospitalInfoDTO> GetHospitalInfoByIdAsync(int id)
         {
             var hospital = await hospitalRepository.GetByIdAsync(id);
             return mapper.Map<HospitalInfoDTO>(hospital);
