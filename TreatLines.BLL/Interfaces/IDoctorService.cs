@@ -19,7 +19,6 @@ namespace TreatLines.BLL.Interfaces
         IEnumerable<string> GetDoctorsEmailsByHospitalId(int id);
         IEnumerable<DoctorInfoDTO> GetDoctorsByHospitalAdminId(string id);
         Task AddAppointment(AppointmentCreationDTO appointmentDto);
-        Task AddSkinInfoToAppointment(SkinInfoDTO skinInfoDto);
         Task AddPrescriptionToAppointment(PrescriptionDTO prescriptionDto);
         IEnumerable<AppointmentFutureInfoDTO> GetFutureAppointmentsByDoctorEmail(string email);
         AppointmentDTO GetNearestAppointment(string doctorId, string patientId);

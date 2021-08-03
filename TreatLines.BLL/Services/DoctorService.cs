@@ -72,7 +72,7 @@ namespace TreatLines.BLL.Services
                 Email = doctor.User.Email,
                 FirstName = doctor.User.FirstName,
                 LastName = doctor.User.LastName,
-                HospitaName = hospital.Name,
+                HospitalName = hospital.Name,
                 Position = doctor.Position,
                 OnHoliday = doctor.OnHoliday ? 1 : 0,
                 Blocked = doctor.User.Blocked ? 1 : 0
@@ -163,20 +163,6 @@ namespace TreatLines.BLL.Services
             await doctorPatientRepository.SaveChangesAsync();
         }
 
-        public async Task AddSkinInfoToAppointment(SkinInfoDTO skinInfoDto)
-        {
-            Appointment appointment = await appointmentRepository.GetByIdAsync(skinInfoDto.AppointmentId);
-
-            appointment.SkinType = skinInfoDto.SkinType;
-            appointment.Elasticity = skinInfoDto.Elasticity;
-            appointment.PHlevel = skinInfoDto.PHlevel;
-            appointment.LevelOfMoisture = skinInfoDto.LevelOfMoisture;
-            appointment.SkinColor = skinInfoDto.SkinColor;
-
-            appointmentRepository.Update(appointment);
-            await appointmentRepository.SaveChangesAsync();
-        }
-
         public async Task AddPrescriptionToAppointment(PrescriptionDTO prescriptionDto)
         {
             Appointment appointment = await appointmentRepository.GetByIdAsync(prescriptionDto.AppointmentId);
@@ -185,13 +171,13 @@ namespace TreatLines.BLL.Services
             await prescriptionRepository.AddAsync(prescription);
             await prescriptionRepository.SaveChangesAsync();
 
-            int prId = prescriptionRepository
+            /*int prId = prescriptionRepository
                 .GetAllAsync()
                 .Result
                 .OrderByDescending(pr => pr.Id)
                 .FirstOrDefault()
-                .Id;
-            appointment.PrescriptionId = prId;
+                .Id;*/
+            appointment.PrescriptionId = prescription.Id;
 
             appointmentRepository.Update(appointment);
             await appointmentRepository.SaveChangesAsync();
@@ -247,11 +233,6 @@ namespace TreatLines.BLL.Services
                 {
                     Id = (int)apInfo.AppointmentId,
                     DateTimeAppointment = apInfo.Appointment.DateTimeAppointment.ToString("g"),
-                    SkinType = apInfo.Appointment.SkinType,
-                    Elasticity = apInfo.Appointment.Elasticity,
-                    PHlevel = apInfo.Appointment.PHlevel.ToString(),
-                    LevelOfMoisture = apInfo.Appointment.LevelOfMoisture,
-                    SkinColor = apInfo.Appointment.SkinColor,
                     PrescriptionId = apInfo.Appointment.PrescriptionId == null ? 0 : (int)apInfo.Appointment.PrescriptionId,
                     Prescription = apInfo.Appointment.Prescription == null ? "-" : apInfo.Appointment.Prescription.Description
                 });                
