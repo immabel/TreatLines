@@ -16,5 +16,6 @@ namespace TreatLines.Models.Tables
         public string Country { get; set; }
         public string RegisterDate { get; set; }
         public string CreationDate { get; set; }
+        public int Blocked { get; set; }
     }
 }

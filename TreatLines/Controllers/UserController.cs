@@ -59,8 +59,8 @@ namespace TreatLines.Controllers
         public async Task<IActionResult> Hospitals()
         {
             var hospitals = await hospitalService.GetHospitalsAsync();
-            IEnumerable<HospitalModel> hospitalsModels = mapper.Map<IEnumerable<HospitalModel>>(hospitals);
-            return View(hospitalsModels);
+            IEnumerable<HospitalModel> result = mapper.Map<IEnumerable<HospitalModel>>(hospitals.Where(h => h.Blocked == 0));
+            return View(result);
         }
 
         public IActionResult RegisterPatient(int? id, string hospName)

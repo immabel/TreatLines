@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -37,17 +38,20 @@ namespace TreatLines.Controllers
             _logger = logger;
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult BackUp()
         {
             backUpService.CreateDbBackup();
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Requests()
         {
             var requests = await hospitalRegistrationRequestsService.GetAllRequestsAsync();
@@ -55,6 +59,7 @@ namespace TreatLines.Controllers
             return View(result);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Hospitals()
         {
             var hospitals = await hospitalService.GetHospitalsAsync();
@@ -62,11 +67,28 @@ namespace TreatLines.Controllers
             return View(result);
         }
 
-        public IActionResult HospitalAdmins(int? id)
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult HospitalAdmins(int? id, string hospName)
         {
+            ViewData["HospitalName"] = hospName;
             var hospAdmins = hospitalService.GetHospitalAdminsById((int)id);
             var result = mapper.Map<IEnumerable<HospitalAdminModel>>(hospAdmins);
-            return View();
+            return View(result);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ApproveRequestAsync(int id)
+        {
+            await hospitalRegistrationRequestsService.ApproveRequestAsync(id);
+            return Ok();
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RejectRequestAsync(int id)
+        {
+            await hospitalRegistrationRequestsService.RejectRequestAsync(id);
+            return Ok();
         }
     }
 }

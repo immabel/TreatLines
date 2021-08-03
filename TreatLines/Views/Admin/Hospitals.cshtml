@@ -1,9 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-@model IEnumerable<TreatLines.Models.Tables.HospitalModel>
+﻿@model IEnumerable<TreatLines.Models.Tables.HospitalModel>
 
 <br />
 <div class="container row p-0 m-0">
@@ -11,14 +6,15 @@
         <h2 class="text-info">Hospitals</h2>
     </div>
     <div class="col-12 border p-3">
-        <table id="hospitals_user" class="table table-striped table-bordered" style="width:100%">
+        <table id="hospitals_admin" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
                     <th style="width:20%">Name</th>
-                    <th>Country</th>
-                    <th>City</th>
+                    <th>Country, city</th>
                     <th>Address</th>
                     <th>Rating</th>
+                    <th>Date of creation</th>
+                    <th>Register date</th>
                     <th></th>
                 </tr>
             </thead>
@@ -27,25 +23,26 @@
                 {
                     <tr>
                         <td>@h.Name</td>
-                        <td>@h.Country</td>
-                        <td>@h.City</td>
+                        <td>@h.Country, @h.City</td>
                         <td>@h.Address</td>
                         <td>@h.Rating</td>
+                        <td>@h.CreationDate</td>
+                        <td>@h.RegisterDate</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <button class="btn btn-secondary"
+                                   asp-controller="Admin"
+                                   asp-action="BlockUnblockHospital"
+                                   asp-route-id="@h.Id"
+                                   asp-route-blocked="@h.Blocked">
+                                    @(h.Blocked == 1 ? "Unblock" : "Block")
+                                </button>
                                 <a class="btn btn-secondary nav-link"
-                                   asp-controller="User"
-                                   asp-action="RegisterPatient"
+                                   asp-controller="Admin"
+                                   asp-action="HospitalAdmins"
                                    asp-route-id="@h.Id"
                                    asp-route-hospName="@h.Name">
-                                    Register
-                                </a>
-                                <a class="btn btn-secondary nav-link"
-                                   style='cursor:pointer;'
-                                   asp-controller="User"
-                                   asp-action="HospitalProfileInfo"
-                                   asp-route-id="@h.Id">
-                                    <i class="fas fa-info-circle"></i>
+                                    Hospital admins
                                 </a>
                             </div>
                         </td>

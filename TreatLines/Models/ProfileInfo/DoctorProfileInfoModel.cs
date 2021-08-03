@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace TreatLines.Models.ProfileInfo
 {
-    public class DoctorProfileInfoModel
+    public class DoctorProfileInfoModel : HospitalAdminProfileInfoModel
     {
+        public string Position { get; set; }
     }
 }

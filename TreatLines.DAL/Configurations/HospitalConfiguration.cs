@@ -20,6 +20,7 @@ namespace TreatLines.DAL.Configurations
             builder.Property(p => p.RegisterDateTime).IsRequired();
             builder.Property(p => p.CreationDate).IsRequired();
             builder.Property(p => p.Type).HasMaxLength(30);
+            builder.Property(u => u.Blocked);
             builder
                 .HasMany(h => h.Doctors)
                 .WithOne(o => o.Hospital);

@@ -12,6 +12,7 @@ namespace TreatLines.DAL.Entities
         public string Address { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
+        public bool Blocked { get; set; }
         public DateTimeOffset RegisterDateTime { get; set; }
         public DateTimeOffset CreationDate { get; set; }
         public List<Doctor> Doctors { get; set; }

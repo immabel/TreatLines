@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TreatLines.BLL.DTOs.Hospital;
-using TreatLines.Models;
-using TreatLines.Models.ProfileInfo;
 
-namespace TreatLines.ViewModels
+namespace TreatLines.Models.ProfileInfo
 {
     public class HospitalProfileInfoViewModel
     {

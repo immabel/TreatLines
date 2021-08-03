@@ -35,7 +35,10 @@ namespace TreatLines.Configuration
                 opt => opt.MapFrom(src => src.RegisterDateTime.ToString("d")))
                 .ForMember(
                 dest => dest.CreationDate,
-                opt => opt.MapFrom(src => src.CreationDate.ToString("d")));
+                opt => opt.MapFrom(src => src.CreationDate.ToString("d")))
+                .ForMember(
+                dest => dest.Blocked,
+                opt => opt.MapFrom(src => src.Blocked ? 1 : 0));
             CreateMap<HospitalInfoDTO, HospitalModel>();
 
             CreateMap<HospitalInfoDTO, HospitalProfileInfoModel>().ReverseMap();
