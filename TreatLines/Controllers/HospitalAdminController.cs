@@ -78,6 +78,16 @@ namespace TreatLines.Controllers
             return View();
         }
 
+        public IActionResult DoctorProfile(string id)
+        {
+            return View();
+        }
+
+        public IActionResult PatientProfile(string id)
+        {
+            return View();
+        }
+
         public IActionResult AddHospitalAdmin()
         {
             return View();

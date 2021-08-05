@@ -45,5 +45,15 @@ namespace TreatLines.Controllers
             await doctorService.CancelAppointmentAsync((int)id);
             return PartialView("_GetUpcomingAppointments");
         }
+
+        public IActionResult Patients()
+        {
+            return View();
+        }
+
+        public IActionResult PatientProfile()
+        {
+            return View();
+        }
     }
 }

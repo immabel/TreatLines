@@ -1,63 +1,52 @@
-﻿@model IEnumerable<TreatLines.Models.Tables.DoctorModel>
+﻿@model IEnumerable<TreatLines.Models.Tables.PatientModel>
 
 <br />
 <div class="container row p-0 m-0">
     <div class="row my-2">
         <div class="col-6">
-            <h2 class="text-info">Doctors</h2>
+            <h2 class="text-info">Patients</h2>
         </div>
         <div class="col-3 offset-3">
             <a class="btn btn-secondary nav-link"
                asp-controller="HospitalAdmin"
-               asp-action="AddDoctor">
-                Add doctor
+               asp-action="AddPatient">
+                Add patient
             </a>
         </div>
     </div>
     <div class="col-12 border p-3">
-        <table id="doctors_hospAdmin" class="table table-striped table-bordered" style="width:100%">
+        <table id="patients_hospAdmin" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
                     <th style="width:20%">Name</th>
                     <th>Email</th>
                     <th>Phone number</th>
-                    <th>Position</th>
-                    <th>Status</th>
                     <th>Registration date</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var d in Model)
+                @foreach (var p in Model)
                 {
                     <tr>
-                        <td>@d.FullName</td>
-                        <td>@d.Email</td>
-                        <td>@d.PhoneNumber</td>
-                        <td>@d.Position</td>
-                        <td>@(d.OnHoliday == 1 ? "On holiday" : "Working")</td>
-                        <td>@d.RegistrationDate</td>
+                        <td>@p.FullName</td>
+                        <td>@p.Email</td>
+                        <td>@p.PhoneNumber</td>
+                        <td>@p.RegistrationDate</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <button class="btn btn-secondary"
-                                        asp-controller="Admin"
-                                        asp-action="BlockUnblockUser"
-                                        asp-route-id="@d.Id">
-                                    @(d.Blocked == 1 ? "Unblock" : "Block")
-                                </button>
                                 <button class="btn btn-secondary"
                                         data-bs-toggle="tooltip"
                                         data-bs-placement="bottom"
                                         title="Make appointment"
                                         asp-controller="HospitalAdmin"
-                                        asp-action="MakeAppointment"
-                                        asp-route-email="@d.Email">
+                                        asp-action="MakeAppointment">
                                     <i class="fas fa-calendar-day"></i>
                                 </button>
                                 <button class="btn btn-secondary"
-                                        asp-controller="HospitalAdmin"
-                                        asp-action="DoctorProfile"
-                                        asp-route-id="@d.Id">
+                                        asp-controller="Doctor"
+                                        asp-action="PatientProfile"
+                                        asp-route-id="@p.Id">
                                     <i class="fas fa-info-circle"></i>
                                 </button>
                             </div>

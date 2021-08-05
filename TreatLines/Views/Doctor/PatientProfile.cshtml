@@ -1,0 +1,77 @@
+﻿@model TreatLines.Models.ProfileInfo.PatientProfileInfoDoctorModel
+
+<section class="my-5">
+    @*<div class="container-lg border px-5 pt-3">*@
+    <div class="card border-primary mb-3">
+        <div class="card-header">
+            <div class="row my-2">
+                <div class="col-6">
+                    <h3 class="mt-2 mb-4">Patient Profile</h3>
+                </div>
+                <div class="col-3 offset-3">
+                    <a class="btn btn-secondary nav-link"
+                       asp-controller="Doctor"
+                       asp-action="MakeAppointment">
+                        Make appointment
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row my-2">
+                <div class="col-2">
+                    <label>Name: </label>
+                </div>
+                <div class="col-3">
+                    <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="FirstName">
+                </div>
+                <div class="col-2">
+                    <label>Surname: </label>
+                </div>
+                <div class="col-3">
+                    <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="LastName">
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-2">
+                    <label>Email: </label>
+                </div>
+                <div class="col-4">
+                    <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Email">
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-2">
+                    <label>Phone number: </label>
+                </div>
+                <div class="col-4">
+                    <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="PhoneNumber" />
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-2">
+                    <label>Blood type: </label>
+                </div>
+                <div class="col-2">
+                    <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="BloodType" />
+                </div>
+                <div class="col-2">
+                    <label>Sex: </label>
+                </div>
+                <div class="col-2">
+                    <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Sex" />
+                </div>
+            </div>
+        </div>
+        @if (Model.Appointment != null)
+        {
+            @await Html.PartialAsync("_NearestAppointmentInfoDoctor", Model.Appointment)
+        }
+        else
+        {
+            <div class="col-6">
+                <p>No upcoming appointment</p>
+            </div>
+        }
+    </div>
+</section>

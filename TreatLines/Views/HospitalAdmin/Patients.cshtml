@@ -38,15 +38,23 @@
                                 <button class="btn btn-secondary"
                                         asp-controller="Admin"
                                         asp-action="BlockUnblockUser"
-                                        asp-route-id="@p.Id"
-                                        asp-route-blocked="@p.Blocked">
+                                        asp-route-id="@p.Id">
                                     @(p.Blocked == 1 ? "Unblock" : "Block")
                                 </button>
                                 <button class="btn btn-secondary"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="bottom"
+                                        title="Make appointment"
                                         asp-controller="HospitalAdmin"
                                         asp-action="MakeAppointment"
                                         asp-route-email="@p.Email">
-                                    Make appointment
+                                    <i class="fas fa-calendar-day"></i>
+                                </button>
+                                <button class="btn btn-secondary"
+                                        asp-controller="HospitalAdmin"
+                                        asp-action="PatientProfile"
+                                        asp-route-id="@p.Id">
+                                    <i class="fas fa-info-circle"></i>
                                 </button>
                             </div>
                         </td>

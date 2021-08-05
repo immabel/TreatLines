@@ -86,9 +86,9 @@ namespace TreatLines.BLL.Services
             return hospitalAdminRepository.GetHospitalByHospitalAdminId(id).Id;
         }
 
-        public async Task BlockUserAsync(string email)
+        public async Task BlockUserAsync(string id)
         {
-            var user = await userRepository.FindByEmailAsync(email);
+            var user = await userRepository.FindByIdAsync(id);
             user.Blocked = user.Blocked ? false : true;
             await userRepository.UpdateAsync(user);
         }

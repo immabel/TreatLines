@@ -12,7 +12,7 @@ namespace TreatLines.BLL.Interfaces
         Task<bool> DeleteHospitalByIdAsync(int hospitalId);
         IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsById(int hospitalId);
         IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsById(string hospitalAdminId);
-        Task BlockUserAsync(string email);
+        Task BlockUserAsync(string id);
         int GetHospitalIdByHospitalAdminId(string id);
         Task DeleteUserAsync(string email);
         int GetDoctorsCountById(int hospitalId);

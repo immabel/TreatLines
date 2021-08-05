@@ -38,6 +38,11 @@ namespace TreatLines.DAL.Repositories
             return userManager.FindByEmailAsync(email);
         }
 
+        public Task<User> FindByIdAsync(string id)
+        {
+            return userManager.FindByIdAsync(id);
+        }
+
         public Task<IList<string>> GetRolesAsync(User user)
         {
             return userManager.GetRolesAsync(user);

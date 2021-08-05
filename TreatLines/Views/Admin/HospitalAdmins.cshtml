@@ -31,8 +31,7 @@
                                 <button class="btn btn-secondary"
                                         asp-controller="Admin"
                                         asp-action="BlockUnblockUser"
-                                        asp-route-id="@h.Id"
-                                        asp-route-blocked="@h.Blocked">
+                                        asp-route-id="@h.Id">
                                     @(h.Blocked == 1 ? "Unblock" : "Block")
                                 </button>
                             @*</div>*@
