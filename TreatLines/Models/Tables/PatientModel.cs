@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace TreatLines.BLL.DTOs.Patient
+namespace TreatLines.Models.Tables
 {
-    public class PatientsInfoDTO
+    public class PatientModel
     {
         public string Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string FullName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string RegistrationDate { get; set; }

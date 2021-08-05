@@ -1,0 +1,59 @@
+﻿@model IEnumerable<TreatLines.Models.Tables.PatientModel>
+
+<br />
+<div class="container row p-0 m-0">
+    <div class="row my-2">
+        <div class="col-6">
+            <h2 class="text-info">Patients</h2>
+        </div>
+        <div class="col-3 offset-3">
+            <a class="btn btn-secondary nav-link"
+               asp-controller="HospitalAdmin"
+               asp-action="AddPatient">
+                Add patient
+            </a>
+        </div>
+    </div>
+    <div class="col-12 border p-3">
+        <table id="patients_hospAdmin" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th style="width:20%">Name</th>
+                    <th>Email</th>
+                    <th>Phone number</th>
+                    <th>Registration date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@p.FullName</td>
+                        <td>@p.Email</td>
+                        <td>@p.PhoneNumber</td>
+                        <td>@p.RegistrationDate</td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button class="btn btn-secondary"
+                                        asp-controller="Admin"
+                                        asp-action="BlockUnblockUser"
+                                        asp-route-id="@p.Id"
+                                        asp-route-blocked="@p.Blocked">
+                                    @(p.Blocked == 1 ? "Unblock" : "Block")
+                                </button>
+                                <button class="btn btn-secondary"
+                                        asp-controller="HospitalAdmin"
+                                        asp-action="MakeAppointment"
+                                        asp-route-email="@p.Email">
+                                    Make appointment
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

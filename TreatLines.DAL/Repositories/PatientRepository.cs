@@ -28,5 +28,13 @@ namespace TreatLines.DAL.Repositories
                 .Include(u => u.User)
                 .FirstOrDefaultAsync(u => u.User.Email == email);
         }
+
+        public async Task<IEnumerable<Patient>> GetAllWithUserAsync()
+        {
+            return await context.Set<Patient>()
+                .Include(u => u.User)
+                .AsNoTracking()
+                .ToListAsync();
+        }
     }
 }

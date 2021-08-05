@@ -27,7 +27,7 @@ namespace TreatLines.BLL.Services
 
         private readonly IPatientRepository patientRepository;
 
-        private readonly IHospitalRepository hospitalRepository;
+        private readonly IRepository<Hospital> hospitalRepository;
 
         private readonly IRepository<Prescription> prescriptionRepository;
 
@@ -39,7 +39,7 @@ namespace TreatLines.BLL.Services
             IDoctorPatientRepository doctorPatientRepository,
             IHospitalAdminRepository hospitalAdminRepository,
             IPatientRepository patientRepository,
-            IHospitalRepository hospitalRepository,
+            IRepository<Hospital> hospitalRepository,
             IRepository<Prescription> prescriptionRepository,
             IMapper mapper
             )
@@ -70,7 +70,6 @@ namespace TreatLines.BLL.Services
                     LastName = apInfo.Doctor.User.LastName,
                     DoctorPosition = apInfo.Doctor.Position,
                     Canceled = apInfo.Appointment.Canceled ? 1 : 0,
-                    SkinType = apInfo.Appointment.SkinType,
                     Prescription = (apInfo.Appointment.Prescription == null) ? "-" : apInfo.Appointment.Prescription.Description
                 });
             return appointmentsInfo;
@@ -96,17 +95,12 @@ namespace TreatLines.BLL.Services
             return appointmentsInfo;
         }
 
-        public IEnumerable<DoctorInfoDTO> GetPatientDoctorsAsync(string email)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<PatientInfoDTO> GetPatientInfoAsync(string id)
         {
             TimeSpan ts = new TimeSpan(0, -30, 0);
             var patient = await patientRepository.GetByIdAsync(id);
             PatientInfoDTO patientInfo = mapper.Map<PatientInfoDTO>(patient);
-            patientInfo.HospitalName = hospitalRepository.GetByIdAsync(patient.HospitalId).Result.Name;
+            //patientInfo.HospitalName = hospitalRepository.GetByIdAsync(patient.HospitalId).Result.Name;
             var appoints = doctorPatientRepository.GetAppointmentsByPatientId(id)
                 .OrderByDescending(dp => dp.Appointment.DateTimeAppointment);
             if (appoints.First().Appointment.PrescriptionId == null)
@@ -118,11 +112,6 @@ namespace TreatLines.BLL.Services
                 patientInfo.Prescription = prescriptionRepository.GetByIdAsync((int)prescriptionId).Result.Description;
             }
             return patientInfo;
-        }
-
-        public Task<PatientInfoDTO> GetPatientInfoByEmailAsync(string email)
-        {
-            throw new NotImplementedException();
         }
 
         public IEnumerable<PatientsInfoDTO> GetPatientsByHospitalAdminId(string id)
@@ -137,21 +126,9 @@ namespace TreatLines.BLL.Services
                     FirstName = p.User.FirstName,
                     LastName = p.User.LastName,
                     Email = p.User.Email,
-                    BloodType = p.BloodType,
-                    Sex = p.Sex,
                     Blocked = p.User.Blocked ? 1 : 0
                 });
             return patients;
-        }
-
-        public IEnumerable<PrescriptionInfoDTO> GetPrescriptionByPatientEmail(string email)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<PrescriptionInfoDTO> GetPrescriptionByPatientId(string id)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task UpdatePatient(PatientInfoDTO patient)

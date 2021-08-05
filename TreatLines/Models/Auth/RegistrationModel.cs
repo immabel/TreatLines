@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace TreatLines.BLL.DTOs.Auth
+namespace TreatLines.Models.Auth
 {
-    public class RegistrationDTO
+    public class RegistrationModel
     {
+        [Required]
         public string FirstName { get; set; }
+        [Required]
         public string LastName { get; set; }
+        [Required, EmailAddress]
         public string Email { get; set; }
-        public string Password { get; set; }
+        [Required, Phone]
         public string PhoneNumber { get; set; }
-        public int HospitalId { get; set; }
     }
 }

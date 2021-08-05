@@ -14,7 +14,7 @@ namespace TreatLines.DAL.Entities
         public decimal Price { get; set; }
         public string Position { get; set; }
         public bool OnHoliday { get; set; }
-        public double Experience { get; set; }
+        public string Experience { get; set; }
         public string Education { get; set; }
         public int? ScheduleId { get; set; }
         public Schedule Schedule { get; set; }

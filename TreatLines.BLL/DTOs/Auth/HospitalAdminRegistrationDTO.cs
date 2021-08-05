@@ -6,6 +6,5 @@ namespace TreatLines.BLL.DTOs.Auth
 {
     public class HospitalAdminRegistrationDTO : RegistrationDTO
     {
-        public int HospitalId { get; set; }
     }
 }

@@ -166,7 +166,7 @@ namespace TreatLines.DAL.Extentions
                     {
                         UserId = id,
                         HospitalId = HOSPITAL_ID,
-                        Experience = 6,
+                        Experience = "Worked at \"Health main\"",
                         Position = "cosmetologist",
                         Price = 400,
                         ScheduleId = 1

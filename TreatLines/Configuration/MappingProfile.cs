@@ -4,9 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TreatLines.BLL.DTOs.Auth;
+using TreatLines.BLL.DTOs.Doctor;
 using TreatLines.BLL.DTOs.Hospital;
 using TreatLines.BLL.DTOs.HospitalAdmin;
 using TreatLines.BLL.DTOs.HospitalCreate;
+using TreatLines.BLL.DTOs.Patient;
+using TreatLines.BLL.DTOs.PatientCreate;
 using TreatLines.DAL.Entities;
 using TreatLines.Models;
 using TreatLines.Models.ProfileInfo;
@@ -24,7 +27,12 @@ namespace TreatLines.Configuration
             CreateMap<RequestToCreateHospitalModel, RequestToCreateHospitalDTO>();
             CreateMap<RequestToCreateHospitalDTO, RequestToCreateHospital>();
             CreateMap<RequestToCreateHospital, RequestToCreateHospitalDTO>();
-            CreateMap<RequestToCreateHospitalViewDTO, RequestToCreateHospitalModelView>()
+            CreateMap<RequestToCreateHospitalViewDTO, RequestInfoToCreateHospitalModel>()
+                .ForMember(
+                dest => dest.DateOfRequestCreation,
+                opt => opt.MapFrom(src => src.DateOfRequestCreation.ToString("g")));
+
+            CreateMap<RequestToCreatePatientViewDTO, RequestInfoToCreatePatientModel>()
                 .ForMember(
                 dest => dest.DateOfRequestCreation,
                 opt => opt.MapFrom(src => src.DateOfRequestCreation.ToString("g")));
@@ -46,6 +54,10 @@ namespace TreatLines.Configuration
             CreateMap<HospitalAdminInfoDTO, HospitalAdminContactInfoModel>();
 
             CreateMap<HospitalAdminInfoDTO, HospitalAdminModel>();
+
+            CreateMap<DoctorInfoDTO, DoctorModel>();
+
+            CreateMap<PatientInfoDTO, PatientModel>();
         }
     }
 }

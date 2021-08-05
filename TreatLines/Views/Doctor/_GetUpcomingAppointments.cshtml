@@ -1,0 +1,52 @@
+﻿@model IEnumerable<TreatLines.Models.Appointment.AppointmentFutureInfoDoctorModel>
+
+<div class="container p-1">
+    <div class="row my-2">
+        <div class="col-6">
+            <h5 class="mt-2 mb-4">Upcoming appointments</h5>
+        </div>
+    </div>
+    @if (Model.Count() == 0)
+    {
+        <div>
+            <p class="mt-2 mb-2">No appointments!</p>
+        </div>
+    }
+    else
+    {
+        @foreach (var a in Model)
+        {
+            <div class="card bg-light mb-3" style="max-width: 20rem;">
+                <div class="card-header">
+                    <h6>
+                        @a.DateTimeAppointment
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">@a.PatientEmail</p> <br />
+                    <p class="card-text">@a.FullName</p> <br />
+                </div>
+                <div class="card-footer">
+                    <div class="row my-1">
+                        <div class="col-4">
+                            @if (a.Canceled == 1)
+                            {
+                                <p class="text-danger">Canceled</p>
+                            }
+                            else
+                            {
+                                <button type="button"
+                                        class="btn btn-outline-danger"
+                                        asp-controller="Doctor"
+                                        asp-action="CancelAppointment"
+                                        asp-route-id="@a.Id">
+                                    Cancel
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

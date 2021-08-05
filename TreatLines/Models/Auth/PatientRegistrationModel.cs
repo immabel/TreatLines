@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TreatLines.BLL.DTOs.Auth
+namespace TreatLines.Models.Auth
 {
-    public class PatientRegistrationDTO : RegistrationDTO
+    public class PatientRegistrationModel : RegistrationModel
     {
         public string BloodType { get; set; }
         public string Sex { get; set; }

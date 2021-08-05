@@ -47,11 +47,16 @@ namespace TreatLines.Extensions
             services.AddScoped<IHospitalAdminRepository, HospitalAdminRepository>();
             services.AddScoped<IDoctorRepository, DoctorRepository>();
             services.AddScoped<IPatientRepository, PatientRepository>();
+            services.AddScoped<IDoctorPatientRepository, DoctorPatientRepository>();
 
             services.AddSingleton<IMailService, MailService>();
 
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IHospitalService, HospitalService>();
+            services.AddTransient<IDoctorService, DoctorService>();
+            services.AddTransient<IPatientService, PatientService>();
+            services.AddTransient<IScheduleService, ScheduleService>();
+            services.AddTransient<IBackUpService, BackUpService>();
             services.AddScoped<IHospitalRegistrationRequestsService, HospitalRegistrationRequestsService>();
             services.AddScoped<IPatientRegistrationRequestsService, PatientRegistrationRequestsService>();
 

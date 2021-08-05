@@ -24,7 +24,7 @@ namespace TreatLines.BLL.Interfaces
         AppointmentDTO GetNearestAppointment(string doctorId, string patientId);
         IEnumerable<AppointmentInfoDTO> GetLastAppointmentsByPatientId(string id);
         Task UpdateDoctor(DoctorInfoDTO doctor);
-        Task CancelAppointment(int id);
+        Task CancelAppointmentAsync(int id);
         Task UpsertPrescriptionByAppointmentId(PrescriptionDTO prescriptionDTO);
         IEnumerable<string> GetPatientsEmailsByDoctorId(string id);
         Task<IEnumerable<FreeDateTimesDTO>> GetFreeDateTimesByDoctorEmail(string email);

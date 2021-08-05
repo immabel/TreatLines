@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TreatLines.BLL.Interfaces;
+using TreatLines.Models.ProfileInfo;
 using TreatLines.Models.Tables;
 
 namespace TreatLines.Controllers
@@ -41,7 +42,8 @@ namespace TreatLines.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
-            return View();
+            var profileInfo = new AdminProfileInfoModel();
+            return View(profileInfo);
         }
 
         [Authorize(Roles = "Admin")]
@@ -55,7 +57,7 @@ namespace TreatLines.Controllers
         public async Task<IActionResult> Requests()
         {
             var requests = await hospitalRegistrationRequestsService.GetAllRequestsAsync();
-            var result = mapper.Map<IEnumerable<RequestToCreateHospitalModelView>>(requests);
+            var result = mapper.Map<IEnumerable<RequestInfoToCreateHospitalModel>>(requests);
             return View(result);
         }
 

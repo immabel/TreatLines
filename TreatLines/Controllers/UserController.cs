@@ -16,7 +16,6 @@ using TreatLines.Models.ProfileInfo;
 using TreatLines.Models.Requests;
 using TreatLines.Models.Response;
 using TreatLines.Models.Tables;
-using TreatLines.ViewModels;
 
 namespace TreatLines.Controllers
 {

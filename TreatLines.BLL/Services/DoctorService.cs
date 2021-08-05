@@ -72,7 +72,7 @@ namespace TreatLines.BLL.Services
                 Email = doctor.User.Email,
                 FirstName = doctor.User.FirstName,
                 LastName = doctor.User.LastName,
-                HospitalName = hospital.Name,
+                //HospitalName = hospital.Name,
                 Position = doctor.Position,
                 OnHoliday = doctor.OnHoliday ? 1 : 0,
                 Blocked = doctor.User.Blocked ? 1 : 0
@@ -119,7 +119,7 @@ namespace TreatLines.BLL.Services
                     Email = doc.User.Email,
                     FirstName = doc.User.FirstName,
                     LastName = doc.User.LastName,
-                    HospitalName = hospital.Name,
+                    //HospitalName = hospital.Name,
                     Position = doc.Position,
                     OnHoliday = doc.OnHoliday ? 1 : 0,
                     Blocked = doc.User.Blocked ? 1 : 0
@@ -214,7 +214,7 @@ namespace TreatLines.BLL.Services
             await doctorRepository.SaveChangesAsync();
         }
 
-        public async Task CancelAppointment(int id)
+        public async Task CancelAppointmentAsync(int id)
         {
             var appoint = await appointmentRepository.GetByIdAsync(id);
             appoint.Canceled = true;

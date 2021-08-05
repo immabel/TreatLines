@@ -10,5 +10,6 @@ namespace TreatLines.DAL.Interfaces
     {
         Task<Patient> GetByIdAsync(string id);
         Task<Patient> GetByEmailAsync(string email);
+        Task<IEnumerable<Patient>> GetAllWithUserAsync();
     }
 }
