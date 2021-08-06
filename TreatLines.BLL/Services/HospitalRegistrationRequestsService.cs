@@ -44,7 +44,9 @@ namespace TreatLines.BLL.Services
             {
                 Name = createRequestDTO.HospitalName,
                 Address = createRequestDTO.Address,
-                Country = createRequestDTO.Country
+                Country = createRequestDTO.Country,
+                City = createRequestDTO.City,
+                CreationDate = createRequestDTO.HospitalCreationDate
             };
             await hospitalRepository.AddAsync(hospital);
             await hospitalRepository.SaveChangesAsync();
@@ -55,6 +57,7 @@ namespace TreatLines.BLL.Services
                 LastName = createRequestDTO.SubmitterLastName,
                 Email = createRequestDTO.Email,
                 Password = "Qwerty12345",
+                PhoneNumber = createRequestDTO.PhoneNumber,
                 HospitalId = hospital.Id
             };
             await authService.RegisterHospitalAdminAsync(adminRegisterRequest);

@@ -9,7 +9,7 @@ namespace TreatLines.BLL.Interfaces
     public interface IPatientRegistrationRequestsService
     {
         Task AddRequestAsync(RequestToCreatePatientDTO creationInfo);
-        Task<IEnumerable<RequestToCreatePatientViewDTO>> GetAllRequestsAsync();
+        Task<IEnumerable<RequestToCreatePatientViewDTO>> GetAllRequestsAsync(int id);
         Task ApproveRequestAsync(int id);
         Task RejectRequestAsync(int id);
     }

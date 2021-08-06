@@ -92,30 +92,35 @@ namespace TreatLines.Controllers
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        public async Task<IActionResult> LoginAsync(LoginRequest request)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
-            var dto = mapper.Map<LoginRequestDTO>(request);
-            var response = await authService.LoginAsync(dto);
-            var result = mapper.Map<LoginResponse>(response);
-            return RedirectToAction("ProfilePage");//will change to redirecting depending on user role
+            if (ModelState.IsValid)
+            {
+                var dto = mapper.Map<LoginRequestDTO>(request);
+                var response = await authService.LoginAsync(dto);
+                var result = mapper.Map<LoginResponse>(response);
+                
+                //return RedirectToAction("ProfilePage");//will change to redirecting depending on user role
+            }
+            return RedirectToAction("Index");
         }
 
         [AllowAnonymous]
-        [HttpPost("SendHospitalRequest")]
-        public async Task<IActionResult> SendHospitalRequestAsync(RequestToCreateHospitalModel request)
+        [HttpPost]
+        public async Task<IActionResult> SendHospitalRequest(RequestToCreateHospitalModel request)
         {
             var dto = mapper.Map<RequestToCreateHospitalDTO>(request);
             await hospitalRegistrationRequestsService.AddRequestAsync(dto);
-            return Ok();
+            return RedirectToAction("Index");
         }
 
         [AllowAnonymous]
-        [HttpPost("SendPatientRequest")]
-        public async Task<IActionResult> SendPatientRequestAsync(RequestToCreatePatientModel request)
+        [HttpPost]
+        public async Task<IActionResult> SendPatientRequest(RequestToCreatePatientModel request)
         {
             var dto = mapper.Map<RequestToCreatePatientDTO>(request);
             await patientRegistrationRequestsService.AddRequestAsync(dto);
-            return Ok();
+            return RedirectToAction("Index");
         }
 
         public IActionResult Privacy()

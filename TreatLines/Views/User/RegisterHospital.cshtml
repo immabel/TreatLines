@@ -4,88 +4,96 @@
 <section class="my-5">
     <div class="container border">
         <div class="col-lg-12 px-5 pt-3">
-            <h5 class="mt-2 mb-4">Hospital registration</h5>
+            <h4 class="mt-2 mb-4">Hospital registration</h4>
+            <hr/>
             <form asp-controller="User" asp-action="SendHospitalRequest" method="post">
-                <div class="form-group row my-2">
-                    <div class="col-2">
-                        <label asp-for="SubmitterFirstName"></label>
+                <fieldset>
+                    <h6>Admin information</h6>
+                    <div class="form-group row my-2">
+                        <div class="col-2">
+                            <label asp-for="SubmitterFirstName">Name: </label>
+                        </div>
+                        <div class="col-4">
+                            <input asp-for="SubmitterFirstName" class="form-control" />
+                            <span asp-validation-for="SubmitterFirstName" class="text-danger"></span>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <input asp-for="SubmitterFirstName" class="form-control" />
-                        <span asp-validation-for="SubmitterFirstName" class="text-danger"></span>
+                    <div class="form-group row my-2">
+                        <div class="col-2">
+                            <label asp-for="SubmitterLastName">Surname: </label>
+                        </div>
+                        <div class="col-4">
+                            <input asp-for="SubmitterLastName" class="form-control" />
+                            <span asp-validation-for="SubmitterLastName" class="text-danger"></span>
+                        </div>
                     </div>
-                    <div class="col-2">
-                        <label asp-for="HospitalName"></label>
+                    <div class="form-group row my-2">
+                        <div class="col-2">
+                            <label asp-for="Email">Email: </label>
+                        </div>
+                        <div class="col-4">
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <input asp-for="HospitalName" class="form-control" />
-                        <span asp-validation-for="HospitalName" class="text-danger"></span>
+                    <div class="form-group row my-2">
+                        <div class="col-2">
+                            <label asp-for="PhoneNumber"></label>
+                        </div>
+                        <div class="col-4">
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row my-2">
-                    <div class="col-2">
-                        <label asp-for="SubmitterLastName"></label>
+                </fieldset>
+                <fieldset>
+                    <h6>Hospital information</h6>
+                    <div class="form-group row my-2">
+                        <div class="col-2">
+                            <label asp-for="HospitalName">Hospital name: </label>
+                        </div>
+                        <div class="col-4">
+                            <input asp-for="HospitalName" class="form-control" />
+                            <span asp-validation-for="HospitalName" class="text-danger"></span>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <input asp-for="SubmitterLastName" class="form-control" />
-                        <span asp-validation-for="SubmitterLastName" class="text-danger"></span>
+                    <div class="form-group row my-2">
+                        <div class="col-2">
+                            <label asp-for="Country">Country: </label>
+                        </div>
+                        <div class="col-4">
+                            <input asp-for="Country" class="form-control" />
+                            <span asp-validation-for="Country" class="text-danger"></span>
+                        </div>
                     </div>
-                    <div class="col-2">
-                        <label asp-for="Country"></label>
+                    <div class="form-group row my-2">
+                        <div class="col-2">
+                            <label asp-for="City">City: </label>
+                        </div>
+                        <div class="col-4">
+                            <input asp-for="City" class="form-control" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <input asp-for="Country" class="form-control" />
-                        <span asp-validation-for="Country" class="text-danger"></span>
+                    <div class="form-group row my-2">
+                        <div class="col-2">
+                            <label asp-for="Address">Address: </label>
+                        </div>
+                        <div class="col-4">
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row my-2">
-                    <div class="col-2">
-                        <label asp-for="Email"></label>
+                    <div class="form-group row my-2">
+                        <div class="col-2">
+                            <label asp-for="HospitalCreationDate">Date of hospital creation: </label>
+                        </div>
+                        <div class="col-4">
+                            <input asp-for="HospitalCreationDate" class="form-control" />
+                            <span asp-validation-for="HospitalCreationDate" class="text-danger"></span>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                    <div class="col-2">
-                        <label asp-for="City"></label>
-                    </div>
-                    <div class="col-4">
-                        <input asp-for="City" class="form-control" />
-                        <span asp-validation-for="City" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group row my-2">
-                    <div class="col-2">
-                        <label asp-for="PhoneNumber"></label>
-                    </div>
-                    <div class="col-4">
-                        <input asp-for="PhoneNumber" class="form-control" />
-                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                    </div>
-                    <div class="col-2">
-                        <label asp-for="Address"></label>
-                    </div>
-                    <div class="col-4">
-                        <input asp-for="Address" class="form-control" />
-                        <span asp-validation-for="Address" class="text-danger"></span>
-                    </div>
-                </div>
-                @*<div class="form-group row my-2">
-                    
-                </div>*@
-                <div class="form-group row my-2">
-                    <div class="col-2">
-                    </div>
-                    <div class="col-4">
-                    </div>
-                    <div class="col-2">
-                        <label asp-for="HospitalCreationDate"></label>
-                    </div>
-                    <div class="col-4">
-                        <input asp-for="HospitalCreationDate" class="form-control" />
-                        <span asp-validation-for="HospitalCreationDate" class="text-danger"></span>
-                    </div>
-                </div>
+                </fieldset>
                 <div class="form-group row my-1">
                     <div class="col-2">
                         <button type="submit" class="btn btn-secondary mb-3">Register</button>

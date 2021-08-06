@@ -76,14 +76,14 @@ namespace TreatLines.BLL.Services
 
         public IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsById(string id)
         {
-            var hospitalId = GetHospitalIdByHospitalAdminId(id);
+            var hospitalId = GetHospitalByHospitalAdminId(id).Id;
             var hAdmins = GetHospitalAdminsById(hospitalId);
             return hAdmins;
         }
 
-        public int GetHospitalIdByHospitalAdminId(string id)
+        public Hospital GetHospitalByHospitalAdminId(string id)
         {
-            return hospitalAdminRepository.GetHospitalByHospitalAdminId(id).Id;
+            return hospitalAdminRepository.GetHospitalByHospitalAdminId(id);
         }
 
         public async Task BlockUserAsync(string id)
@@ -109,6 +109,20 @@ namespace TreatLines.BLL.Services
         {
             int docCount = doctorRepository.GetAllAsync().Result.Count();
             return docCount;
+        }
+
+        public async Task<HospitalAdminInfoDTO> GetHospitalAdminProfileInfoAsync(string id)
+        {
+            var user = await userRepository.FindByIdAsync(id);
+            string hospName = GetHospitalByHospitalAdminId(id).Name;
+            return new HospitalAdminInfoDTO
+            {
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                HospitalName = hospName
+            };
         }
     }
 }

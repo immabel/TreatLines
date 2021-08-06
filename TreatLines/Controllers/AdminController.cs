@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TreatLines.BLL.DTOs.Admin;
 using TreatLines.BLL.Interfaces;
 using TreatLines.Models.ProfileInfo;
 using TreatLines.Models.Tables;
@@ -18,7 +19,7 @@ namespace TreatLines.Controllers
 
         private readonly IHospitalService hospitalService;
 
-        private readonly IBackUpService backUpService;
+        private readonly IAdminService adminService;
 
         private readonly IMapper mapper;
 
@@ -28,32 +29,34 @@ namespace TreatLines.Controllers
             ILogger<AdminController> logger,
             IHospitalRegistrationRequestsService hospitalRegistrationRequestsService,
             IHospitalService hospitalService,
-            IBackUpService backUpService,
+            IAdminService adminService,
             IMapper mapper
             )
         {
             this.hospitalRegistrationRequestsService = hospitalRegistrationRequestsService;
             this.mapper = mapper;
-            this.backUpService = backUpService;
+            this.adminService = adminService;
             this.hospitalService = hospitalService;
             _logger = logger;
         }
 
-        [Authorize(Roles = "Admin")]
-        public IActionResult Index()
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Index()
         {
-            var profileInfo = new AdminProfileInfoModel();
-            return View(profileInfo);
+            string adminId = "00CA41A9-C962-4230-937E-D5F54772C062";
+            var profileInfo = await adminService.GetAdminProfileInfoAsync(adminId);
+            var result = mapper.Map<AdminProfileInfoModel>(profileInfo);
+            return View(result);
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult BackUp()
         {
-            backUpService.CreateDbBackup();
-            return View();
+            adminService.CreateDbBackup();
+            return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Requests()
         {
             var requests = await hospitalRegistrationRequestsService.GetAllRequestsAsync();
@@ -61,7 +64,7 @@ namespace TreatLines.Controllers
             return View(result);
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Hospitals()
         {
             var hospitals = await hospitalService.GetHospitalsAsync();
@@ -69,8 +72,7 @@ namespace TreatLines.Controllers
             return View(result);
         }
 
-
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult HospitalAdmins(int? id, string hospName)
         {
             ViewData["HospitalName"] = hospName;
@@ -79,18 +81,28 @@ namespace TreatLines.Controllers
             return View(result);
         }
 
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> ApproveRequestAsync(int id)
+        //[Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> ApproveRequest(int id)
         {
             await hospitalRegistrationRequestsService.ApproveRequestAsync(id);
-            return Ok();
+            return RedirectToAction("Requests");
         }
 
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> RejectRequestAsync(int id)
+        //[Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> RejectRequest(int? id)
         {
-            await hospitalRegistrationRequestsService.RejectRequestAsync(id);
-            return Ok();
+            await hospitalRegistrationRequestsService.RejectRequestAsync((int)id);
+            return RedirectToAction("Requests");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAdminInfo(AdminProfileInfoModel model)
+        {
+            var admin = mapper.Map<AdminProfileInfoDTO>(model);
+            await adminService.UpdateUserInfoAsync(admin);
+            return RedirectToAction("Index");
         }
     }
 }

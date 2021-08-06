@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TreatLines.BLL.DTOs.Admin;
 using TreatLines.BLL.DTOs.Auth;
 using TreatLines.BLL.DTOs.Doctor;
 using TreatLines.BLL.DTOs.Hospital;
@@ -27,15 +28,25 @@ namespace TreatLines.Configuration
             CreateMap<RequestToCreateHospitalModel, RequestToCreateHospitalDTO>();
             CreateMap<RequestToCreateHospitalDTO, RequestToCreateHospital>();
             CreateMap<RequestToCreateHospital, RequestToCreateHospitalDTO>();
+            CreateMap<RequestToCreateHospital, RequestToCreateHospitalViewDTO>()
+                .ForMember(
+                dest => dest.CreationDate,
+                opt => opt.MapFrom(src => src.HospitalCreationDate));
             CreateMap<RequestToCreateHospitalViewDTO, RequestInfoToCreateHospitalModel>()
                 .ForMember(
                 dest => dest.DateOfRequestCreation,
-                opt => opt.MapFrom(src => src.DateOfRequestCreation.ToString("g")));
+                opt => opt.MapFrom(src => src.DateOfRequestCreation.ToString("g")))
+                .ForMember(
+                dest => dest.CreationDate,
+                opt => opt.MapFrom(src => src.CreationDate.ToString("d")));
 
+            CreateMap<RequestToCreatePatient, RequestToCreatePatientViewDTO>();
             CreateMap<RequestToCreatePatientViewDTO, RequestInfoToCreatePatientModel>()
                 .ForMember(
                 dest => dest.DateOfRequestCreation,
                 opt => opt.MapFrom(src => src.DateOfRequestCreation.ToString("g")));
+            CreateMap<RequestToCreatePatientModel, RequestToCreatePatientDTO>();
+            CreateMap<RequestToCreatePatientDTO, RequestToCreatePatient>();
 
             CreateMap<Hospital, HospitalInfoDTO>()
                 .ForMember(
@@ -50,14 +61,24 @@ namespace TreatLines.Configuration
             CreateMap<HospitalInfoDTO, HospitalModel>();
 
             CreateMap<HospitalInfoDTO, HospitalProfileInfoModel>().ReverseMap();
+            CreateMap<AdminProfileInfoDTO, AdminProfileInfoModel>();//.ReverseMap();
+            CreateMap<AdminProfileInfoModel, AdminProfileInfoDTO>();
 
             CreateMap<HospitalAdminInfoDTO, HospitalAdminContactInfoModel>();
 
-            CreateMap<HospitalAdminInfoDTO, HospitalAdminModel>();
+            CreateMap<HospitalAdminInfoDTO, HospitalAdminModel>()
+                .ForMember(
+                dest => dest.FullName,
+                opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName));
+            CreateMap<HospitalAdminInfoDTO, HospitalAdminProfileInfoModel>();
 
-            CreateMap<DoctorInfoDTO, DoctorModel>();
+            CreateMap<DoctorInfoDTO, DoctorModel>()
+                .ForMember(
+                dest => dest.FullName,
+                opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName));
 
             CreateMap<PatientInfoDTO, PatientModel>();
+
         }
     }
 }

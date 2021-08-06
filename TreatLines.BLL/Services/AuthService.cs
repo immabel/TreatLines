@@ -16,7 +16,7 @@ namespace TreatLines.BLL.Services
 {
     public sealed class AuthService : IAuthService
     {
-        private readonly UserRepository usersRepository;
+        private readonly UserRepository userRepository;
 
         private readonly IHospitalAdminRepository hospitalAdminRepository;
 
@@ -31,7 +31,7 @@ namespace TreatLines.BLL.Services
         private readonly IJwtAuthenticationManager jwtAuthenticationManager;
 
         public AuthService(
-            UserRepository usersRepository,
+            UserRepository userRepository,
             IHospitalAdminRepository hospitalAdminRepository,
             IDoctorRepository doctorRepository,
             IPatientRepository patientRepository,
@@ -39,7 +39,7 @@ namespace TreatLines.BLL.Services
             IRepository<Hospital> hospitalRepository,
             IJwtAuthenticationManager jwtAuthenticationManager)
         {
-            this.usersRepository = usersRepository;
+            this.userRepository = userRepository;
             this.hospitalRepository = hospitalRepository;
             this.hospitalAdminRepository = hospitalAdminRepository;
             this.doctorRepository = doctorRepository;
@@ -50,7 +50,7 @@ namespace TreatLines.BLL.Services
 
         public async Task<LoginResponseDTO> LoginAsync(LoginRequestDTO request)
         {
-            User user = await usersRepository.FindByEmailAsync(request.Email);
+            User user = await userRepository.FindByEmailAsync(request.Email);
             if (user == null)
             {
                 throw new BadRequestException("User does not exist!");
@@ -58,7 +58,7 @@ namespace TreatLines.BLL.Services
             if (user.Blocked)
                 return null;
 
-            bool passwordIsCorrect = await usersRepository.CheckPasswordAsync(user, request.Password);
+            bool passwordIsCorrect = await userRepository.CheckPasswordAsync(user, request.Password);
             if (!passwordIsCorrect)
             {
                 throw new ForbiddenException("Password is incorrect!");
@@ -98,7 +98,7 @@ namespace TreatLines.BLL.Services
             request.Password = "Qwerty12345";
 
             User hospitalAdminUser = await RegisterAsync(request);
-            await usersRepository.AddUserToRoleAsync(hospitalAdminUser, Rolename.HOSPITAL_ADMIN);
+            await userRepository.AddUserToRoleAsync(hospitalAdminUser, Rolename.HOSPITAL_ADMIN);
             await hospitalAdminRepository.AddAsync(new HospitalAdmin
             {
                 UserId = hospitalAdminUser.Id,
@@ -117,8 +117,10 @@ namespace TreatLines.BLL.Services
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
+                RegisterDateTime = DateTimeOffset.Now
             };
-            var registerResult = await usersRepository.TryCreateAsync(
+            var registerResult = await userRepository.TryCreateAsync(
                 user: user,
                 password: request.Password);
 
@@ -132,7 +134,7 @@ namespace TreatLines.BLL.Services
 
         private async Task<Claim[]> GetAuthTokenClaimsForUserAsync(User user)
         {
-            IList<string> userRoles = await usersRepository.GetRolesAsync(user);
+            IList<string> userRoles = await userRepository.GetRolesAsync(user);
             var userClaims = new[]
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
@@ -171,12 +173,12 @@ namespace TreatLines.BLL.Services
             request.Password = "Qwerty12345";
 
             User doctor = await RegisterAsync(request);
-            await usersRepository.AddUserToRoleAsync(doctor, Rolename.DOCTOR);
+            await userRepository.AddUserToRoleAsync(doctor, Rolename.DOCTOR);
             await doctorRepository.AddAsync(new Doctor
             {
                 UserId = doctor.Id,
                 Position = request.Position,
-                OnHoliday = request.OnHoliday,
+                OnHoliday = false,
                 HospitalId = request.HospitalId,
                 ScheduleId = schedule.Id
             });
@@ -190,7 +192,7 @@ namespace TreatLines.BLL.Services
             request.Password = "Qwerty12345";
 
             User patient = await RegisterAsync(request);
-            await usersRepository.AddUserToRoleAsync(patient, Rolename.PATIENT);
+            await userRepository.AddUserToRoleAsync(patient, Rolename.PATIENT);
             await patientRepository.AddAsync(new Patient
             {
                 UserId = patient.Id,

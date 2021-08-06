@@ -98,9 +98,9 @@ namespace TreatLines.BLL.Services
             await requestsPatientRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<RequestToCreatePatientViewDTO>> GetAllRequestsAsync()
+        public async Task<IEnumerable<RequestToCreatePatientViewDTO>> GetAllRequestsAsync(int id)
         {
-            IEnumerable<RequestToCreatePatient> requests = await requestsPatientRepository.Find(_ => true);
+            IEnumerable<RequestToCreatePatient> requests = await requestsPatientRepository.Find(r => r.HospitalId == id);
             return mapper.Map<IEnumerable<RequestToCreatePatientViewDTO>>(requests);
         }
     }

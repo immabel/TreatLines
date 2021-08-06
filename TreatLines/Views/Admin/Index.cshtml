@@ -7,11 +7,15 @@
                 <h4 class="mt-2 mb-4">User Profile</h4>
             </div>
             <div class="col-3 offset-3">
-                <button class="btn btn-secondary"
-                        asp-controller="Admin"
-                        asp-action="BackUp">
+                <button type="button"
+                        class="btn btn-secondary"                   
+                        onclick="location.href='@Url.Action("BackUp", "Admin")'">
                     Make db backup
                 </button>
+                @*<input type="button"
+                       class="btn btn-secondary"
+                       value="Make db backup"
+                       onclick="location.href='@Url.Action("BackUp", "Admin")'"/>*@
             </div>
         </div>
         <form asp-controller="Admin" asp-action="UpdateAdminInfo" method="post">
@@ -28,7 +32,7 @@
                 <div class="col-3">
                     <input class="form-control p-0" asp-for="LastName">
                 </div>
-            </div>@*class="form-control-plaintext p-0"*@
+            </div>
             <div class="form-group row my-2">
                 <div class="col-2">
                     <label>Email: </label>

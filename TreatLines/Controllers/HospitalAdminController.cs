@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TreatLines.BLL.DTOs.Patient;
 using TreatLines.BLL.Interfaces;
 using TreatLines.Models.Auth;
+using TreatLines.Models.ProfileInfo;
 using TreatLines.Models.Tables;
 
 namespace TreatLines.Controllers
@@ -46,40 +47,47 @@ namespace TreatLines.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            string hospAdminId = "BFCC8BAB-AD20-4F70-9CD9-D2003FAE6F09";
+            var hospAdm = await hospitalService.GetHospitalAdminProfileInfoAsync(hospAdminId);
+            var result = mapper.Map<HospitalAdminProfileInfoModel>(hospAdm);
+            return View(result);
         }
 
         public async Task<IActionResult> Requests()
         {
-            var requests = await patientRegistrationRequestsService.GetAllRequestsAsync();
+            int hospId = 1;
+            var requests = await patientRegistrationRequestsService.GetAllRequestsAsync(hospId);
             var result = mapper.Map<IEnumerable<RequestInfoToCreatePatientModel>>(requests);
             return View(result);
         }
 
         public IActionResult Doctors()
         {
-            var doctors = doctorService.GetDoctorsByHospitalAdminId("");
+            string hospId = "BFCC8BAB-AD20-4F70-9CD9-D2003FAE6F09";
+            var doctors = doctorService.GetDoctorsByHospitalAdminId(hospId);
             var result = mapper.Map<IEnumerable<DoctorModel>>(doctors);
-            return View();
+            return View(result);
         }
 
         public IActionResult Patients()
         {
-            var patients = patientService.GetPatientsByHospitalAdminId("");
+            string hospId = "BFCC8BAB-AD20-4F70-9CD9-D2003FAE6F09";
+            var patients = patientService.GetPatientsByHospitalAdminId(hospId);
             var result = mapper.Map<IEnumerable<PatientModel>>(patients);
-            return View();
+            return View(result);
         }
 
         public IActionResult MakeAppointment()
         {
-
             return View();
         }
 
-        public IActionResult DoctorProfile(string id)
+        public IActionResult DoctorProfile(string email)
         {
+            var docInfo = doctorService.GetDoctorInfoByEmailAsync(email);
+            var result = mapper.Map<DoctorProfileInfoModel>(docInfo);
             return View();
         }
 

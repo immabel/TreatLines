@@ -4,13 +4,17 @@
 <section class="my-5">
     <div class="container border">
         <div class="col-lg-7 px-5 pt-3">
-            <h5 class="mt-2 mb-4">Registration as patient</h5>
+            <h4 class="mt-2 mb-4">Registration as patient</h4>
             <br />
             <p>Hospital name: @ViewData["HospitalName"]</p>
             <form asp-controller="User" asp-action="SendPatientRequest" method="post">
+                @if (Model.HospitalId != 0)
+                {
+                    <input type="hidden" asp-for="HospitalId" />
+                }
                 <div class="form-group row my-2">
                     <div class="col-4">
-                        <label asp-for="FirstName"></label>
+                        <label asp-for="FirstName">Name: </label>
                     </div>
                     <div class="col-6">
                         <input asp-for="FirstName" class="form-control" />
@@ -19,7 +23,7 @@
                 </div>
                 <div class="form-group row my-2">
                     <div class="col-4">
-                        <label asp-for="LastName"></label>
+                        <label asp-for="LastName">Surname: </label>
                     </div>
                     <div class="col-6">
                         <input asp-for="LastName" class="form-control" />
@@ -28,7 +32,7 @@
                 </div>
                 <div class="form-group row my-2">
                     <div class="col-4">
-                        <label asp-for="Email"></label>
+                        <label asp-for="Email">Email: </label>
                     </div>
                     <div class="col-6">
                         <input asp-for="Email" class="form-control" />
@@ -37,12 +41,32 @@
                 </div>
                 <div class="form-group row my-2">
                     <div class="col-4">
-                        <label asp-for="PhoneNumber"></label>
+                        <label asp-for="PhoneNumber">Phone number: </label>
                     </div>
                     <div class="col-6">
                         <input asp-for="PhoneNumber" class="form-control" />
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
+                </div>
+                <div class="form-group row my-2">
+                    <label for="bloodtype" class="form-label mt-4">Blood type</label>
+                    <select class="form-select" id="bloodtype" asp-for="BloodType">
+                        <option>O+</option>
+                        <option>O-</option>
+                        <option>A+</option>
+                        <option>A-</option>
+                        <option>B+</option>
+                        <option>B-</option>
+                        <option>AB-</option>
+                        <option>AB+</option>
+                    </select>
+                </div>
+                <div class="form-group row my-2">
+                    <label for="sex" class="form-label mt-4">Sex</label>
+                    <select class="form-select" id="sex" asp-for="Sex">
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
                 </div>
                 <div class="form-group row my-1">
                     <div class="col-4">

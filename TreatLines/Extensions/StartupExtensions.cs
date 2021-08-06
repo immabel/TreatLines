@@ -56,7 +56,7 @@ namespace TreatLines.Extensions
             services.AddTransient<IDoctorService, DoctorService>();
             services.AddTransient<IPatientService, PatientService>();
             services.AddTransient<IScheduleService, ScheduleService>();
-            services.AddTransient<IBackUpService, BackUpService>();
+            services.AddTransient<IAdminService, AdminService>();
             services.AddScoped<IHospitalRegistrationRequestsService, HospitalRegistrationRequestsService>();
             services.AddScoped<IPatientRegistrationRequestsService, PatientRegistrationRequestsService>();
 
