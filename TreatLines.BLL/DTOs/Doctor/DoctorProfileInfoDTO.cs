@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TreatLines.BLL.DTOs.Schedule;
 
 namespace TreatLines.BLL.DTOs.Doctor
 {
     public class DoctorProfileInfoDTO : DoctorInfoDTO
     {
-        public string StartTime { get; set; }
-        public string EndTime { get; set; }
-        public string WorkDays { get; set; }
+        public decimal Price { get; set; }
+        public string Experience { get; set; }
+        public string Education { get; set; }
+        public string BirthDate { get; set; }
+        public string HospitalName { get; set; }
+        public ScheduleInfoDoctorDTO Schedule { get; set; }
     }
 }

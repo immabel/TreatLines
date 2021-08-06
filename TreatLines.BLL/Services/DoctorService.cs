@@ -63,23 +63,38 @@ namespace TreatLines.BLL.Services
             this.mapper = mapper;
         }
 
-        public async Task<DoctorInfoDTO> GetDoctorInfoAsync(string id)
+        public async Task<DoctorProfileInfoDTO> GetDoctorInfoAsync(string id)
         {
             var doctor = await doctorRepository.GetByIdAsync(id);
             var hospital = await hospitalRepository.GetByIdAsync(doctor.HospitalId);
-            return new DoctorInfoDTO
+            var schedule = scheduleRepository.GetByIdAsync((int)doctor.ScheduleId);
+
+            var scheduleTemp = mapper.Map<ScheduleInfoDoctorDTO>(schedule);
+            var regDate = doctor.User.RegisterDateTime.ToString("d");
+            var birthDate = doctor.DateOfBirth.ToString("g");
+
+            return new DoctorProfileInfoDTO
             {
+                Id = doctor.UserId,
                 Email = doctor.User.Email,
                 FirstName = doctor.User.FirstName,
                 LastName = doctor.User.LastName,
-                //HospitalName = hospital.Name,
                 Position = doctor.Position,
                 OnHoliday = doctor.OnHoliday ? 1 : 0,
-                Blocked = doctor.User.Blocked ? 1 : 0
+                Blocked = doctor.User.Blocked ? 1 : 0,
+                Schedule = scheduleTemp,
+                Education = doctor.Education,
+                Experience = doctor.Experience,
+                PhoneNumber = doctor.User.PhoneNumber,
+                RegistrationDate = regDate,
+                Price = doctor.Price,
+                HospitalName = hospital.Name,
+                BirthDate = birthDate,
+                Sex = doctor.Sex
             };
         }
 
-        public async Task<DoctorInfoDTO> GetDoctorInfoByEmailAsync(string email)
+        public async Task<DoctorProfileInfoDTO> GetDoctorInfoByEmailAsync(string email)
         {
             var doctor = (await doctorRepository
                 .Find(doc => doc.User.Email.Equals(email))).First();
@@ -122,7 +137,8 @@ namespace TreatLines.BLL.Services
                     //HospitalName = hospital.Name,
                     Position = doc.Position,
                     OnHoliday = doc.OnHoliday ? 1 : 0,
-                    Blocked = doc.User.Blocked ? 1 : 0
+                    Blocked = doc.User.Blocked ? 1 : 0,
+                    Sex = doc.Sex
                 });
             return doctors;
         }
@@ -134,12 +150,12 @@ namespace TreatLines.BLL.Services
             return doctors;
         }
 
-        public async Task<ScheduleInfoDTO> GetScheduleByEmailAsync(string email)
+        public async Task<ScheduleInfoDoctorDTO> GetScheduleByEmailAsync(string email)
         {
             var doctor = await doctorRepository.GetByEmailAsync(email);
             var schedule = await scheduleRepository.Find(
                 sched => sched.Id == doctor.ScheduleId);
-            return mapper.Map<ScheduleInfoDTO>(schedule.First());
+            return mapper.Map<ScheduleInfoDoctorDTO>(schedule.First());
         }
 
         public async Task AddAppointment(AppointmentCreationDTO appointmentDto)
@@ -343,6 +359,12 @@ namespace TreatLines.BLL.Services
                 result = result.Skip(1);
 
             return result;
+        }
+
+        public Task ChangeDoctorsSchedule(ScheduleInfoDoctorDTO infoDTO)
+        {
+            
+            throw new NotImplementedException();
         }
     }
 }

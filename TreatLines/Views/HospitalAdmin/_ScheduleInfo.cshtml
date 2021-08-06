@@ -7,6 +7,10 @@
                 <h5 class="mt-2 mb-4">Schedule</h5>
             </div>
         </div>
+        @if (Model.DoctorId != null)
+        {
+            <input type="hidden" asp-for="DoctorId" />
+        }
         <div class="form-group row my-2">
             <div class="col-2">
                 <label>Start time: </label>
@@ -26,7 +30,12 @@
                 <label>Work days: </label>
             </div>
             <div class="col-6">
-                <input class="form-control p-0" asp-for="WorkDays">
+                <select id="workDays" multiple="multiple">
+                    @foreach (var item in Model.WorkDays)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </select>
             </div>
         </div>
         <div class="form-group col-4 my-1">
@@ -34,3 +43,11 @@
         </div>
     </div>
 </form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#workDays").multiselect({
+            includeSelectAllOptions: true
+        });
+    });
+</script>

@@ -17,6 +17,8 @@ namespace TreatLines.DAL.Configurations
             builder.Property(u => u.Education);
             builder.Property(u => u.Experience);
             builder.Property(u => u.Price).HasColumnType("money");
+            builder.Property(p => p.Sex).HasMaxLength(30);
+            builder.Property(p => p.DateOfBirth);
             builder
                 .HasOne(h => h.User)
                 .WithOne();

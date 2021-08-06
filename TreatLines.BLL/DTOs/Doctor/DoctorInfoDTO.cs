@@ -15,5 +15,6 @@ namespace TreatLines.BLL.DTOs.Doctor
         public int OnHoliday { get; set; }
         public string RegistrationDate { get; set; }
         public int Blocked { get; set; }
+        public string Sex { get; set; }
     }
 }

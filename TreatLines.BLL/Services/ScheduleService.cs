@@ -24,16 +24,16 @@ namespace TreatLines.BLL.Services
             this.mapper = mapper;
         }
 
-        public async Task<ScheduleInfoDTO> GetScheduleByIdAsync(int scheduleId)
+        public async Task<ScheduleInfoDoctorDTO> GetScheduleByIdAsync(int scheduleId)
         {
             var schedule = await scheduleRepository.GetByIdAsync(scheduleId);
-            return mapper.Map<ScheduleInfoDTO>(schedule);
+            return mapper.Map<ScheduleInfoDoctorDTO>(schedule);
         }
 
-        public async Task<IEnumerable<ScheduleInfoDTO>> GetSchedules(int hospitalId)
+        public async Task<IEnumerable<ScheduleInfoDoctorDTO>> GetSchedules(int hospitalId)
         {
             var schedules = await scheduleRepository.Find(sched => sched.Doctors.Exists(doc => doc.HospitalId == hospitalId));
-            return mapper.Map<IEnumerable<ScheduleInfoDTO>>(schedules);
+            return mapper.Map<IEnumerable<ScheduleInfoDoctorDTO>>(schedules);
         }
 
         public async Task<int> AddScheduleAsync(ScheduleDTO scheduleDto)
@@ -44,7 +44,7 @@ namespace TreatLines.BLL.Services
             return schedule.Id;
         }
 
-        public async Task UpdateSchedule(ScheduleInfoDTO scheduleDto)
+        public async Task UpdateSchedule(ScheduleInfoDoctorDTO scheduleDto)
         {
             Schedule schedule = await scheduleRepository.GetByIdAsync(scheduleDto.Id);
             schedule.StartTime = DateTimeOffset.Parse(scheduleDto.StartTime);

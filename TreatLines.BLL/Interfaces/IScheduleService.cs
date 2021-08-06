@@ -11,6 +11,6 @@ namespace TreatLines.BLL.Interfaces
         Task<ScheduleInfoDTO> GetScheduleByIdAsync(int scheduleId);
         Task<IEnumerable<ScheduleInfoDTO>> GetSchedules(int hospitalId);
         Task<int> AddScheduleAsync(ScheduleDTO scheduleDto);
-        Task UpdateSchedule(ScheduleInfoDTO scheduleDto);
+        Task UpdateSchedule(ScheduleInfoDoctorDTO scheduleDto);
     }
 }

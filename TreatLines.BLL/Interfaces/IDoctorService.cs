@@ -12,9 +12,9 @@ namespace TreatLines.BLL.Interfaces
     public interface IDoctorService
     {
         IEnumerable<PatientsInfoDTO> GetDoctorPatientsByEmailAsync(string email);
-        Task<DoctorInfoDTO> GetDoctorInfoAsync(string id);
-        Task<DoctorInfoDTO> GetDoctorInfoByEmailAsync(string email);
-        Task<ScheduleInfoDTO> GetScheduleByEmailAsync(string email);
+        Task<DoctorProfileInfoDTO> GetDoctorInfoAsync(string id);
+        Task<DoctorProfileInfoDTO> GetDoctorInfoByEmailAsync(string email);
+        Task<ScheduleInfoDoctorDTO> GetScheduleByEmailAsync(string email);
         IEnumerable<DoctorInfoDTO> GetDoctorsByHospital(Hospital hospital);
         IEnumerable<string> GetDoctorsEmailsByHospitalId(int id);
         IEnumerable<DoctorInfoDTO> GetDoctorsByHospitalAdminId(string id);
@@ -28,5 +28,6 @@ namespace TreatLines.BLL.Interfaces
         Task UpsertPrescriptionByAppointmentId(PrescriptionDTO prescriptionDTO);
         IEnumerable<string> GetPatientsEmailsByDoctorId(string id);
         Task<IEnumerable<FreeDateTimesDTO>> GetFreeDateTimesByDoctorEmail(string email);
+        Task ChangeDoctorsSchedule(ScheduleInfoDoctorDTO infoDTO);
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TreatLines.DAL;
 
 namespace TreatLines.DAL.Migrations
 {
     [DbContext(typeof(TLinesDbContext))]
-    partial class TLinesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210806171908_PatientBirthdateMigration")]
+    partial class PatientBirthdateMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,9 +183,6 @@ namespace TreatLines.DAL.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTimeOffset>("DateOfBirth")
-                        .HasColumnType("datetimeoffset");
-
                     b.Property<string>("Education")
                         .HasColumnType("nvarchar(max)");
 
@@ -205,10 +204,6 @@ namespace TreatLines.DAL.Migrations
 
                     b.Property<int?>("ScheduleId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Sex")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("UserId");
 
@@ -313,8 +308,8 @@ namespace TreatLines.DAL.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("BloodType")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTimeOffset>("DateOfBirth")
                         .HasColumnType("datetimeoffset");

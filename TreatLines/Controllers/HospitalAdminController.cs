@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TreatLines.BLL.DTOs.Patient;
 using TreatLines.BLL.Interfaces;
+using TreatLines.Models;
 using TreatLines.Models.Auth;
 using TreatLines.Models.ProfileInfo;
 using TreatLines.Models.Tables;
@@ -84,11 +85,12 @@ namespace TreatLines.Controllers
             return View();
         }
 
-        public IActionResult DoctorProfile(string email)
+        public async Task<IActionResult> DoctorProfile(string email)
         {
-            var docInfo = doctorService.GetDoctorInfoByEmailAsync(email);
+            var docInfo = await doctorService.GetDoctorInfoByEmailAsync(email);
             var result = mapper.Map<DoctorProfileInfoModel>(docInfo);
-            return View();
+            result.Schedule.DoctorId = docInfo.Id;
+            return View(result);
         }
 
         public IActionResult PatientProfile(string id)
@@ -127,6 +129,12 @@ namespace TreatLines.Controllers
         public IActionResult AddPatient(PatientRegistrationModel model)
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult ChangeSchedule(ScheduleInfoModel model)
+        {
+            return RedirectToAction("DoctorProfile");
         }
     }
 }

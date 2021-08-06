@@ -16,6 +16,8 @@ namespace TreatLines.DAL.Entities
         public bool OnHoliday { get; set; }
         public string Experience { get; set; }
         public string Education { get; set; }
+        public string Sex { get; set; }
+        public DateTimeOffset DateOfBirth { get; set; }
         public int? ScheduleId { get; set; }
         public Schedule Schedule { get; set; }
         public List<DoctorPatient> DoctorPatients { get; set; }

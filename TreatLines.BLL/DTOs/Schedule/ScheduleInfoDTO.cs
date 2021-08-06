@@ -9,6 +9,6 @@ namespace TreatLines.BLL.DTOs.Schedule
         public int Id { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }
-        public string WorkDays { get; set; }
+        public IEnumerable<string> WorkDays { get; set; }
     }
 }

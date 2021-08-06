@@ -11,6 +11,7 @@ using TreatLines.BLL.DTOs.HospitalAdmin;
 using TreatLines.BLL.DTOs.HospitalCreate;
 using TreatLines.BLL.DTOs.Patient;
 using TreatLines.BLL.DTOs.PatientCreate;
+using TreatLines.BLL.DTOs.Schedule;
 using TreatLines.DAL.Entities;
 using TreatLines.Models;
 using TreatLines.Models.ProfileInfo;
@@ -76,9 +77,11 @@ namespace TreatLines.Configuration
                 .ForMember(
                 dest => dest.FullName,
                 opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName));
+            CreateMap<DoctorProfileInfoDTO, DoctorProfileInfoModel>();
 
             CreateMap<PatientInfoDTO, PatientModel>();
 
+            CreateMap<ScheduleInfoModel, ScheduleInfoDoctorDTO>();
         }
     }
 }
