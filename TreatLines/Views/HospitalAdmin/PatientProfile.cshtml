@@ -11,7 +11,8 @@
                 <div class="col-3 offset-3">
                     <a class="btn btn-secondary nav-link"
                        asp-controller="HospitalAdmin"
-                       asp-action="MakeAppointment">
+                       asp-action="MakeAppointment"
+                       asp-route-patientEmail="@Model.Email">
                         Make appointment
                     </a>
                 </div>

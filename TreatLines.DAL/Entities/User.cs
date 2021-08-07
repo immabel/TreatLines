@@ -10,6 +10,6 @@ namespace TreatLines.DAL.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public bool Blocked { get; set; }
-        public DateTimeOffset RegisterDateTime { get; set; }
+        public DateTimeOffset RegistrationDate { get; set; }
     }
 }

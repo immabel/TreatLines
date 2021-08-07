@@ -11,7 +11,6 @@ namespace TreatLines.BLL.DTOs.Doctor
         public string Experience { get; set; }
         public string Education { get; set; }
         public string BirthDate { get; set; }
-        public string HospitalName { get; set; }
-        public ScheduleInfoDoctorDTO Schedule { get; set; }
+        public int ScheduleId { get; set; }
     }
 }

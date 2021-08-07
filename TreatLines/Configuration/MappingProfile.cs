@@ -72,6 +72,14 @@ namespace TreatLines.Configuration
                 dest => dest.FullName,
                 opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName));
             CreateMap<HospitalAdminInfoDTO, HospitalAdminProfileInfoModel>();
+            CreateMap<User, HospitalAdminInfoDTO>()
+                .ForMember(
+                dest => dest.RegistrationDate,
+                opt => opt.MapFrom(src => src.RegistrationDate.ToString("d")))
+                .ForMember(
+                dest => dest.Blocked,
+                opt => opt.MapFrom(src => src.Blocked ? 1 : 0))
+                .ReverseMap();
 
             CreateMap<DoctorInfoDTO, DoctorModel>()
                 .ForMember(
@@ -80,8 +88,20 @@ namespace TreatLines.Configuration
             CreateMap<DoctorProfileInfoDTO, DoctorProfileInfoModel>();
 
             CreateMap<PatientInfoDTO, PatientModel>();
+            CreateMap<Patient, PatientInfoDTO>()
+                .ForMember(
+                dest => dest.BirthDate,
+                opt => opt.MapFrom(src => src.DateOfBirth.ToString("d")))
+                .ReverseMap();
 
             CreateMap<ScheduleInfoModel, ScheduleInfoDoctorDTO>();
+            CreateMap<ScheduleDTO, Schedule>()
+                .ForMember(
+                dest => dest.StartTime,
+                opt => opt.MapFrom(src => DateTimeOffset.Parse(src.StartTime)))
+                .ForMember(
+                dest => dest.EndTime,
+                opt => opt.MapFrom(src => DateTimeOffset.Parse(src.EndTime)));
         }
     }
 }

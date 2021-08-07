@@ -8,6 +8,8 @@ using TreatLines.BLL.Interfaces;
 using TreatLines.DAL.Entities;
 using TreatLines.DAL.Interfaces;
 using TreatLines.DAL.Repositories;
+using TreatLines.BLL.DTOs.Doctor;
+using TreatLines.BLL.DTOs.Patient;
 
 namespace TreatLines.BLL.Services
 {
@@ -21,6 +23,8 @@ namespace TreatLines.BLL.Services
 
         private readonly IHospitalAdminRepository hospitalAdminRepository;
 
+        private readonly IPatientRepository patientRepository;
+
         private readonly IMapper mapper;
 
         public HospitalService(
@@ -28,12 +32,14 @@ namespace TreatLines.BLL.Services
             IRepository<Hospital> hospitalRepository,
             IDoctorRepository doctorRepository,
             IHospitalAdminRepository hospitalAdminRepository,
+            IPatientRepository patientRepository,
             IMapper mapper)
         {
             this.userRepository = userRepository;
             this.hospitalRepository = hospitalRepository;
             this.doctorRepository = doctorRepository;
             this.hospitalAdminRepository = hospitalAdminRepository;
+            this.patientRepository = patientRepository;
             this.mapper = mapper;
         }
 
@@ -43,16 +49,16 @@ namespace TreatLines.BLL.Services
             return mapper.Map<IEnumerable<HospitalInfoDTO>>(hospitals);
         }
 
-        public async Task<bool> DeleteHospitalByIdAsync(int hospitalId)
+        public async Task BlockHospitalByIdAsync(int hospitalId)
         {
             var hospital = await hospitalRepository.GetByIdAsync(hospitalId);
             if (hospital == null)
             {
-                return false;
+                return;
             }
-            hospitalRepository.Remove(hospital);
+            hospital.Blocked = hospital.Blocked ? false : true;
+            hospitalRepository.Update(hospital);
             await hospitalRepository.SaveChangesAsync();
-            return true;
         }
 
         public IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsById(int hospitalId)
@@ -76,14 +82,9 @@ namespace TreatLines.BLL.Services
 
         public IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsById(string id)
         {
-            var hospitalId = GetHospitalByHospitalAdminId(id).Id;
+            var hospitalId = hospitalAdminRepository.GetHospitalByHospitalAdminId(id).Id;
             var hAdmins = GetHospitalAdminsById(hospitalId);
             return hAdmins;
-        }
-
-        public Hospital GetHospitalByHospitalAdminId(string id)
-        {
-            return hospitalAdminRepository.GetHospitalByHospitalAdminId(id);
         }
 
         public async Task BlockUserAsync(string id)
@@ -91,12 +92,6 @@ namespace TreatLines.BLL.Services
             var user = await userRepository.FindByIdAsync(id);
             user.Blocked = user.Blocked ? false : true;
             await userRepository.UpdateAsync(user);
-        }
-
-        public async Task DeleteUserAsync(string email)
-        {
-            var user = await userRepository.FindByEmailAsync(email);
-            await userRepository.DeleteAsync(user);
         }
 
         public async Task<HospitalInfoDTO> GetHospitalInfoByIdAsync(int id)
@@ -114,7 +109,7 @@ namespace TreatLines.BLL.Services
         public async Task<HospitalAdminInfoDTO> GetHospitalAdminProfileInfoAsync(string id)
         {
             var user = await userRepository.FindByIdAsync(id);
-            string hospName = GetHospitalByHospitalAdminId(id).Name;
+            string hospName = hospitalAdminRepository.GetHospitalByHospitalAdminId(id).Name;
             return new HospitalAdminInfoDTO
             {
                 Email = user.Email,
@@ -123,6 +118,47 @@ namespace TreatLines.BLL.Services
                 LastName = user.LastName,
                 HospitalName = hospName
             };
+        }
+
+        public IEnumerable<DoctorInfoDTO> GetDoctorsByHospital(Hospital hospital)
+        {
+            var doctors = doctorRepository.GetDoctors(hospital.Id)
+                .Select(doc => new DoctorInfoDTO
+                {
+                    Email = doc.User.Email,
+                    FirstName = doc.User.FirstName,
+                    LastName = doc.User.LastName,
+                    //HospitalName = hospital.Name,
+                    Position = doc.Position,
+                    OnHoliday = doc.OnHoliday,
+                    Blocked = doc.User.Blocked ? 1 : 0,
+                    Sex = doc.Sex
+                });
+            return doctors;
+        }
+
+        public IEnumerable<DoctorInfoDTO> GetDoctorsByHospitalAdminId(string id)
+        {
+            var hospital = hospitalAdminRepository.GetHospitalByHospitalAdminId(id);
+            var doctors = GetDoctorsByHospital(hospital);
+            return doctors;
+        }
+
+        public IEnumerable<PatientInfoDTO> GetPatientsByHospitalAdminId(string id)
+        {
+            var hospitalId = hospitalAdminRepository.GetHospitalByHospitalAdminId(id).Id;
+            var patients = patientRepository.GetAllWithUserAsync()
+                .Result
+                .Where(p => p.HospitalId == hospitalId)
+                .Select(p => new PatientInfoDTO
+                {
+                    Id = p.UserId,
+                    FirstName = p.User.FirstName,
+                    LastName = p.User.LastName,
+                    Email = p.User.Email,
+                    Blocked = p.User.Blocked ? 1 : 0
+                });
+            return patients;
         }
     }
 }

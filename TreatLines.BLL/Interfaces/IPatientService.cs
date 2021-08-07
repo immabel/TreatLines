@@ -11,14 +11,15 @@ namespace TreatLines.BLL.Interfaces
 {
     public interface IPatientService
     {
-        //IEnumerable<DoctorInfoDTO> GetPatientDoctorsAsync(string email);
         Task<PatientInfoDTO> GetPatientInfoAsync(string id);
-        //Task<PatientInfoDTO> GetPatientInfoByEmailAsync(string email);
+        Task<PatientInfoDTO> GetPatientInfoByEmailAsync(string email);
         IEnumerable<PastAppointmentsPatientInfoDTO> GetPastAppointmentsByPatientId(string id);
         IEnumerable<AppointmentsPatientFutureInfoDTO> GetFutureAppointmentsByPatientId(string id);
         //IEnumerable<PrescriptionInfoDTO> GetPrescriptionByPatientId(string id);
-        //IEnumerable<PrescriptionInfoDTO> GetPrescriptionByPatientEmail(string email);
-        IEnumerable<PatientsInfoDTO> GetPatientsByHospitalAdminId(string id);
-        Task UpdatePatient(PatientInfoDTO patient);
+        PrescriptionInfoDTO GetLatestPrescriptionByPatientEmail(string email);
+        Task UpdatePatientAsync(PatientInfoDTO patient);
+        Task AddPrescriptionToAppointmentAsync(PrescriptionDTO prescriptionDto);
+        Task UpsertPrescriptionByAppointmentIdAsync(PrescriptionDTO prescriptionDTO);
+        IEnumerable<string> GetPatientsEmailsByHospitalId(int id);
     }
 }

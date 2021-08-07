@@ -118,7 +118,7 @@ namespace TreatLines.BLL.Services
                 LastName = request.LastName,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
-                RegisterDateTime = DateTimeOffset.Now
+                RegistrationDate = DateTimeOffset.Now
             };
             var registerResult = await userRepository.TryCreateAsync(
                 user: user,

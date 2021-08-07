@@ -19,38 +19,30 @@ namespace TreatLines.BLL.Services
     {
         private readonly UserRepository userRepository;
 
-        private readonly IDoctorRepository doctorRepository;
-
         private readonly IDoctorPatientRepository doctorPatientRepository;
-
-        private readonly IHospitalAdminRepository hospitalAdminRepository;
 
         private readonly IPatientRepository patientRepository;
 
-        private readonly IRepository<Hospital> hospitalRepository;
-
         private readonly IRepository<Prescription> prescriptionRepository;
+
+        private readonly IRepository<Appointment> appointmentRepository;
 
         private readonly IMapper mapper;
 
         public PatientService(
             UserRepository userRepository,
-            IDoctorRepository doctorRepository,
             IDoctorPatientRepository doctorPatientRepository,
-            IHospitalAdminRepository hospitalAdminRepository,
             IPatientRepository patientRepository,
-            IRepository<Hospital> hospitalRepository,
             IRepository<Prescription> prescriptionRepository,
+            IRepository<Appointment> appointmentRepository,
             IMapper mapper
             )
         {
             this.userRepository = userRepository;
-            this.doctorRepository = doctorRepository;
             this.doctorPatientRepository = doctorPatientRepository;
-            this.hospitalAdminRepository = hospitalAdminRepository;
             this.patientRepository = patientRepository;
-            this.hospitalRepository = hospitalRepository;
             this.prescriptionRepository = prescriptionRepository;
+            this.appointmentRepository = appointmentRepository;
             this.mapper = mapper;
         }
 
@@ -97,41 +89,13 @@ namespace TreatLines.BLL.Services
 
         public async Task<PatientInfoDTO> GetPatientInfoAsync(string id)
         {
-            TimeSpan ts = new TimeSpan(0, -30, 0);
             var patient = await patientRepository.GetByIdAsync(id);
             PatientInfoDTO patientInfo = mapper.Map<PatientInfoDTO>(patient);
-            //patientInfo.HospitalName = hospitalRepository.GetByIdAsync(patient.HospitalId).Result.Name;
-            var appoints = doctorPatientRepository.GetAppointmentsByPatientId(id)
-                .OrderByDescending(dp => dp.Appointment.DateTimeAppointment);
-            if (appoints.First().Appointment.PrescriptionId == null)
-                appoints = appoints.SkipWhile(dp => dp.Appointment.DateTimeAppointment.Subtract(DateTimeOffset.Now).CompareTo(ts) > 0)
-                    .OrderBy(dp => dp.Appointment.DateTimeAppointment);//SkipLast(1).OrderBy(dp => dp.Appointment.DateTimeAppointment);
-            if (appoints.Count() != 0 && appoints.Last().Appointment.PrescriptionId != null)
-            {
-                var prescriptionId = appoints.Last().Appointment.PrescriptionId;
-                patientInfo.Prescription = prescriptionRepository.GetByIdAsync((int)prescriptionId).Result.Description;
-            }
+            //patientInfo.HospitalName = hospitalRepository.GetByIdAsync(patient.HospitalId).Result.Name;            
             return patientInfo;
         }
 
-        public IEnumerable<PatientsInfoDTO> GetPatientsByHospitalAdminId(string id)
-        {
-            var hospitalId = hospitalAdminRepository.GetHospitalByHospitalAdminId(id).Id;
-            var patients = patientRepository.GetAllWithUserAsync()
-                .Result
-                .Where(p => p.HospitalId == hospitalId)
-                .Select(p => new PatientsInfoDTO
-                {
-                    Id = p.UserId,
-                    FirstName = p.User.FirstName,
-                    LastName = p.User.LastName,
-                    Email = p.User.Email,
-                    Blocked = p.User.Blocked ? 1 : 0
-                });
-            return patients;
-        }
-
-        public async Task UpdatePatient(PatientInfoDTO patient)
+        public async Task UpdatePatientAsync(PatientInfoDTO patient)
         {
             User user = await userRepository.FindByEmailAsync(patient.Email);
             user.FirstName = patient.FirstName;
@@ -143,6 +107,87 @@ namespace TreatLines.BLL.Services
             patientTemp.Sex = patient.Sex;
             patientRepository.Update(patientTemp);
             await patientRepository.SaveChangesAsync();
+        }
+
+        public async Task AddPrescriptionToAppointmentAsync(PrescriptionDTO prescriptionDto)
+        {
+            Appointment appointment = await appointmentRepository.GetByIdAsync(prescriptionDto.AppointmentId);
+            Prescription prescription = mapper.Map<Prescription>(prescriptionDto);
+
+            await prescriptionRepository.AddAsync(prescription);
+            await prescriptionRepository.SaveChangesAsync();
+
+            /*int prId = prescriptionRepository
+                .GetAllAsync()
+                .Result
+                .OrderByDescending(pr => pr.Id)
+                .FirstOrDefault()
+                .Id;*/
+            appointment.PrescriptionId = prescription.Id;
+
+            appointmentRepository.Update(appointment);
+            await appointmentRepository.SaveChangesAsync();
+        }
+
+        public async Task UpsertPrescriptionByAppointmentIdAsync(PrescriptionDTO prescriptionDTO)
+        {
+            var appointment = await appointmentRepository.GetByIdAsync(prescriptionDTO.AppointmentId);
+            if (appointment.PrescriptionId != null)
+            {
+                Prescription prescription = await prescriptionRepository.GetByIdAsync((int)appointment.PrescriptionId);
+                prescription.Description = prescriptionDTO.Description;
+                prescriptionRepository.Update(prescription);
+                await prescriptionRepository.SaveChangesAsync();
+            }
+            else
+            {
+                Prescription prescription = new Prescription { Description = prescriptionDTO.Description };
+                await prescriptionRepository.AddAsync(prescription);
+                await prescriptionRepository.SaveChangesAsync();
+                appointment.PrescriptionId = prescription.Id;
+                appointmentRepository.Update(appointment);
+                await appointmentRepository.SaveChangesAsync();
+            }
+        }
+
+        public async Task<PatientInfoDTO> GetPatientInfoByEmailAsync(string email)
+        {
+            var patient = await patientRepository.GetByEmailAsync(email);
+            var result = await GetPatientInfoAsync(patient.UserId);
+            return result;
+        }
+
+        public IEnumerable<string> GetPatientsEmailsByHospitalId(int id)
+        {
+            IEnumerable<string> patEms = patientRepository.GetAllWithUserAsync()
+                .Result
+                .Where(p => p.HospitalId == id)
+                .Select(dp => dp.User.Email);
+            return patEms;
+        }
+
+        public PrescriptionInfoDTO GetLatestPrescriptionByPatientEmail(string email)
+        {
+            TimeSpan ts = new TimeSpan(0, -30, 0);
+            var patId = patientRepository.GetByEmailAsync(email).Result.UserId;
+            var appoints = doctorPatientRepository.GetAppointmentsByPatientId(patId);
+            if (appoints.Count() != 0 && appoints.First().Appointment.PrescriptionId == null)
+                appoints = appoints
+                    .OrderByDescending(dp => dp.Appointment.DateTimeAppointment)
+                    .SkipWhile(dp => dp.Appointment.DateTimeAppointment
+                    .Subtract(DateTimeOffset.Now).CompareTo(ts) > 0)
+                    .OrderBy(dp => dp.Appointment.DateTimeAppointment);//SkipLast(1).OrderBy(dp => dp.Appointment.DateTimeAppointment);
+            if (appoints.Count() != 0 && appoints.Last().Appointment.PrescriptionId != null)
+            {
+                var prescriptionId = (int)appoints.Last().Appointment.PrescriptionId;
+                var description = prescriptionRepository.GetByIdAsync((int)prescriptionId).Result.Description;
+                return new PrescriptionInfoDTO
+                {
+                    Id = prescriptionId,
+                    Description = description
+                };
+            };
+            return null;
         }
     }
 }

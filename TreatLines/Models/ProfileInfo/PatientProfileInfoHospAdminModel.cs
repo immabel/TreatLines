@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using TreatLines.BLL.DTOs.HospitalAdmin;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace TreatLines.BLL.DTOs.Patient
+namespace TreatLines.Models.ProfileInfo
 {
-    public class PatientInfoDTO : HospitalAdminInfoDTO
+    public class PatientProfileInfoHospAdminModel : HospitalAdminProfileInfoModel
     {
         public string BloodType { get; set; }
         public string Sex { get; set; }
         public double Discount { get; set; }
-        public string BirthDate { get; set; }
     }
 }

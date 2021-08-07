@@ -5,17 +5,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TreatLines.BLL.DTOs.Auth;
+using TreatLines.BLL.DTOs.Doctor;
 using TreatLines.BLL.DTOs.Patient;
+using TreatLines.BLL.DTOs.Schedule;
 using TreatLines.BLL.Interfaces;
 using TreatLines.Models;
+using TreatLines.Models.Appointment;
 using TreatLines.Models.Auth;
 using TreatLines.Models.ProfileInfo;
+using TreatLines.Models.Response;
 using TreatLines.Models.Tables;
 
 namespace TreatLines.Controllers
 {
     public class HospitalAdminController : Controller
     {
+        private readonly IAuthService authService;
+
         private readonly IHospitalService hospitalService;
 
         private readonly IDoctorService doctorService;
@@ -32,13 +39,15 @@ namespace TreatLines.Controllers
 
         public HospitalAdminController(
             ILogger<HospitalAdminController> logger,
-            IHospitalService hospitalService,
+            IAuthService authService,
+        IHospitalService hospitalService,
             IScheduleService scheduleService,
             IDoctorService doctorService,
             IPatientService patientService,
             IPatientRegistrationRequestsService patientRegistrationRequestsService,
             IMapper mapper)
         {
+            this.authService = authService;
             this.hospitalService = hospitalService;
             this.scheduleService = scheduleService;
             this.doctorService = doctorService;
@@ -67,7 +76,7 @@ namespace TreatLines.Controllers
         public IActionResult Doctors()
         {
             string hospId = "BFCC8BAB-AD20-4F70-9CD9-D2003FAE6F09";
-            var doctors = doctorService.GetDoctorsByHospitalAdminId(hospId);
+            var doctors = hospitalService.GetDoctorsByHospitalAdminId(hospId);
             var result = mapper.Map<IEnumerable<DoctorModel>>(doctors);
             return View(result);
         }
@@ -75,27 +84,55 @@ namespace TreatLines.Controllers
         public IActionResult Patients()
         {
             string hospId = "BFCC8BAB-AD20-4F70-9CD9-D2003FAE6F09";
-            var patients = patientService.GetPatientsByHospitalAdminId(hospId);
+            var patients = hospitalService.GetPatientsByHospitalAdminId(hospId);
             var result = mapper.Map<IEnumerable<PatientModel>>(patients);
             return View(result);
         }
 
-        public IActionResult MakeAppointment()
+        public IActionResult MakeAppointment(string doctorEmail, string patientEmail)
         {
-            return View();
+            int hospId = 1;
+            /*if (doctorEmail == null)
+            {
+                
+            }
+            if (patientEmail == null)
+            {
+
+            }*/
+            AppointmentCreationModel appointment = new AppointmentCreationModel
+            {
+                DoctorEmail = doctorEmail,
+                PatientEmail = patientEmail
+            };
+            var docEmails = doctorService.GetDoctorsEmailsByHospitalId(hospId);
+            var patEmails = patientService.GetPatientsEmailsByHospitalId(hospId);
+            var freeDateTime = doctorService.GetFreeDateTimesByDoctorEmail(docEmails.First());
+
+            appointment.DoctorsEmails = docEmails;
+            appointment.PatientsEmails = patEmails;
+            appointment.FreeDatesTime = mapper.Map<IEnumerable<FreeDateTimeModel>>(freeDateTime);
+
+            return View(appointment);
         }
 
         public async Task<IActionResult> DoctorProfile(string email)
         {
             var docInfo = await doctorService.GetDoctorInfoByEmailAsync(email);
+            var schedInfo = scheduleService.GetScheduleInfoByIdAsync(docInfo.ScheduleId);
+
             var result = mapper.Map<DoctorProfileInfoModel>(docInfo);
-            result.Schedule.DoctorId = docInfo.Id;
+            result.Schedule = mapper.Map<ScheduleInfoModel>(schedInfo);
+            result.Schedule.DoctorEmail = docInfo.Email;
+
             return View(result);
         }
 
-        public IActionResult PatientProfile(string id)
+        public async Task<IActionResult> PatientProfile(string email)
         {
-            return View();
+            var patInfo = await patientService.GetPatientInfoByEmailAsync(email);
+            var result = mapper.Map<PatientProfileInfoHospAdminModel>(patInfo);
+            return View(result);
         }
 
         public IActionResult AddHospitalAdmin()
@@ -114,27 +151,52 @@ namespace TreatLines.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddHospitalAdmin(RegistrationModel model)
+        public async Task<IActionResult> AddHospitalAdmin(RegistrationModel model)
         {
-            return View();
+            var hospAdm = mapper.Map<HospitalAdminRegistrationDTO>(model);
+            await authService.RegisterHospitalAdminAsync(hospAdm);
+            return RedirectToAction("AddHospitalAdmin");
         }
 
         [HttpPost]
-        public IActionResult AddDoctor(DoctorRegistrationModel model)
+        public async Task<IActionResult> AddDoctor(DoctorRegistrationModel model)
         {
-            return View();
+            var doc = mapper.Map<DoctorRegistrationDTO>(model);
+            await authService.RegisterDoctorAsync(doc);
+            return RedirectToAction("AddDoctor");
         }
 
         [HttpPost]
-        public IActionResult AddPatient(PatientRegistrationModel model)
+        public async Task<IActionResult> AddPatient(PatientRegistrationModel model)
         {
-            return View();
+            var patient = mapper.Map<PatientRegistrationDTO>(model);
+            await authService.RegisterPatientAsync(patient);
+            return RedirectToAction("AddPatient");
         }
 
         [HttpPost]
-        public IActionResult ChangeSchedule(ScheduleInfoModel model)
+        public async Task<IActionResult> UpdateDoctorInfo(DoctorProfileInfoModel model)
         {
-            return RedirectToAction("DoctorProfile");
+            var doctor = mapper.Map<DoctorProfileInfoDTO>(model);
+            await doctorService.UpdateDoctorAsync(doctor);
+            return View("DoctorProfile", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeSchedule(ScheduleInfoModel model)
+        {
+            var schedule = mapper.Map<ScheduleInfoDoctorDTO>(model);
+            await doctorService.ChangeDoctorScheduleAsync(schedule);
+            //return RedirectToAction("DoctorProfile", new { email = model.DoctorEmail });
+            return PartialView("_ScheduleInfo", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdatePatientInfo(PatientProfileInfoHospAdminModel model)
+        {
+            var patient = mapper.Map<PatientInfoDTO>(model);
+            await patientService.UpdatePatientAsync(patient);
+            return View("PatientProfile", model);
         }
     }
 }

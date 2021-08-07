@@ -143,7 +143,7 @@ namespace TreatLines.DAL.Extentions
                 NormalizedEmail = email,
                 PasswordHash = new PasswordHasher<User>().HashPassword(null, password),
                 PhoneNumber = phoneNumber,
-                RegisterDateTime = DateTimeOffset.Parse("20.07.2021")
+                RegistrationDate = DateTimeOffset.Parse("20.07.2021")
             });
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
             {

@@ -15,7 +15,7 @@ namespace TreatLines.DAL.Configurations
             builder.Property(u => u.FirstName).IsRequired().HasMaxLength(30);
             builder.Property(u => u.LastName).IsRequired().HasMaxLength(30);
             builder.Property(u => u.Blocked);
-            builder.Property(u => u.RegisterDateTime);
+            builder.Property(u => u.RegistrationDate);
         }
     }
 }

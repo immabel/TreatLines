@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TreatLines.Models.Appointment;
 
 namespace TreatLines.Models.ProfileInfo
 {
-    public class PatientProfileInfoModel : HospitalAdminProfileInfoModel
+    public class PatientProfileInfoModel : PatientProfileInfoHospAdminModel
     {
-        public string BloodType { get; set; }
-        public string Sex { get; set; }
-        public double Discount { get; set; }
+        public AppointmentNearestInfoModel Appointment { get; set; }
     }
 }

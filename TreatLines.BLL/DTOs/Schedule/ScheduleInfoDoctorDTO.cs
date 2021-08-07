@@ -6,6 +6,6 @@ namespace TreatLines.BLL.DTOs.Schedule
 {
     public class ScheduleInfoDoctorDTO : ScheduleInfoDTO
     {
-        public string DoctorId { get; set; }
+        public string DoctorEmail { get; set; }
     }
 }

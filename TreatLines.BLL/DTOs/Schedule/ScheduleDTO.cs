@@ -6,8 +6,8 @@ namespace TreatLines.BLL.DTOs.Schedule
 {
     public class ScheduleDTO
     {
-        public DateTimeOffset StartTime { get; set; }
-        public DateTimeOffset EndTime { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
         public string WorkDays { get; set; }
     }
 }
