@@ -23,13 +23,13 @@
                         <div class="col-2">
                             <label>Name: </label>
                         </div>
-                        <div class="col-3">
+                        <div class="col-2">
                             <input class="form-control p-0" asp-for="FirstName">
                         </div>
                         <div class="col-2">
                             <label>Surname: </label>
                         </div>
-                        <div class="col-3">
+                        <div class="col-2">
                             <input class="form-control p-0" asp-for="LastName">
                         </div>
                     </div>@*class="form-control-plaintext p-0"*@
@@ -37,7 +37,7 @@
                         <div class="col-2">
                             <label>Email: </label>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Email">
                         </div>
                     </div>
@@ -45,27 +45,41 @@
                         <div class="col-2">
                             <label>Phone number: </label>
                         </div>
-                        <div class="col-4">
+                        <div class="col-2">
                             <input class="form-control p-0" asp-for="PhoneNumber" />
+                        </div>
+                    </div>
+                    <div class="form-group row my-2">
+                        <div class="col-2">
+                            <label>Date of birth: </label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control p-0" asp-for="DateOfBirth" />
                         </div>
                     </div>
                     <div class="form-group row my-2">
                         <div class="col-2">
                             <label>Position: </label>
                         </div>
-                        <div class="col-4">
+                        <div class="col-2">
                             <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Position">
+                        </div>
+                        <div class="col-2">
+                            <label>Appointment price: </label>
+                        </div>
+                        <div class="col-2">
+                            <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Price">
                         </div>
                     </div>
                     <div class="form-group row my-2">
                         <div class="form-check">
                             @if (Model.OnHoliday)
                             {
-                                <input class="form-check-input" disabled="" type="checkbox" value="" id="flexCheck" checked="">
+                                <input class="form-check-input" disabled="" type="checkbox" checked="">
                             }
                             else
                             {
-                                <input class="form-check-input" disabled="" type="checkbox" value="" id="flexCheck">
+                                <input class="form-check-input" disabled="" type="checkbox">
                             }
                             <label class="form-check-label" for="flexCheck" asp-for="OnHoliday">
                                 On holiday
@@ -113,8 +127,12 @@
                         <div class="col-2">
                             <label>Work days: </label>
                         </div>
-                        <div class="col-6">
-                            <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Schedule.WorkDays">
+                        <div class="col-3">
+                            @*<input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Schedule.WorkDays">*@
+                                @foreach(var day in Model.Schedule.WorkDays)
+            {
+                                <span class="badge rounded-pill bg-info">@day</span>
+            }
                         </div>
                     </div>
                 </div>
@@ -125,5 +143,4 @@
                 </div>
             </form>
         </div>
-        @await Html.PartialAsync("_GetUpcomingAppointments")
 </section>

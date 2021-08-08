@@ -1,18 +1,8 @@
 ﻿@model IEnumerable<TreatLines.Models.Tables.HospitalAdminModel>
 
-@{
-    string hospitalName = @Model.First().HospitalName;
-    int hospId = Model.First().HopitalId;
-    }
-
-<br />
 <div class="container row p-0 m-0">
-    <div class="col-6">
-        <h2 class="text-info">Hospital admins</h2>
-    </div>
-    <br />
-    <p>Hospital name: @hospitalName</p>
-    <div class="col-12 border p-3">
+    <h3 class="text-info">Hospital admins</h3>
+    <div class="border p-3">
         <table id="hospitalAdmins_admin" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
@@ -32,16 +22,13 @@
                         <td>@h.PhoneNumber</td>
                         <td>@h.RegisterDate</td>
                         <td>
-                            @*<div class="btn-group" role="group" aria-label="Basic example">*@
                             <a class="btn btn-secondary"
-                               asp-controller="Admin"
+                               asp-controller="HospitalAdmin"
                                asp-action="BlockUnblockUser"
                                asp-route-id="@h.Id"
-                               asp-route-hospId="@hospId"
-                               asp-route-hospitalName="@hospitalName">
+                               asp-route-userType="0">
                                 @(h.Blocked == 1 ? "Unblock" : "Block")
                             </a>
-                            @*</div>*@
                         </td>
                     </tr>
                 }
@@ -49,4 +36,3 @@
         </table>
     </div>
 </div>
-

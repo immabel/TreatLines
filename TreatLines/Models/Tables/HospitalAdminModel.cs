@@ -12,5 +12,7 @@ namespace TreatLines.Models.Tables
         public int Blocked { get; set; }
         public string PhoneNumber { get; set; }
         public string RegisterDate { get; set; }
+        public int HopitalId { get; set; }
+        public string HospitalName { get; set; }
     }
 }

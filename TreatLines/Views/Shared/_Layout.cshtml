@@ -17,9 +17,9 @@
 
                 @*<a class="navbar-brand" asp-area="" asp-controller="Admin" asp-action="Index">TreatLines</a>)*@
 
-                <a class="navbar-brand" asp-area="" asp-controller="HospitalAdmin" asp-action="Index">TreatLines</a>
+                @*<a class="navbar-brand" asp-area="" asp-controller="HospitalAdmin" asp-action="Index">TreatLines</a>*@
 
-                @*<a class="navbar-brand" asp-area="" asp-controller="Doctor" asp-action="Index">TreatLines</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Doctor" asp-action="Index">TreatLines</a>
 
                 @*<a class="navbar-brand" asp-area="" asp-controller="Patient" asp-action="Index">TreatLines</a>*@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -28,7 +28,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 
-                   @* <ul class="navbar-nav flex-grow-1">
+                    @* <ul class="navbar-nav flex-grow-1">
             <li class="nav-item">
                 <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Requests">Requests</a>
             </li>
@@ -50,10 +50,11 @@
                     </ul>
 
                     @*<ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Doctor" asp-action="Patients">Patients</a>
-                        </li>
-                    </ul>*@
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Doctor" asp-action="Patients">Patients</a>
+            </li>
+        </ul>*@
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>

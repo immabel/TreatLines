@@ -38,7 +38,8 @@
                                 <a class="btn btn-secondary"
                                         asp-controller="Admin"
                                         asp-action="BlockUnblockUser"
-                                        asp-route-id="@p.Id">
+                                        asp-route-id="@p.Id"
+                                        asp-route-userType="2">
                                     @(p.Blocked == 1 ? "Unblock" : "Block")
                                 </a>
                                 <button class="btn btn-secondary"
@@ -47,7 +48,7 @@
                                         title="Make appointment"
                                         asp-controller="HospitalAdmin"
                                         asp-action="MakeAppointment"
-                                        asp-route-email="@p.Email">
+                                        asp-route-patientEmail="@p.Email">
                                     <i class="fas fa-calendar-day"></i>
                                 </button>
                                 <button class="btn btn-secondary"

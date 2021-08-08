@@ -84,7 +84,7 @@ namespace TreatLines.BLL.Services
             return await GetDoctorInfoAsync(doctor.UserId); 
         }
 
-        public IEnumerable<PatientInfoDTO> GetDoctorPatientsByEmailAsync(string email)
+        public IEnumerable<PatientInfoDTO> GetDoctorPatientsByEmail(string email)
         {
             var patients = doctorPatientRepository.GetDoctorPatientsByEmail(email)
                 .Select(p => new PatientInfoDTO
@@ -198,16 +198,17 @@ namespace TreatLines.BLL.Services
             return appointmentsInfo;
         }
 
-        public AppointmentDTO GetNearestAppointment(string doctorId, string patientId)
+        public AppointmentDTO GetNearestAppointment(string doctorId, string patientEmail)
         {
             TimeSpan ts = new TimeSpan(-1, 30, 0);
+            var patientId = userRepository.FindByEmailAsync(patientEmail).Result.Id;
             Appointment appointment = doctorPatientRepository.GetAppointments(doctorId, patientId)
                 .Where(ap => ap.DateTimeAppointment.Subtract(DateTimeOffset.Now).CompareTo(ts) > 0)
                 .FirstOrDefault();
             return mapper.Map<AppointmentDTO>(appointment);
         }
 
-        public async Task<IEnumerable<FreeDateTimesDTO>> GetFreeDateTimesByDoctorEmail(string email)
+        public async Task<IEnumerable<FreeDateTimesDTO>> GetFreeDateTimesByDoctorEmailAsync(string email)
         {
             var schedId = doctorRepository.GetByEmailAsync(email).Result.ScheduleId;
             Schedule schedule = await scheduleService.GetByIdAsync((int)schedId);

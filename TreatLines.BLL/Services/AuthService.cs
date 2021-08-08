@@ -28,16 +28,13 @@ namespace TreatLines.BLL.Services
 
         private readonly IRepository<Hospital> hospitalRepository;
 
-        private readonly IJwtAuthenticationManager jwtAuthenticationManager;
-
         public AuthService(
             UserRepository userRepository,
             IHospitalAdminRepository hospitalAdminRepository,
             IDoctorRepository doctorRepository,
             IPatientRepository patientRepository,
             IRepository<Schedule> scheduleRepository,
-            IRepository<Hospital> hospitalRepository,
-            IJwtAuthenticationManager jwtAuthenticationManager)
+            IRepository<Hospital> hospitalRepository)
         {
             this.userRepository = userRepository;
             this.hospitalRepository = hospitalRepository;
@@ -45,7 +42,6 @@ namespace TreatLines.BLL.Services
             this.doctorRepository = doctorRepository;
             this.patientRepository = patientRepository;
             this.scheduleRepository = scheduleRepository;
-            this.jwtAuthenticationManager = jwtAuthenticationManager;
         }
 
         public async Task<LoginResponseDTO> LoginAsync(LoginRequestDTO request)
@@ -65,8 +61,6 @@ namespace TreatLines.BLL.Services
             }
             Claim[] userClaims = await GetAuthTokenClaimsForUserAsync(user);
 
-            var accessToken = jwtAuthenticationManager.GenerateTokenForClaims(userClaims);
-
             string role = userClaims[1].Value;
             int hospitalId = 0;
 
@@ -81,7 +75,6 @@ namespace TreatLines.BLL.Services
             {
                 UserId = user.Id,
                 Email = user.Email,
-                Token = accessToken,
                 Role = role,
                 HospitalId = hospitalId
             };

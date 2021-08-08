@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TreatLines.BLL.Interfaces;
-using TreatLines.BLL.JwtAuthentication;
 using TreatLines.BLL.Services;
 using TreatLines.Configuration;
 using TreatLines.DAL.Entities;
@@ -17,26 +16,6 @@ namespace TreatLines.Extensions
 {
     public static class StartupExtensions
     {
-        public static IServiceCollection AddJwtTokenAuthentication(this IServiceCollection services, IConfiguration configuration)
-        {
-            var tokenProvider = new JwtAuthenticationManager(configuration);
-            services
-                .AddSingleton<IJwtAuthenticationManager>(tokenProvider)
-                .AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(
-                    authenticationScheme: JwtBearerDefaults.AuthenticationScheme,
-                    configureOptions: options =>
-                    {
-                        options.RequireHttpsMetadata = true;
-                        options.TokenValidationParameters = tokenProvider.TokenValidationParameters;
-                    });
-            return services;
-        }
-
         public static IServiceCollection RegisterDepInj(this IServiceCollection services)
         {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

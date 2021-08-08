@@ -61,11 +61,7 @@ namespace TreatLines.Controllers
         {
             string hospAdminId = "BFCC8BAB-AD20-4F70-9CD9-D2003FAE6F09";
             var hospAdm = await hospitalService.GetHospitalAdminProfileInfoAsync(hospAdminId);
-            var hospAdms = hospitalService.GetHospitalAdminsByHospAdminId(hospAdminId);
-
-            var result = mapper.Map<HospitalAdminProfileInfoModel>(hospAdm);
-            result.HospitalAdmins = mapper.Map<IEnumerable<HospitalAdminModel>>(hospAdms);
-            
+            var result = mapper.Map<HospitalAdminProfileInfoModel>(hospAdm);            
             return View(result);
         }
 
@@ -74,6 +70,14 @@ namespace TreatLines.Controllers
             int hospId = 1;
             var requests = await patientRegistrationRequestsService.GetAllRequestsAsync(hospId);
             var result = mapper.Map<IEnumerable<RequestInfoToCreatePatientModel>>(requests);
+            return View(result);
+        }
+
+        public IActionResult HospitalAdmins()
+        {
+            string hospAdminId = "BFCC8BAB-AD20-4F70-9CD9-D2003FAE6F09";
+            var hospAdms = hospitalService.GetHospitalAdminsByHospAdminId(hospAdminId);
+            var result = mapper.Map<IEnumerable<HospitalAdminModel>>(hospAdms);
             return View(result);
         }
 
@@ -93,7 +97,7 @@ namespace TreatLines.Controllers
             return View(result);
         }
 
-        public IActionResult MakeAppointment(string doctorEmail, string patientEmail)
+        public async Task<IActionResult> MakeAppointment(string doctorEmail, string patientEmail)
         {
             int hospId = 1;
             /*if (doctorEmail == null)
@@ -111,7 +115,7 @@ namespace TreatLines.Controllers
             };
             var docEmails = doctorService.GetDoctorsEmailsByHospitalId(hospId);
             var patEmails = patientService.GetPatientsEmailsByHospitalId(hospId);
-            var freeDateTime = doctorService.GetFreeDateTimesByDoctorEmail(docEmails.First());
+            var freeDateTime = await doctorService.GetFreeDateTimesByDoctorEmailAsync(docEmails.First());
 
             appointment.DoctorsEmails = docEmails;
             appointment.PatientsEmails = patEmails;
@@ -209,7 +213,7 @@ namespace TreatLines.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeSchedule(ScheduleInfoModel model)
+        public async Task<PartialViewResult> ChangeSchedule(ScheduleInfoModel model)
         {
             if (ModelState.IsValid)
             {
@@ -246,6 +250,18 @@ namespace TreatLines.Controllers
         {
             await patientRegistrationRequestsService.RejectRequestAsync(id);
             return RedirectToAction("Requests");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BlockUnblockUser(string id, int userType)
+        {
+            await hospitalService.BlockUserAsync(id);
+            if (userType == 0)
+                return RedirectToAction("HospitalAdmins");
+            else if (userType == 1)
+                return RedirectToAction("Doctors");
+            else
+                return RedirectToAction("Patients");
         }
     }
 }

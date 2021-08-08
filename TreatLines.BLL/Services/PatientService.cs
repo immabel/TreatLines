@@ -109,29 +109,9 @@ namespace TreatLines.BLL.Services
             await patientRepository.SaveChangesAsync();
         }
 
-        public async Task AddPrescriptionToAppointmentAsync(PrescriptionDTO prescriptionDto)
-        {
-            Appointment appointment = await appointmentRepository.GetByIdAsync(prescriptionDto.AppointmentId);
-            Prescription prescription = mapper.Map<Prescription>(prescriptionDto);
-
-            await prescriptionRepository.AddAsync(prescription);
-            await prescriptionRepository.SaveChangesAsync();
-
-            /*int prId = prescriptionRepository
-                .GetAllAsync()
-                .Result
-                .OrderByDescending(pr => pr.Id)
-                .FirstOrDefault()
-                .Id;*/
-            appointment.PrescriptionId = prescription.Id;
-
-            appointmentRepository.Update(appointment);
-            await appointmentRepository.SaveChangesAsync();
-        }
-
         public async Task UpsertPrescriptionByAppointmentIdAsync(PrescriptionDTO prescriptionDTO)
         {
-            var appointment = await appointmentRepository.GetByIdAsync(prescriptionDTO.AppointmentId);
+            var appointment = await appointmentRepository.GetByIdAsync((int)prescriptionDTO.AppointmentId);
             if (appointment.PrescriptionId != null)
             {
                 Prescription prescription = await prescriptionRepository.GetByIdAsync((int)appointment.PrescriptionId);

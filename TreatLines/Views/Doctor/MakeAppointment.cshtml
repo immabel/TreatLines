@@ -5,35 +5,35 @@
         <div class="col-8">
             @foreach (var dateTime in Model.FreeDatesTime)
             {
-                <div class="row">
-                    <h5>@dateTime.Date</h5>
-                    @foreach (var time in dateTime.Times)
-                    {
-                        <button type="button" class="btn btn-outline-secondary m-1" style="width: 100px">@time</button>
-                    }
-                </div>
+            <div class="row mt-1">
+                <h5>@dateTime.Date</h5>
+                @foreach (var time in dateTime.Times)
+                {
+                    <button id="btnDateTimeAppDoc"
+                            type="button"
+                            class="btn btn-outline-secondary m-1"
+                            style="width: 70px">
+                        @time
+                    </button>
+                }
+            </div>
             }
         </div>
         <div class="col-4">
             <form asp-controller="HospitalAdmin" asp-action="MakeAppointment" method="post">
                 <div class="card bg-light mb-3" style="max-width: 20rem;">
-                    <div class="card-header">
-                        <h6 id="dateTimeAppoint"></h6>
+                    @*<div class="card-header">
+                        <h6 id="dateTimeAppoint">@Model.DateTimeAppointment</h6>*@
                         @if (Model.DateTimeAppointment != null)
                         {
-                            <input type="hidden" asp-for="DateTimeAppointment" />
+                            <input id="dateTimeAppInput" type="hidden" asp-for="DateTimeAppointment" />
                         }
-                    </div>
+                    @*</div>*@
                     <div class="card-body">
-                        <div class="form-group">
-                            <label for="selectDoctor" class="form-label mt-4">Doctor email</label>
-                            <select class="form-select" id="selectDoctor" asp-for="DoctorEmail">
-                                @foreach (var email in Model.DoctorsEmails)
-                                {
-                                    <option value="@email">email</option>
-                                }
-                            </select>
-                        </div>
+                        @if (Model.DoctorEmail != null)
+                        {
+                            <input type="hidden" asp-for="DoctorEmail" />
+                        }
                         <div class="form-group">
                             <label for="selectPatient" class="form-label mt-4">Patient email</label>
                             <select class="form-select" id="selectPatient" asp-for="PatientEmail">

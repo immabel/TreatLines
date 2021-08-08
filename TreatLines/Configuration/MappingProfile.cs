@@ -16,6 +16,7 @@ using TreatLines.DAL.Entities;
 using TreatLines.Models;
 using TreatLines.Models.ProfileInfo;
 using TreatLines.Models.Requests;
+using TreatLines.Models.Response;
 using TreatLines.Models.Tables;
 
 namespace TreatLines.Configuration
@@ -105,6 +106,8 @@ namespace TreatLines.Configuration
                 .ForMember(
                 dest => dest.EndTime,
                 opt => opt.MapFrom(src => DateTimeOffset.Parse(src.EndTime)));
+
+            CreateMap<FreeDateTimesDTO, FreeDateTimeModel>();
         }
     }
 }

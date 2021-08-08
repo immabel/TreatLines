@@ -9,6 +9,5 @@ namespace TreatLines.Models.ProfileInfo
     public class HospitalAdminProfileInfoModel : AdminProfileInfoModel
     {
         public string HospitalName { get; set; }
-        public IEnumerable<HospitalAdminModel> HospitalAdmins { get; set; }
     }
 }

@@ -18,7 +18,6 @@ namespace TreatLines.BLL.Interfaces
         //IEnumerable<PrescriptionInfoDTO> GetPrescriptionByPatientId(string id);
         PrescriptionInfoDTO GetLatestPrescriptionByPatientEmail(string email);
         Task UpdatePatientAsync(PatientInfoDTO patient);
-        Task AddPrescriptionToAppointmentAsync(PrescriptionDTO prescriptionDto);
         Task UpsertPrescriptionByAppointmentIdAsync(PrescriptionDTO prescriptionDTO);
         IEnumerable<string> GetPatientsEmailsByHospitalId(int id);
     }

@@ -4,19 +4,9 @@
     @*<div class="container-lg border px-5 pt-3">*@
     <div class="card border-primary mb-3">
         <div class="card-header">
-            <div class="row my-2">
                 <div class="col-6">
-                    <h3 class="mt-2 mb-4">Patient Profile</h3>
+                    <h3 class="mt-2 mb-4">User Profile</h3>
                 </div>
-                <div class="col-3 offset-3">
-                    <a class="btn btn-secondary nav-link"
-                       asp-controller="Doctor"
-                       asp-action="MakeAppointment"
-                       asp-route-patientEmail="@Model.Email">
-                        Make appointment
-                    </a>
-                </div>
-            </div>
         </div>
         <div class="card-body">
             <div class="row my-2">
@@ -24,13 +14,13 @@
                     <label>Name: </label>
                 </div>
                 <div class="col-3">
-                    <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="FirstName">
+                    <input class="form-control p-0" asp-for="FirstName">
                 </div>
                 <div class="col-2">
                     <label>Surname: </label>
                 </div>
                 <div class="col-3">
-                    <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="LastName">
+                    <input class="form-control p-0" asp-for="LastName">
                 </div>
             </div>
             <div class="row my-2">
@@ -46,7 +36,7 @@
                     <label>Phone number: </label>
                 </div>
                 <div class="col-4">
-                    <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="PhoneNumber" />
+                    <input class="form-control p-0" asp-for="PhoneNumber" />
                 </div>
             </div>
             <div class="row my-2">
@@ -66,29 +56,17 @@
         </div>
         @if (Model.Appointment != null)
         {
-            <form asp-controller="Doctor" asp-action="UpsertPrescription" method="post">
                 <div class="card-body">
-                    <div class="form-group row my-2">
-                        <input type="hidden" asp-for="Appointment.PatientEmail" />
-                        <input type="hidden" asp-for="Appointment.AppointmentId" />
-                        <input type="hidden" asp-for="Appointment.PrescriptionId" />
-                        <h4>Appointment</h4>
-                        <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Appointment.DateTime" />
-                    </div>
-                    <div class="form-group row my-2">
+                    <div class="row my-2">
                         <p class="text-info">Prescription: </p>
                         <textarea class="form-control" rows="3" asp-for="Appointment.Description"></textarea>
                     </div>
-                    <div class="form-group col-4 my-1">
-                        <button type="submit" class="btn btn-secondary mb-3">Save changes</button>
-                    </div>
                 </div>
-            </form>
         }
         else
         {
             <div class="col-6">
-                <p>No upcoming appointment</p>
+                <p>No prescription</p>
             </div>
         }
     </div>

@@ -13,7 +13,7 @@ namespace TreatLines.Models.ProfileInfo
         public bool OnHoliday { get; set; }
         public string Experience { get; set; }
         public string Education { get; set; }
-        public string BirthDate { get; set; }
+        public string DateOfBirth { get; set; }
         public string Sex { get; set; }
         public ScheduleInfoModel Schedule { get; set; }
     }

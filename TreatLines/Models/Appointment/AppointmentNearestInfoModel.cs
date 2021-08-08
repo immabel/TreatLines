@@ -7,6 +7,7 @@ namespace TreatLines.Models.Appointment
 {
     public class AppointmentNearestInfoModel
     {
+        public string PatientEmail { get; set; }
         public int? AppointmentId { get; set; }   
         public string DateTime { get; set; }
         public int? PrescriptionId { get; set; }

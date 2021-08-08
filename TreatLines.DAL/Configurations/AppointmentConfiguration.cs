@@ -14,6 +14,7 @@ namespace TreatLines.DAL.Configurations
             builder.ToTable("Appointments").HasKey(k => k.Id);
             builder.Property(p => p.DateTimeAppointment);
             builder.Property(p => p.Price).HasColumnType("money");
+            builder.Property(p => p.PriceWithDiscount).HasColumnType("money");
             builder.Property(p => p.Canceled);
             builder
                 .HasOne(h => h.Prescription)

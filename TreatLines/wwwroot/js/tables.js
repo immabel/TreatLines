@@ -29,3 +29,6 @@ $(document).ready(function () {
     $('#doctors_hospAdmin').DataTable();
 });*/
 
+$(document).ready(function () {
+
+});

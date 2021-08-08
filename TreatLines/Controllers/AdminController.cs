@@ -104,5 +104,19 @@ namespace TreatLines.Controllers
             await adminService.UpdateUserInfoAsync(admin);
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> BlockUnblockUser(string id, int? hospId, string hospitalName)
+        {
+            await hospitalService.BlockUserAsync(id);
+            return RedirectToAction("HospitalAdmins", new { id = hospId, hospName = hospitalName });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BlockUnblockHospital(int id)
+        {
+            await hospitalService.BlockHospitalByIdAsync(id);
+            return RedirectToAction("Hospitals");
+        }
     }
 }
