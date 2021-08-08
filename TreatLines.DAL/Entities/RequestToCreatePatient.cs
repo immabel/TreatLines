@@ -14,6 +14,7 @@ namespace TreatLines.DAL.Entities
         public string PhoneNumber { get; set; }
         public string BloodType { get; set; }
         public string Sex { get; set; }
+        public DateTimeOffset DateOfBirth { get; set; }
         public DateTimeOffset DateOfRequestCreation { get; set; }
     }
 }

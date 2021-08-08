@@ -17,9 +17,10 @@ namespace TreatLines.DAL.Configurations
             builder.Property(p => p.LastName).IsRequired();
             builder.Property(p => p.Email).IsRequired();
             builder.Property(p => p.DateOfRequestCreation).IsRequired();
+            builder.Property(p => p.DateOfBirth).IsRequired();
             builder.Property(p => p.PhoneNumber).IsRequired();
-            builder.Property(p => p.BloodType);
-            builder.Property(p => p.Sex);
+            builder.Property(p => p.BloodType).IsRequired();
+            builder.Property(p => p.Sex).IsRequired();
         }
     }
 }

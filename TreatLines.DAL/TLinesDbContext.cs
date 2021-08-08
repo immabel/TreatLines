@@ -38,7 +38,7 @@ namespace TreatLines.DAL
             modelBuilder.ApplyConfiguration(new RequestToCreatePatientConfiguration());
 
             base.OnModelCreating(modelBuilder);
-            //modelBuilder.Seed();
+            modelBuilder.Seed();
         }
     }
 }

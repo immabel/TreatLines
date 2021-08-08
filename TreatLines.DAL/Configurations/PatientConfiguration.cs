@@ -15,9 +15,9 @@ namespace TreatLines.DAL.Configurations
             builder.Property(p => p.BloodType).HasMaxLength(30);
             builder.Property(p => p.Sex).HasMaxLength(30);
             builder.Property(p => p.Discount);
-            //builder.Property(p => p.HospitalRating);
-            builder.Property(p => p.HospitalId);
-            builder.Property(p => p.DateOfBirth);
+            builder.Property(p => p.HospitalRating);
+            builder.Property(p => p.HospitalId).IsRequired();
+            builder.Property(p => p.DateOfBirth).IsRequired();
             builder
                 .HasOne(h => h.User)
                 .WithOne();

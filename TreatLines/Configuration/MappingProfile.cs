@@ -45,7 +45,10 @@ namespace TreatLines.Configuration
             CreateMap<RequestToCreatePatientViewDTO, RequestInfoToCreatePatientModel>()
                 .ForMember(
                 dest => dest.DateOfRequestCreation,
-                opt => opt.MapFrom(src => src.DateOfRequestCreation.ToString("g")));
+                opt => opt.MapFrom(src => src.DateOfRequestCreation.ToString("g")))
+                .ForMember(
+                dest => dest.FullName,
+                opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName));
             CreateMap<RequestToCreatePatientModel, RequestToCreatePatientDTO>();
             CreateMap<RequestToCreatePatientDTO, RequestToCreatePatient>();
 

@@ -14,7 +14,7 @@ namespace TreatLines.BLL.Interfaces
         Task<HospitalInfoDTO> GetHospitalInfoByIdAsync(int id);
         Task BlockHospitalByIdAsync(int hospitalId);
         IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsById(int hospitalId);
-        IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsById(string hospitalAdminId);
+        IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsByHospAdminId(string hospitalAdminId);
         Task BlockUserAsync(string id);
         int GetDoctorsCountById(int hospitalId);
         Task<HospitalAdminInfoDTO> GetHospitalAdminProfileInfoAsync(string id);

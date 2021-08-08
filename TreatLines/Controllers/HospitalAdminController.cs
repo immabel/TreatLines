@@ -61,7 +61,11 @@ namespace TreatLines.Controllers
         {
             string hospAdminId = "BFCC8BAB-AD20-4F70-9CD9-D2003FAE6F09";
             var hospAdm = await hospitalService.GetHospitalAdminProfileInfoAsync(hospAdminId);
+            var hospAdms = hospitalService.GetHospitalAdminsByHospAdminId(hospAdminId);
+
             var result = mapper.Map<HospitalAdminProfileInfoModel>(hospAdm);
+            result.HospitalAdmins = mapper.Map<IEnumerable<HospitalAdminModel>>(hospAdms);
+            
             return View(result);
         }
 
@@ -153,50 +157,95 @@ namespace TreatLines.Controllers
         [HttpPost]
         public async Task<IActionResult> AddHospitalAdmin(RegistrationModel model)
         {
-            var hospAdm = mapper.Map<HospitalAdminRegistrationDTO>(model);
-            await authService.RegisterHospitalAdminAsync(hospAdm);
-            return RedirectToAction("AddHospitalAdmin");
+            if (ModelState.IsValid)
+            {
+                int id = 1;
+                var hospAdm = mapper.Map<HospitalAdminRegistrationDTO>(model);
+                hospAdm.HospitalId = id;
+                await authService.RegisterHospitalAdminAsync(hospAdm);
+                return RedirectToAction("AddHospitalAdmin");
+            }
+            return RedirectToAction("AddHospitalAdmin", model);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddDoctor(DoctorRegistrationModel model)
         {
-            var doc = mapper.Map<DoctorRegistrationDTO>(model);
-            await authService.RegisterDoctorAsync(doc);
-            return RedirectToAction("AddDoctor");
+            if (ModelState.IsValid)
+            {
+                int id = 1;
+                var doc = mapper.Map<DoctorRegistrationDTO>(model);
+                doc.HospitalId = id;
+                await authService.RegisterDoctorAsync(doc);
+                return RedirectToAction("AddDoctor");
+            }
+            return RedirectToAction("AddDoctor", model);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddPatient(PatientRegistrationModel model)
         {
-            var patient = mapper.Map<PatientRegistrationDTO>(model);
-            await authService.RegisterPatientAsync(patient);
-            return RedirectToAction("AddPatient");
+            if (ModelState.IsValid)
+            {
+                int id = 1;
+                var patient = mapper.Map<PatientRegistrationDTO>(model);
+                patient.HospitalId = id;
+                await authService.RegisterPatientAsync(patient);
+                return RedirectToAction("AddPatient");
+            }
+            return RedirectToAction("AddPatient", model);
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateDoctorInfo(DoctorProfileInfoModel model)
         {
-            var doctor = mapper.Map<DoctorProfileInfoDTO>(model);
-            await doctorService.UpdateDoctorAsync(doctor);
+            if (ModelState.IsValid)
+            {
+                var doctor = mapper.Map<DoctorProfileInfoDTO>(model);
+                await doctorService.UpdateDoctorAsync(doctor);
+                return View("DoctorProfile", model);
+            }
             return View("DoctorProfile", model);
         }
 
         [HttpPost]
         public async Task<IActionResult> ChangeSchedule(ScheduleInfoModel model)
         {
-            var schedule = mapper.Map<ScheduleInfoDoctorDTO>(model);
-            await doctorService.ChangeDoctorScheduleAsync(schedule);
-            //return RedirectToAction("DoctorProfile", new { email = model.DoctorEmail });
+            if (ModelState.IsValid)
+            {
+                var schedule = mapper.Map<ScheduleInfoDoctorDTO>(model);
+                await doctorService.ChangeDoctorScheduleAsync(schedule);
+                //return RedirectToAction("DoctorProfile", new { email = model.DoctorEmail });
+                return PartialView("_ScheduleInfo", model);
+            }
             return PartialView("_ScheduleInfo", model);
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdatePatientInfo(PatientProfileInfoHospAdminModel model)
         {
-            var patient = mapper.Map<PatientInfoDTO>(model);
-            await patientService.UpdatePatientAsync(patient);
+            if (ModelState.IsValid)
+            {
+                var patient = mapper.Map<PatientInfoDTO>(model);
+                await patientService.UpdatePatientAsync(patient);
+                return View("PatientProfile", model);
+            }
             return View("PatientProfile", model);
+            //return RedirectToAction("PatientProfile", new { email = model.Email });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveRequest(int id)
+        {
+            await patientRegistrationRequestsService.ApproveRequestAsync(id);
+            return RedirectToAction("Requests");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RejectRequest(int id)
+        {
+            await patientRegistrationRequestsService.RejectRequestAsync(id);
+            return RedirectToAction("Requests");
         }
     }
 }

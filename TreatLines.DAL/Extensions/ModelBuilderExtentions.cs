@@ -169,7 +169,8 @@ namespace TreatLines.DAL.Extentions
                         Experience = "Worked at \"Health main\"",
                         Position = "cosmetologist",
                         Price = 400,
-                        ScheduleId = 1
+                        ScheduleId = 1,
+                        DateOfBirth = DateTimeOffset.Parse("13.10.1970")
                     });
                     break;
                 case PATIENT_ROLE_ID:
@@ -177,9 +178,10 @@ namespace TreatLines.DAL.Extentions
                     {
                         UserId = id,
                         HospitalId = HOSPITAL_ID,
-                        BloodType = "0",
+                        BloodType = "O-",
                         Discount = 5,
-                        Sex = "Male"
+                        Sex = "Male",
+                        DateOfBirth = DateTimeOffset.Parse("06.01.1990")
                     });
                     break;
                 default: break;

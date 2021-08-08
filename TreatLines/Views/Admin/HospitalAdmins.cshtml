@@ -8,10 +8,10 @@
     <br />
     <p>Hospital name: @ViewData["HospitalName"]</p>
     <div class="col-12 border p-3">
-        <table id="hospitals_admin" class="table table-striped table-bordered" style="width:100%">
+        <table id="hospitalAdmins_admin" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
-                    <th style="width:20%">Name</th>
+                    <th>Name</th>
                     <th>Email</th>
                     <th>Phone number</th> 
                     <th>Register date</th>
@@ -28,12 +28,12 @@
                         <td>@h.RegisterDate</td>
                         <td>
                             @*<div class="btn-group" role="group" aria-label="Basic example">*@
-                                <button class="btn btn-secondary"
+                                <a class="btn btn-secondary"
                                         asp-controller="Admin"
                                         asp-action="BlockUnblockUser"
                                         asp-route-id="@h.Id">
                                     @(h.Blocked == 1 ? "Unblock" : "Block")
-                                </button>
+                                </a>
                             @*</div>*@
                         </td>
                     </tr>

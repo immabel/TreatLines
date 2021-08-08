@@ -80,7 +80,7 @@ namespace TreatLines.BLL.Services
             return admins;
         }
 
-        public IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsById(string id)
+        public IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsByHospAdminId(string id)
         {
             var hospitalId = hospitalAdminRepository.GetHospitalByHospitalAdminId(id).Id;
             var hAdmins = GetHospitalAdminsById(hospitalId);
