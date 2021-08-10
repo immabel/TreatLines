@@ -5,12 +5,8 @@ using System.Threading.Tasks;
 
 namespace TreatLines.Models
 {
-    public class ScheduleInfoModel
+    public class ScheduleDoctorInfoModel : ScheduleInfoModel
     {
-        public int Id { get; set; }
         public string DoctorEmail { get; set; }
-        public string StartTime { get; set; }
-        public string EndTime { get; set; }
-        public List<string> WorkDays { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace TreatLines.BLL.Interfaces
 {
     public interface IAdminService
     {
-        Task<AdminProfileInfoDTO> GetAdminProfileInfoAsync(string id);
+        Task<AdminProfileInfoDTO> GetAdminProfileInfoAsync(string email);
         Task UpdateUserInfoAsync(AdminProfileInfoDTO adminDTO);
         public void CreateDbBackup();
     }

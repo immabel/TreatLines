@@ -170,7 +170,9 @@ namespace TreatLines.DAL.Extentions
                         Position = "cosmetologist",
                         Price = 400,
                         ScheduleId = 1,
-                        DateOfBirth = DateTimeOffset.Parse("13.10.1970")
+                        DateOfBirth = DateTimeOffset.Parse("13.10.1970"),
+                        Education = "None",
+                        Sex = "Female"
                     });
                     break;
                 case PATIENT_ROLE_ID:

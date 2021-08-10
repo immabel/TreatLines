@@ -15,6 +15,7 @@ namespace TreatLines.DAL.Configurations
             builder.Property(p => p.StartTime);
             builder.Property(p => p.EndTime);
             builder.Property(p => p.WorkDays).HasMaxLength(10);
+            builder.Property(p => p.HospitalId);
             builder
                 .HasMany(h => h.Doctors)
                 .WithOne(o => o.Schedule)

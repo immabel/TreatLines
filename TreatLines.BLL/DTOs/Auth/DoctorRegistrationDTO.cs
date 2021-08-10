@@ -7,8 +7,11 @@ namespace TreatLines.BLL.DTOs.Auth
     public class DoctorRegistrationDTO : RegistrationDTO
     {
         public string Position { get; set; }
-        public DateTimeOffset StartTime { get; set; }
-        public DateTimeOffset EndTime { get; set; }
-        public string WorkDays { get; set; }
+        public int ScheduleId { get; set; }
+        public string Experience { get; set; }
+        public string Education { get; set; }
+        public string Sex { get; set; }
+        public DateTimeOffset DateOfBirth { get; set; }
+        public decimal Price { get; set; }
     }
 }

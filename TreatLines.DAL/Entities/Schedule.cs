@@ -9,6 +9,7 @@ namespace TreatLines.DAL.Entities
         public DateTimeOffset StartTime { get; set; } 
         public DateTimeOffset EndTime { get; set; } 
         public string WorkDays { get; set; }
+        public int HospitalId { get; set; }
         public List<Doctor> Doctors { get; set; }
     }
 }

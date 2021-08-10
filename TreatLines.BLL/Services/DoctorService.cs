@@ -54,10 +54,10 @@ namespace TreatLines.BLL.Services
             var doctor = await doctorRepository.GetByIdAsync(id);
             var hospital = await hospitalRepository.GetByIdAsync(doctor.HospitalId);
 
-            var regDate = doctor.User.RegistrationDate.ToString("d");
-            var birthDate = doctor.DateOfBirth.ToString("g");
-
-            return new DoctorProfileInfoDTO
+            var result = mapper.Map<DoctorProfileInfoDTO>(doctor);
+            result.HospitalName = hospital.Name;
+            return result;
+            /*return new DoctorProfileInfoDTO
             {
                 Id = doctor.UserId,
                 Email = doctor.User.Email,
@@ -66,16 +66,17 @@ namespace TreatLines.BLL.Services
                 Position = doctor.Position,
                 OnHoliday = doctor.OnHoliday,
                 Blocked = doctor.User.Blocked ? 1 : 0,
-                ScheduleId = doctor.ScheduleId == null ? 0 : (int)doctor.ScheduleId,
+                ScheduleId = doctor.ScheduleId,
                 Education = doctor.Education,
                 Experience = doctor.Experience,
                 PhoneNumber = doctor.User.PhoneNumber,
                 RegistrationDate = regDate,
                 Price = doctor.Price,
                 HospitalName = hospital.Name,
-                BirthDate = birthDate,
-                Sex = doctor.Sex
-            };
+                DateOfBirth = birthDate,
+                Sex = doctor.Sex,
+                HospitalId = doctor.HospitalId
+            };*/
         }
 
         public async Task<DoctorProfileInfoDTO> GetDoctorInfoByEmailAsync(string email)
@@ -169,6 +170,7 @@ namespace TreatLines.BLL.Services
             doctorTemp.Price = doctor.Price;
             doctorTemp.Education = doctor.Education;
             doctorTemp.Experience = doctor.Experience;
+            doctorTemp.ScheduleId = doctor.ScheduleId;
             doctorRepository.Update(doctorTemp);
             await doctorRepository.SaveChangesAsync();
         }

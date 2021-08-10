@@ -10,6 +10,7 @@ using TreatLines.DAL.Interfaces;
 using TreatLines.DAL.Repositories;
 using TreatLines.BLL.DTOs.Doctor;
 using TreatLines.BLL.DTOs.Patient;
+using TreatLines.BLL.DTOs.Schedule;
 
 namespace TreatLines.BLL.Services
 {
@@ -25,6 +26,8 @@ namespace TreatLines.BLL.Services
 
         private readonly IPatientRepository patientRepository;
 
+        //private readonly IScheduleService scheduleService;
+
         private readonly IMapper mapper;
 
         public HospitalService(
@@ -33,6 +36,7 @@ namespace TreatLines.BLL.Services
             IDoctorRepository doctorRepository,
             IHospitalAdminRepository hospitalAdminRepository,
             IPatientRepository patientRepository,
+            //IScheduleService scheduleService,
             IMapper mapper)
         {
             this.userRepository = userRepository;
@@ -40,6 +44,7 @@ namespace TreatLines.BLL.Services
             this.doctorRepository = doctorRepository;
             this.hospitalAdminRepository = hospitalAdminRepository;
             this.patientRepository = patientRepository;
+            //this.scheduleService = scheduleService;
             this.mapper = mapper;
         }
 
@@ -59,6 +64,11 @@ namespace TreatLines.BLL.Services
             hospital.Blocked = hospital.Blocked ? false : true;
             hospitalRepository.Update(hospital);
             await hospitalRepository.SaveChangesAsync();
+
+            /*if (hospital.Blocked)
+            {
+
+            }*/
         }
 
         public IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsById(int hospitalId)
@@ -75,14 +85,15 @@ namespace TreatLines.BLL.Services
                     HospitalName = ha.Hospital.Name,
                     HospitalId = ha.HospitalId,
                     Blocked = ha.User.Blocked ? 1 : 0,
-                    PhoneNumber = ha.User.PhoneNumber
+                    PhoneNumber = ha.User.PhoneNumber,
+                    RegistrationDate = ha.User.RegistrationDate.ToString("d")
                 });
             return admins;
         }
 
-        public IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsByHospAdminId(string id)
+        public IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsByHospAdmin(string email)
         {
-            var hospitalId = hospitalAdminRepository.GetHospitalByHospitalAdminId(id).Id;
+            var hospitalId = GetHospitalIdByHospAdmin(email);
             var hAdmins = GetHospitalAdminsById(hospitalId);
             return hAdmins;
         }
@@ -106,17 +117,18 @@ namespace TreatLines.BLL.Services
             return docCount;
         }
 
-        public async Task<HospitalAdminInfoDTO> GetHospitalAdminProfileInfoAsync(string id)
+        public async Task<HospitalAdminInfoDTO> GetHospitalAdminProfileInfoAsync(string email)
         {
-            var user = await userRepository.FindByIdAsync(id);
-            string hospName = hospitalAdminRepository.GetHospitalByHospitalAdminId(id).Name;
+            var user = await userRepository.FindByEmailAsync(email);
+            string hospName = hospitalAdminRepository.GetHospitalByHospitalAdminId(user.Id).Name;
             return new HospitalAdminInfoDTO
             {
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                HospitalName = hospName
+                HospitalName = hospName,
+                RegistrationDate = user.RegistrationDate.ToString("d")
             };
         }
 
@@ -125,6 +137,7 @@ namespace TreatLines.BLL.Services
             var doctors = doctorRepository.GetDoctors(hospital.Id)
                 .Select(doc => new DoctorInfoDTO
                 {
+                    Id = doc.UserId,
                     Email = doc.User.Email,
                     FirstName = doc.User.FirstName,
                     LastName = doc.User.LastName,
@@ -132,21 +145,24 @@ namespace TreatLines.BLL.Services
                     Position = doc.Position,
                     OnHoliday = doc.OnHoliday,
                     Blocked = doc.User.Blocked ? 1 : 0,
-                    Sex = doc.Sex
+                    Sex = doc.Sex,
+                    RegistrationDate = doc.User.RegistrationDate.ToString("d"),
+                    PhoneNumber = doc.User.PhoneNumber
                 });
             return doctors;
         }
 
-        public IEnumerable<DoctorInfoDTO> GetDoctorsByHospitalAdminId(string id)
+        public IEnumerable<DoctorInfoDTO> GetDoctorsByHospitalAdmin(string email)
         {
+            var id = userRepository.FindByEmailAsync(email).Result.Id;
             var hospital = hospitalAdminRepository.GetHospitalByHospitalAdminId(id);
             var doctors = GetDoctorsByHospital(hospital);
             return doctors;
         }
 
-        public IEnumerable<PatientInfoDTO> GetPatientsByHospitalAdminId(string id)
+        public IEnumerable<PatientInfoDTO> GetPatientsByHospitalAdmin(string email)
         {
-            var hospitalId = hospitalAdminRepository.GetHospitalByHospitalAdminId(id).Id;
+            var hospitalId = GetHospitalIdByHospAdmin(email);
             var patients = patientRepository.GetAllWithUserAsync()
                 .Result
                 .Where(p => p.HospitalId == hospitalId)
@@ -160,5 +176,28 @@ namespace TreatLines.BLL.Services
                 });
             return patients;
         }
+
+        public async Task UpdateHospitalAdminInfoAsync(HospitalAdminInfoDTO adminDTO)
+        {
+            User user = await userRepository.FindByEmailAsync(adminDTO.Email);
+            user.FirstName = adminDTO.FirstName;
+            user.LastName = adminDTO.LastName;
+            user.PhoneNumber = adminDTO.PhoneNumber;
+            await userRepository.UpdateAsync(user);
+        }
+
+        public int GetHospitalIdByHospAdmin(string email)
+        {
+            var id = userRepository.FindByEmailAsync(email).Result.Id;
+            var hospitalId = hospitalAdminRepository.GetHospitalByHospitalAdminId(id).Id;
+            return hospitalId;
+        }
+
+        /*public IEnumerable<ScheduleInfoDTO> GetSchedulesByHospAdmin(string email)
+        {
+            int hospId = GetHospitalIdByHospAdmin(email);
+            var result = scheduleService.GetSchedules(hospId);
+            return result;
+        }*/
     }
 }

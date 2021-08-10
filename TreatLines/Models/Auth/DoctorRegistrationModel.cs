@@ -9,8 +9,15 @@ namespace TreatLines.Models.Auth
     {
         [Required]
         public string Position { get; set; }
-        public string StartTime { get; set; }
-        public string EndTime { get; set; }
-        public string WorkDays { get; set; }
+        public int? ScheduleId { get; set; }
+        public IEnumerable<ScheduleInfoModel> Schedules { get; set; }
+        public string Experience { get; set; }
+        [Required]
+        public string Education { get; set; }
+        [Required]
+        public string Sex { get; set; }
+        [Required]
+        public string DateOfBirth { get; set; }
+        public decimal Price { get; set; }
     }
 }

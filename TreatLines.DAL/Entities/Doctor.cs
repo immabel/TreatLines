@@ -18,7 +18,7 @@ namespace TreatLines.DAL.Entities
         public string Education { get; set; }
         public string Sex { get; set; }
         public DateTimeOffset DateOfBirth { get; set; }
-        public int? ScheduleId { get; set; }
+        public int ScheduleId { get; set; }
         public Schedule Schedule { get; set; }
         public List<DoctorPatient> DoctorPatients { get; set; }
     }

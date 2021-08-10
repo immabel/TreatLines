@@ -8,5 +8,6 @@ namespace TreatLines.BLL.DTOs.Auth
     {
         public string BloodType { get; set; }
         public string Sex { get; set; }
+        public DateTimeOffset DateOfBirth { get; set; }
     }
 }

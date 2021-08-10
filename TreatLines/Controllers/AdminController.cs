@@ -13,6 +13,7 @@ using TreatLines.Models.Tables;
 
 namespace TreatLines.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly IHospitalRegistrationRequestsService hospitalRegistrationRequestsService;
@@ -23,10 +24,7 @@ namespace TreatLines.Controllers
 
         private readonly IMapper mapper;
 
-        private readonly ILogger<AdminController> _logger;
-
         public AdminController(
-            ILogger<AdminController> logger,
             IHospitalRegistrationRequestsService hospitalRegistrationRequestsService,
             IHospitalService hospitalService,
             IAdminService adminService,
@@ -37,26 +35,22 @@ namespace TreatLines.Controllers
             this.mapper = mapper;
             this.adminService = adminService;
             this.hospitalService = hospitalService;
-            _logger = logger;
         }
 
-        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
-            string adminId = "00CA41A9-C962-4230-937E-D5F54772C062";
-            var profileInfo = await adminService.GetAdminProfileInfoAsync(adminId);
+            var temp = User.Identity.Name;
+            var profileInfo = await adminService.GetAdminProfileInfoAsync(temp);
             var result = mapper.Map<AdminProfileInfoModel>(profileInfo);
             return View(result);
         }
 
-        //[Authorize(Roles = "Admin")]
         public IActionResult BackUp()
         {
             adminService.CreateDbBackup();
             return RedirectToAction("Index");
         }
-
-        //[Authorize(Roles = "Admin")]
+        
         public async Task<IActionResult> Requests()
         {
             var requests = await hospitalRegistrationRequestsService.GetAllRequestsAsync();
@@ -64,7 +58,6 @@ namespace TreatLines.Controllers
             return View(result);
         }
 
-        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Hospitals()
         {
             var hospitals = await hospitalService.GetHospitalsAsync();
@@ -72,25 +65,23 @@ namespace TreatLines.Controllers
             return View(result);
         }
 
-        //[Authorize(Roles = "Admin")]
         public IActionResult HospitalAdmins(int? id, string hospName)
         {
+            if (id == null)
+                return Redirect("/Admin/Hospitals");
             ViewData["HospitalName"] = hospName;
             var hospAdmins = hospitalService.GetHospitalAdminsById((int)id);
             var result = mapper.Map<IEnumerable<HospitalAdminModel>>(hospAdmins);
+            result.First().HopitalId = (int)id;
             return View(result);
         }
 
-        //[Authorize(Roles = "Admin")]
-        [HttpPost]
-        public async Task<IActionResult> ApproveRequest(int id)
+        public async Task<IActionResult> ApproveRequest(int? id)
         {
-            await hospitalRegistrationRequestsService.ApproveRequestAsync(id);
+            await hospitalRegistrationRequestsService.ApproveRequestAsync((int)id);
             return RedirectToAction("Requests");
         }
 
-        //[Authorize(Roles = "Admin")]
-        [HttpPost]
         public async Task<IActionResult> RejectRequest(int? id)
         {
             await hospitalRegistrationRequestsService.RejectRequestAsync((int)id);
@@ -104,15 +95,13 @@ namespace TreatLines.Controllers
             await adminService.UpdateUserInfoAsync(admin);
             return RedirectToAction("Index");
         }
-
-        [HttpPost]
+                
         public async Task<IActionResult> BlockUnblockUser(string id, int? hospId, string hospitalName)
         {
             await hospitalService.BlockUserAsync(id);
             return RedirectToAction("HospitalAdmins", new { id = hospId, hospName = hospitalName });
         }
 
-        [HttpPost]
         public async Task<IActionResult> BlockUnblockHospital(int id)
         {
             await hospitalService.BlockHospitalByIdAsync(id);

@@ -32,27 +32,41 @@
                         <td>@r.DateOfRequestCreation</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <form asp-controller="Admin"
+                                <a class="btn btn-secondary"
+                                   asp-controller="Admin"
                                       asp-action="ApproveRequest"
-                                      asp-route-id="@r.Id"
-                                      method="post">
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-secondary">
+                                      asp-route-id="@r.Id">
                                             <i class="fas fa-check-circle"></i>
-                                        </button>
-                                    </div>
-                                </form>
-                                <form asp-action="RejectRequest"
+                                </a>
+                                <a class="btn btn-secondary"
+                                   asp-action="RejectRequest"
                                       asp-controller="Admin"
-                                      asp-route-id="@r.Id"
-                                      method="post">
-                                    <div class="form-group">
-                                        <button type="submit"
-                                                class="btn btn-secondary">
+                                      asp-route-id="@r.Id">
                                             <i class="fas fa-times-circle"></i>
-                                        </button>
-                                    </div>
-                                </form>
+                                </a>
+                                @*
+                                    <form asp-controller="Admin"
+                                                                      asp-action="ApproveRequest"
+                                                                      asp-route-id="@r.Id"
+                                                                      method="post">
+                                                                    <div class="form-group">
+                                                                        <button type="submit" class="btn btn-secondary">
+                                                                            <i class="fas fa-check-circle"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                                <form asp-action="RejectRequest"
+                                                                      asp-controller="Admin"
+                                                                      asp-route-id="@r.Id"
+                                                                      method="post">
+                                                                    <div class="form-group">
+                                                                        <button type="submit"
+                                                                                class="btn btn-secondary">
+                                                                            <i class="fas fa-times-circle"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                *@
                             </div>
                         </td>
                     </tr>

@@ -19,16 +19,17 @@ namespace TreatLines.BLL.Services
             this.userRepository = userRepository;
         }
 
-        public async Task<AdminProfileInfoDTO> GetAdminProfileInfoAsync(string id)
+        public async Task<AdminProfileInfoDTO> GetAdminProfileInfoAsync(string email)
         {
-            TreatLines.DAL.Entities.User user = await userRepository.FindByIdAsync(id);
+            TreatLines.DAL.Entities.User user = await userRepository.FindByEmailAsync(email);
 
             var result = new AdminProfileInfoDTO
             {
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 FirstName = user.FirstName,
-                LastName = user.LastName
+                LastName = user.LastName,
+                RegistrationDate = user.RegistrationDate.ToString("d")
             };
 
             return result;

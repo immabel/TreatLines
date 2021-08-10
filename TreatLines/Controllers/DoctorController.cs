@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,6 +17,7 @@ using TreatLines.Models.Tables;
 
 namespace TreatLines.Controllers
 {
+    [Authorize]
     public class DoctorController : Controller
     {
         private readonly IDoctorService doctorService;
@@ -97,7 +99,7 @@ namespace TreatLines.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateDoctorInfo(DoctorProfileInfoModel model)
+        public async Task<IActionResult> UpdateDoctorInfo(DoctorProfileInfoHospAdminModel model)
         {
             if (ModelState.IsValid)
             {

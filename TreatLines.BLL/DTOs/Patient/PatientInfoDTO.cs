@@ -10,6 +10,6 @@ namespace TreatLines.BLL.DTOs.Patient
         public string BloodType { get; set; }
         public string Sex { get; set; }
         public double Discount { get; set; }
-        public string BirthDate { get; set; }
+        public string DateOfBirth { get; set; }
     }
 }

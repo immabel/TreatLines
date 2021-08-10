@@ -11,6 +11,5 @@ namespace TreatLines.BLL.DTOs.HospitalAdmin
         public string HospitalName { get; set; }
         public int HospitalId { get; set; }
         public int Blocked { get; set; }
-        public string RegistrationDate { get; set; }
     }
 }

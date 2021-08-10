@@ -12,51 +12,7 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
-            <div class="container">
-                @*<a class="navbar-brand" style="font-weight: bold" asp-area="" asp-controller="User" asp-action="Index">TreatLines</a>*@
-
-                @*<a class="navbar-brand" asp-area="" asp-controller="Admin" asp-action="Index">TreatLines</a>)*@
-
-                @*<a class="navbar-brand" asp-area="" asp-controller="HospitalAdmin" asp-action="Index">TreatLines</a>*@
-
-                <a class="navbar-brand" asp-area="" asp-controller="Doctor" asp-action="Index">TreatLines</a>
-
-                @*<a class="navbar-brand" asp-area="" asp-controller="Patient" asp-action="Index">TreatLines</a>*@
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-
-                    @* <ul class="navbar-nav flex-grow-1">
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Requests">Requests</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Hospitals">Hospitals</a>
-            </li>
-        </ul>*@
-
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="HospitalAdmin" asp-action="Requests">Requests</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="HospitalAdmin" asp-action="Doctors">Doctors</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="HospitalAdmin" asp-action="Patients">Patients</a>
-                        </li>
-                    </ul>
-
-                    @*<ul class="navbar-nav flex-grow-1">
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="Doctor" asp-action="Patients">Patients</a>
-            </li>
-        </ul>*@
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
+                <partial name="_LoginPartial.cshtml"/>
         </nav>
     </header>
     <div class="container">

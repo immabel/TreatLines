@@ -1,26 +1,84 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@using TreatLines.DAL.Entities
 
-<ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
-</ul>
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+@{ var user = await UserManager.GetUserAsync(User);
+    string role = null;
+    if (user != null)
+        role = UserManager.GetRolesAsync(user).Result.First();
+    }
+
+<div class="container">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <a class="navbar-brand" style="font-weight: normal" asp-area="" asp-controller="@role" asp-action="Index">TreatLines</a>
+
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            @if (role.Equals("Admin"))
+            {
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Requests">Requests</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Hospitals">Hospitals</a>
+                    </li>
+                </ul>
+            }
+            else if (role.Equals("HospitalAdmin"))
+            {
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="HospitalAdmin" asp-action="Requests">Requests</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="HospitalAdmin" asp-action="Doctors">Doctors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="HospitalAdmin" asp-action="Patients">Patients</a>
+                    </li>
+                </ul>
+            }
+            else if (role.Equals("Doctor"))
+            {
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Doctor" asp-action="Patients">Patients</a>
+                    </li>
+                </ul>
+            }
+            else
+            {
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Patient" asp-action="Doctors">Patients</a>
+                    </li>
+                </ul>
+            }
+
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+                </li>
+                <li class="nav-item">
+                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "User", new { area = "" })">
+                        <button id="logout" type="submit" class="nav-link btn btn-link">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    }
+    else
+    {
+        <a class="navbar-brand" style="font-weight: normal" asp-area="Identity" asp-page="/Account/Login">TreatLines</a>
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                </li>
+            </ul>
+        </div>
+    }
+</div>

@@ -133,8 +133,9 @@ namespace TreatLines.BLL.Services
         public async Task<PatientInfoDTO> GetPatientInfoByEmailAsync(string email)
         {
             var patient = await patientRepository.GetByEmailAsync(email);
-            var result = await GetPatientInfoAsync(patient.UserId);
-            return result;
+            PatientInfoDTO patientInfo = mapper.Map<PatientInfoDTO>(patient);
+            //patientInfo.HospitalName = hospitalRepository.GetByIdAsync(patient.HospitalId).Result.Name;            
+            return patientInfo;
         }
 
         public IEnumerable<string> GetPatientsEmailsByHospitalId(int id)

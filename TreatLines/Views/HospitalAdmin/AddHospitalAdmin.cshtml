@@ -1,11 +1,11 @@
 ﻿@model TreatLines.Models.Auth.RegistrationModel
 
 <section class="my-5">
-    <div class="card text-white bg-secondary mb-3">
+    <div class="card col-md-8 text-white bg-secondary mb-1 mx-auto">
         <div class="card-header">
-            <h4 class="mt-2 mb-4 text-center">Adding new hospital admin</h4>
+            <h4 class="mt-2 text-center">Adding new hospital admin</h4>
         </div>
-        <div class="card-body">
+        <div class="card-body ms-3">
             <form asp-controller="HospitalAdmin" asp-action="AddHospitalAdmin" method="post">
                 <div class="form-group row my-2">
                     <div class="col-3">
@@ -45,7 +45,7 @@
                 </div>
                 <div class="form-group row my-1">
                     <div class="col-4">
-                        <button type="submit" class="btn btn-outline-secondary mb-3">Register</button>
+                        <button type="submit" class="btn btn-secondary border-white">Register</button>
                     </div>
                 </div>
             </form>

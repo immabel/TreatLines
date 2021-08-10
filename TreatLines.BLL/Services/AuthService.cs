@@ -44,42 +44,6 @@ namespace TreatLines.BLL.Services
             this.scheduleRepository = scheduleRepository;
         }
 
-        public async Task<LoginResponseDTO> LoginAsync(LoginRequestDTO request)
-        {
-            User user = await userRepository.FindByEmailAsync(request.Email);
-            if (user == null)
-            {
-                throw new BadRequestException("User does not exist!");
-            }
-            if (user.Blocked)
-                return null;
-
-            bool passwordIsCorrect = await userRepository.CheckPasswordAsync(user, request.Password);
-            if (!passwordIsCorrect)
-            {
-                throw new ForbiddenException("Password is incorrect!");
-            }
-            Claim[] userClaims = await GetAuthTokenClaimsForUserAsync(user);
-
-            string role = userClaims[1].Value;
-            int hospitalId = 0;
-
-            if (role.Equals("HospitalAdmin"))
-                hospitalId = hospitalAdminRepository.GetHospitalByHospitalAdminId(user.Id).Id;
-            else if (role.Equals("Doctor"))
-                hospitalId = doctorRepository.GetByIdAsync(user.Id).Result.HospitalId;
-            else if (role.Equals("Patient"))
-                hospitalId = patientRepository.GetByIdAsync(user.Id).Result.HospitalId;
-
-            return new LoginResponseDTO
-            {
-                UserId = user.Id,
-                Email = user.Email,
-                Role = role,
-                HospitalId = hospitalId
-            };
-        }
-
         public async Task<RegistrationResponseDTO> RegisterHospitalAdminAsync(HospitalAdminRegistrationDTO request)
         {
             Hospital hospital = await hospitalRepository.GetByIdAsync(request.HospitalId);
@@ -125,27 +89,6 @@ namespace TreatLines.BLL.Services
             return user;
         }
 
-        private async Task<Claim[]> GetAuthTokenClaimsForUserAsync(User user)
-        {
-            IList<string> userRoles = await userRepository.GetRolesAsync(user);
-            var userClaims = new[]
-            {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, userRoles.FirstOrDefault())
-            };
-            return userClaims;
-        }
-
-        public string MySort(string str)
-        {
-            int[] arr = new int[str.Length];
-            for (int i = 0; i < str.Length; i++)
-                arr[i] = str[i];
-            Array.Sort(arr);
-            str = arr.ToString();
-            return str;
-        }
-
         public async Task<RegistrationResponseDTO> RegisterDoctorAsync(DoctorRegistrationDTO request)
         {
             Hospital hospital = await hospitalRepository.GetByIdAsync(request.HospitalId);
@@ -153,15 +96,6 @@ namespace TreatLines.BLL.Services
             {
                 throw new BadRequestException("Hospital doesn't exist!");
             }
-
-            Schedule schedule = new Schedule
-            {
-                StartTime = request.StartTime,
-                EndTime = request.EndTime,
-                WorkDays = request.WorkDays
-            };
-            await scheduleRepository.AddAsync(schedule);
-            await scheduleRepository.SaveChangesAsync();
 
             request.Password = "Qwerty12345";
 
@@ -173,7 +107,12 @@ namespace TreatLines.BLL.Services
                 Position = request.Position,
                 OnHoliday = false,
                 HospitalId = request.HospitalId,
-                ScheduleId = schedule.Id
+                ScheduleId = request.ScheduleId,
+                Education = request.Education,
+                Experience = request.Experience,
+                DateOfBirth = request.DateOfBirth,
+                Price = request.Price,
+                Sex = request.Sex
             });
             await doctorRepository.SaveChangesAsync();
 
@@ -191,6 +130,7 @@ namespace TreatLines.BLL.Services
                 UserId = patient.Id,
                 BloodType = request.BloodType,
                 Sex = request.Sex,
+                DateOfBirth = request.DateOfBirth,
                 HospitalId = request.HospitalId
             });
             await patientRepository.SaveChangesAsync();

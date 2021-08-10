@@ -14,6 +14,7 @@ using TreatLines.BLL.DTOs.PatientCreate;
 using TreatLines.BLL.DTOs.Schedule;
 using TreatLines.DAL.Entities;
 using TreatLines.Models;
+using TreatLines.Models.Auth;
 using TreatLines.Models.ProfileInfo;
 using TreatLines.Models.Requests;
 using TreatLines.Models.Response;
@@ -66,16 +67,22 @@ namespace TreatLines.Configuration
             CreateMap<HospitalInfoDTO, HospitalModel>();
 
             CreateMap<HospitalInfoDTO, HospitalProfileInfoModel>().ReverseMap();
+
             CreateMap<AdminProfileInfoDTO, AdminProfileInfoModel>();//.ReverseMap();
             CreateMap<AdminProfileInfoModel, AdminProfileInfoDTO>();
 
+            CreateMap<HospitalAdminProfileInfoModel, HospitalAdminInfoDTO>();
             CreateMap<HospitalAdminInfoDTO, HospitalAdminContactInfoModel>();
-
             CreateMap<HospitalAdminInfoDTO, HospitalAdminModel>()
                 .ForMember(
                 dest => dest.FullName,
                 opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName));
             CreateMap<HospitalAdminInfoDTO, HospitalAdminProfileInfoModel>();
+
+            CreateMap<User, AdminProfileInfoDTO>()
+                .ForMember(
+                dest => dest.RegistrationDate,
+                opt => opt.MapFrom(src => src.RegistrationDate.ToString("d")));
             CreateMap<User, HospitalAdminInfoDTO>()
                 .ForMember(
                 dest => dest.RegistrationDate,
@@ -84,21 +91,37 @@ namespace TreatLines.Configuration
                 dest => dest.Blocked,
                 opt => opt.MapFrom(src => src.Blocked ? 1 : 0))
                 .ReverseMap();
+            CreateMap<User, DoctorProfileInfoDTO>()
+                .ForMember(
+                dest => dest.RegistrationDate,
+                opt => opt.MapFrom(src => src.RegistrationDate.ToString("d")))
+                .ForMember(
+                dest => dest.Blocked,
+                opt => opt.MapFrom(src => src.Blocked ? 1 : 0));
 
             CreateMap<DoctorInfoDTO, DoctorModel>()
                 .ForMember(
                 dest => dest.FullName,
                 opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName));
-            CreateMap<DoctorProfileInfoDTO, DoctorProfileInfoModel>();
+            CreateMap<DoctorProfileInfoDTO, DoctorProfileInfoHospAdminModel>();
+            CreateMap<Doctor, DoctorProfileInfoDTO>()
+                .ForMember(
+                dest => dest.Id,
+                opt => opt.MapFrom(src => src.UserId))
+                .ForMember(
+                dest => dest.DateOfBirth,
+                opt => opt.MapFrom(src => src.DateOfBirth.ToString("d")));
 
             CreateMap<PatientInfoDTO, PatientModel>();
             CreateMap<Patient, PatientInfoDTO>()
                 .ForMember(
-                dest => dest.BirthDate,
+                dest => dest.DateOfBirth,
                 opt => opt.MapFrom(src => src.DateOfBirth.ToString("d")))
                 .ReverseMap();
 
             CreateMap<ScheduleInfoModel, ScheduleInfoDoctorDTO>();
+            CreateMap<ScheduleInfoDTO, ScheduleDoctorInfoModel>();
+            CreateMap<ScheduleInfoDTO, ScheduleInfoModel>();;
             CreateMap<ScheduleDTO, Schedule>()
                 .ForMember(
                 dest => dest.StartTime,
@@ -108,6 +131,19 @@ namespace TreatLines.Configuration
                 opt => opt.MapFrom(src => DateTimeOffset.Parse(src.EndTime)));
 
             CreateMap<FreeDateTimesDTO, FreeDateTimeModel>();
+
+            CreateMap<RegistrationModel, HospitalAdminRegistrationDTO>();
+            CreateMap<DoctorRegistrationModel, DoctorRegistrationDTO>()
+                .ForMember(
+                dest => dest.ScheduleId,
+                opt => opt.MapFrom(src => src.ScheduleId == null ? 1 : src.ScheduleId))
+                .ForMember(
+                dest => dest.DateOfBirth,
+                opt => opt.MapFrom(src => DateTimeOffset.Parse(src.DateOfBirth)));
+            CreateMap<PatientRegistrationModel, PatientRegistrationDTO>()
+                .ForMember(
+                dest => dest.DateOfBirth,
+                opt => opt.MapFrom(src => DateTimeOffset.Parse(src.DateOfBirth)));
         }
     }
 }

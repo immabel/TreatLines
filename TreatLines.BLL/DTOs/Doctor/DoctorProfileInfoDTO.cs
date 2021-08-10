@@ -10,7 +10,7 @@ namespace TreatLines.BLL.DTOs.Doctor
         public decimal Price { get; set; }
         public string Experience { get; set; }
         public string Education { get; set; }
-        public string BirthDate { get; set; }
+        public string DateOfBirth { get; set; }
         public int ScheduleId { get; set; }
     }
 }

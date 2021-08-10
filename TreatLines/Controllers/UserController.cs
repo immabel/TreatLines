@@ -90,7 +90,7 @@ namespace TreatLines.Controllers
             return View(viewModel);
         }
 
-        [AllowAnonymous]
+        /*[AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
@@ -103,35 +103,23 @@ namespace TreatLines.Controllers
                 //return RedirectToAction("ProfilePage");//will change to redirecting depending on user role
             }
             return RedirectToAction("Index");
-        }
+        }*/
 
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> SendHospitalRequest(RequestToCreateHospitalModel request)
         {
             var dto = mapper.Map<RequestToCreateHospitalDTO>(request);
             await hospitalRegistrationRequestsService.AddRequestAsync(dto);
-            return RedirectToAction("Index");
+            //ModelState.
+            return RedirectToAction("RegisterHospital");
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> SendPatientRequest(RequestToCreatePatientModel request)
         {
             var dto = mapper.Map<RequestToCreatePatientDTO>(request);
             await patientRegistrationRequestsService.AddRequestAsync(dto);
-            return RedirectToAction("Index");
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return RedirectToAction("Hospitals");
         }
     }
 }

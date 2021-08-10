@@ -29,6 +29,7 @@ namespace TreatLines
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddRazorPages();
             services.AddDbContext<TLinesDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
             services.AddTransient<DbContext, TLinesDbContext>();
 
@@ -69,7 +70,8 @@ namespace TreatLines
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=User}/{action=Index}/{id?}");
+                    pattern: "{controller=HospitalAdmin}/{action=Doctors}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

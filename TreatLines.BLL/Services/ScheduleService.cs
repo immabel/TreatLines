@@ -40,10 +40,11 @@ namespace TreatLines.BLL.Services
         public IEnumerable<ScheduleInfoDTO> GetSchedules(int hospitalId)
         {
             var schedules = scheduleRepository
-                .Find(sched => sched.Doctors.Exists(doc => doc.HospitalId == hospitalId))
+                .Find(sched => sched.HospitalId == hospitalId)
                 .Result
                 .Select(sch => new ScheduleInfoDTO
                 {
+                    Id = sch.Id,
                     StartTime = sch.StartTime.ToString("f"),
                     EndTime = sch.EndTime.ToString("f"),
                     WorkDays = FromNumbersToDays(sch.WorkDays)

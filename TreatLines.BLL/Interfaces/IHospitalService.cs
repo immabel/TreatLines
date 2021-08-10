@@ -4,6 +4,7 @@ using TreatLines.BLL.DTOs.Doctor;
 using TreatLines.BLL.DTOs.Hospital;
 using TreatLines.BLL.DTOs.HospitalAdmin;
 using TreatLines.BLL.DTOs.Patient;
+using TreatLines.BLL.DTOs.Schedule;
 using TreatLines.DAL.Entities;
 
 namespace TreatLines.BLL.Interfaces
@@ -14,12 +15,15 @@ namespace TreatLines.BLL.Interfaces
         Task<HospitalInfoDTO> GetHospitalInfoByIdAsync(int id);
         Task BlockHospitalByIdAsync(int hospitalId);
         IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsById(int hospitalId);
-        IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsByHospAdminId(string hospitalAdminId);
+        IEnumerable<HospitalAdminInfoDTO> GetHospitalAdminsByHospAdmin(string email);
         Task BlockUserAsync(string id);
         int GetDoctorsCountById(int hospitalId);
-        Task<HospitalAdminInfoDTO> GetHospitalAdminProfileInfoAsync(string id);
+        Task<HospitalAdminInfoDTO> GetHospitalAdminProfileInfoAsync(string email);
         IEnumerable<DoctorInfoDTO> GetDoctorsByHospital(Hospital hospital);
-        IEnumerable<DoctorInfoDTO> GetDoctorsByHospitalAdminId(string id);
-        IEnumerable<PatientInfoDTO> GetPatientsByHospitalAdminId(string id);
+        IEnumerable<DoctorInfoDTO> GetDoctorsByHospitalAdmin(string email);
+        IEnumerable<PatientInfoDTO> GetPatientsByHospitalAdmin(string email);
+        Task UpdateHospitalAdminInfoAsync(HospitalAdminInfoDTO adminDTO);
+        int GetHospitalIdByHospAdmin(string email);
+        //IEnumerable<ScheduleInfoDTO> GetSchedulesByHospAdmin(string email);
     }
 }
