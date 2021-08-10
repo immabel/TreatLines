@@ -105,6 +105,7 @@ namespace TreatLines.BLL.Services
             Patient patientTemp = await patientRepository.GetByEmailAsync(patient.Email);
             patientTemp.BloodType = patient.BloodType;
             patientTemp.Sex = patient.Sex;
+            patientTemp.Discount = patient.Discount;
             patientRepository.Update(patientTemp);
             await patientRepository.SaveChangesAsync();
         }
@@ -134,6 +135,11 @@ namespace TreatLines.BLL.Services
         {
             var patient = await patientRepository.GetByEmailAsync(email);
             PatientInfoDTO patientInfo = mapper.Map<PatientInfoDTO>(patient);
+            patientInfo.FirstName = patient.User.FirstName;
+            patientInfo.LastName = patient.User.LastName;
+            patientInfo.PhoneNumber = patient.User.PhoneNumber;
+            patientInfo.Email = patient.User.Email;
+            patientInfo.RegistrationDate = patient.User.RegistrationDate.ToString("d");
             //patientInfo.HospitalName = hospitalRepository.GetByIdAsync(patient.HospitalId).Result.Name;            
             return patientInfo;
         }

@@ -1,72 +1,97 @@
 ﻿@model TreatLines.Models.Auth.DoctorRegistrationModel
 
 <section class="my-5">
-    <div class="card text-white bg-secondary mb-3">
+    <div class="card col-md-9 text-white bg-secondary mx-auto">
         <div class="card-header">
-            <h4 class="mt-2 mb-4 text-center">Adding new doctor</h4>
+            <h4 class="mt-2 text-center">Adding new doctor</h4>
         </div>
-        <div class="card-body">
+        <div class="card-body ms-1">
             <form asp-controller="HospitalAdmin" asp-action="AddDoctor" method="post">
                 <div class="form-group row my-2">
-                    <div class="col-3">
+                    <div class="col-2">
                         <label asp-for="FirstName">First name: </label>
                     </div>
-                    <div class="col-5">
+                    <div class="col-4">
                         <input asp-for="FirstName" class="form-control" />
                         <span asp-validation-for="FirstName" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row my-2">
-                    <div class="col-3">
+                    <div class="col-2">
                         <label asp-for="LastName">Last name: </label>
                     </div>
-                    <div class="col-5">
+                    <div class="col-4">
                         <input asp-for="LastName" class="form-control" />
                         <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row my-2">
-                    <div class="col-3">
+                    <div class="col-2">
                         <label asp-for="Email">Email: </label>
                     </div>
-                    <div class="col-5">
+                    <div class="col-4">
                         <input asp-for="Email" class="form-control" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row my-2">
-                    <div class="col-3">
+                    <div class="col-2">
                         <label asp-for="PhoneNumber">Phone number: </label>
                     </div>
-                    <div class="col-5">
+                    <div class="col-4">
                         <input asp-for="PhoneNumber" class="form-control" />
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row my-2">
                     <div class="col-2">
+                        <label for="sex" class="form-label">Sex: </label>
+                    </div>
+                    <div class="col-3">
+                        <select class="form-select" id="sex" asp-for="Sex">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <label for="sex" class="form-label">Date of birth: </label>
+                    </div>
+                    <div class="col-3">
+                        <input asp-for="DateOfBirth" class="form-control" />
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row my-2">
+                    <div class="col-2">
                         <label>Position: </label>
                     </div>
-                    <div class="col-2">
-                        <input class="form-control p-0" asp-for="Position">
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Position">
                     </div>
-                    <div class="col-2">
+                    <div class="col-3">
                         <label>Appointment price: </label>
                     </div>
-                    <div class="col-2">
-                        <input class="form-control p-0" asp-for="Price">
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Price">
                     </div>
                 </div>
                 <div class="form-group row my-2">
-                    <label>Education: </label>
-                    <textarea class="form-control" rows="3" asp-for="Education"></textarea>
+                    <div class="col-12">
+                        <label class="mb-1">Education: </label>
+                        <textarea class="form-control" rows="3" asp-for="Education"></textarea>
+                    </div>
                 </div>
                 <div class="form-group row my-2">
-                    <label>Experience: </label>
-                    <textarea class="form-control" rows="3" asp-for="Experience"></textarea>
+                    <div class="col-12">
+                        <label class="mb-1">Experience: </label>
+                        <textarea class="form-control" rows="3" asp-for="Experience"></textarea>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <h5 class="mt-2 mb-2">Schedule</h5>
                 </div>
                 <div class="form-group row my-2">
-                    <div class="col-2">
+                    <div class="col-2 ps-2">
                         <select id="schedulesId" asp-for="ScheduleId">
                             @foreach (var item in Model.Schedules)
                             {
@@ -75,32 +100,34 @@
                         </select>
                     </div>
                     <div class="col-4">
-                        <div class="row">
-                            <div class="col-2">
+                        <div class="row mb-2">
+                            <div class="col-5">
                                 <label>Start time: </label>
                             </div>
-                            <div class="col-2">
-                                <input class="form-control p-0">
+                            <div class="col-6">
+                                <input class="form-control">
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5">
                                 <label>End time: </label>
                             </div>
-                            <div class="col-2">
-                                <input class="form-control p-0">
+                            <div class="col-6">
+                                <input class="form-control">
                             </div>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-2">
                         <label>Work days: </label>
+                    </div>
+                    <div class="col-3">
                         <select id="workDays" multiple="multiple">
                         </select>
                     </div>
                 </div>
                 <div class="form-group row my-1">
                     <div class="col-4">
-                        <button type="submit" class="btn btn-outline-secondary mb-3">Register</button>
+                        <button type="submit" class="btn btn-secondary border-white">Register</button>
                     </div>
                 </div>
             </form>

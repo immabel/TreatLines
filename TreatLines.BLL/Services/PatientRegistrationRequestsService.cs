@@ -54,7 +54,10 @@ namespace TreatLines.BLL.Services
                 throw new BadRequestException("Creation request doesn't exist!");
             }
 
-            var result = await authService.RegisterPatientAsync(new PatientRegistrationDTO
+            var patient = mapper.Map<PatientRegistrationDTO>(request);
+            patient.Password = "Qwerty12345";
+            var result = await authService.RegisterPatientAsync(patient);
+            /*new PatientRegistrationDTO
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
@@ -62,10 +65,12 @@ namespace TreatLines.BLL.Services
                 BloodType = request.BloodType,
                 Email = request.Email,
                 Sex = request.Sex,
-                PhoneNumber = request.PhoneNumber
-            });
+                PhoneNumber = request.PhoneNumber,
+                DateOfBirth = request.DateOfBirth,
+                HospitalId = request.HospitalId
+            });*/
 
-            var hospName = hospitalRepository.GetByIdAsync(request.Id).Result.Name;
+            var hospName = hospitalRepository.GetByIdAsync(request.HospitalId).Result.Name;
 
             // TODO: load html letter template and fill it in
             await mailService.SendAsync(
@@ -86,7 +91,7 @@ namespace TreatLines.BLL.Services
                 throw new BadRequestException("Creation request doesn't exist!");
             }
 
-            var hospName = hospitalRepository.GetByIdAsync(request.Id).Result.Name;
+            var hospName = hospitalRepository.GetByIdAsync(request.HospitalId).Result.Name;
 
             // TODO: Load email HTML template from file and fill it in
             await mailService.SendAsync(

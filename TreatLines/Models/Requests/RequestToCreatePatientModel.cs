@@ -18,7 +18,7 @@ namespace TreatLines.Models.Requests
         [Required, Phone]
         public string PhoneNumber { get; set; }
         [Required]
-        public DateTimeOffset DateOfBirth { get; set; }
+        public string DateOfBirth { get; set; }
         public string BloodType { get; set; }
         public string Sex { get; set; }
     }

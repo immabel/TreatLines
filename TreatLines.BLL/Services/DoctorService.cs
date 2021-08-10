@@ -56,6 +56,10 @@ namespace TreatLines.BLL.Services
 
             var result = mapper.Map<DoctorProfileInfoDTO>(doctor);
             result.HospitalName = hospital.Name;
+            result.FirstName = doctor.User.FirstName;
+            result.LastName = doctor.User.LastName;
+            result.Email = doctor.User.Email;
+            result.PhoneNumber = doctor.User.PhoneNumber;
             return result;
             /*return new DoctorProfileInfoDTO
             {

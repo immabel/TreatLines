@@ -2,11 +2,11 @@
 
 <section class="my-5">
     @*<div class="container-lg border px-5 pt-3">*@
-    <div class="card border-primary mb-3">
+    <div class="card col-md-10 border-primary mx-auto">
         <div class="card-header">
             <div class="row my-2">
                 <div class="col-6">
-                    <h4 class="mt-2 mb-4">Patient Profile</h4>
+                    <h4 class="mt-2 mb-1">Patient Profile</h4>
                 </div>
                 <div class="col-3 offset-3">
                     <a class="btn btn-secondary nav-link"
@@ -25,13 +25,13 @@
                         <label>Name: </label>
                     </div>
                     <div class="col-3">
-                        <input class="form-control p-0" asp-for="FirstName">
+                        <input class="form-control" asp-for="FirstName">
                     </div>
                     <div class="col-2">
                         <label>Surname: </label>
                     </div>
                     <div class="col-3">
-                        <input class="form-control p-0" asp-for="LastName">
+                        <input class="form-control" asp-for="LastName">
                     </div>
                 </div>
                 <div class="form-group row my-2">
@@ -47,7 +47,7 @@
                         <label>Phone number: </label>
                     </div>
                     <div class="col-4">
-                        <input class="form-control p-0" asp-for="PhoneNumber" />
+                        <input class="form-control" asp-for="PhoneNumber" />
                     </div>
                 </div>
                 <div class="row my-2">
@@ -61,7 +61,7 @@
                 <div class="form-group row my-2">
                     <div class="col-4">
                         <label for="bloodtype" class="form-label mt-4">Blood type</label>
-                        <select multiple="" class="form-select" id="bloodtype" asp-for="BloodType">
+                        <select class="form-select" id="bloodtype" asp-for="BloodType">
                             <option value="O+">O+</option>
                             <option value="O-">O-</option>
                             <option value="A+">A+</option>
@@ -74,7 +74,7 @@
                     </div>
                     <div class="col-4">
                         <label for="sex" class="form-label mt-4">Sex</label>
-                        <select multiple="" class="form-select" id="sex" asp-for="Sex">
+                        <select class="form-select" id="sex" asp-for="Sex">
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                         </select>
@@ -82,10 +82,10 @@
                 </div>
                 <div class="form-group row my-2">
                     <div class="col-2">
-                        <label>Discount: </label>
+                        <label>Discount(%): </label>
                     </div>
-                    <div class="col-4">
-                        <input class="form-control p-0" asp-for="Discount" />
+                    <div class="col-1">
+                        <input class="form-control" asp-for="Discount" />
                     </div>
                 </div>
                 <div class="row my-2">
@@ -97,7 +97,7 @@
                     </div>
                 </div>
                 <div class="form-group col-4 my-1">
-                    <button type="submit" class="btn btn-secondary mb-3">Save changes</button>
+                    <button type="submit" class="btn btn-secondary">Save changes</button>
                 </div>
             </div>
         </form>

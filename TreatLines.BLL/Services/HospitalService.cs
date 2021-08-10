@@ -172,7 +172,9 @@ namespace TreatLines.BLL.Services
                     FirstName = p.User.FirstName,
                     LastName = p.User.LastName,
                     Email = p.User.Email,
-                    Blocked = p.User.Blocked ? 1 : 0
+                    Blocked = p.User.Blocked ? 1 : 0,
+                    PhoneNumber = p.User.PhoneNumber,
+                    RegistrationDate = p.User.RegistrationDate.ToString("d")
                 });
             return patients;
         }

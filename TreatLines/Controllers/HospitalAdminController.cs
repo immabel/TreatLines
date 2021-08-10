@@ -136,13 +136,13 @@ namespace TreatLines.Controllers
 
         public async Task<IActionResult> DoctorProfile(string email)
         {
-            string adminEmail = "ssadmin@gmail.com";//User.Identity.Name;
-            var hospId = hospitalService.GetHospitalIdByHospAdmin(adminEmail);
-            var schedules = scheduleService.GetSchedules(hospId);
+            //string adminEmail = "ssadmin@gmail.com";//User.Identity.Name;
             var docInfo = await doctorService.GetDoctorInfoByEmailAsync(email);
+            var schedules = scheduleService.GetSchedules(docInfo.HospitalId);
 
             var result = mapper.Map<DoctorProfileInfoHospAdminModel>(docInfo);
             result.Schedules = mapper.Map<IEnumerable<ScheduleInfoModel>>(schedules);
+            
 
             return View(result);
         }

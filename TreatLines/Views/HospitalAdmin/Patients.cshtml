@@ -36,13 +36,13 @@
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a class="btn btn-secondary"
-                                        asp-controller="Admin"
+                                        asp-controller="HospitalAdmin"
                                         asp-action="BlockUnblockUser"
                                         asp-route-id="@p.Id"
                                         asp-route-userType="2">
                                     @(p.Blocked == 1 ? "Unblock" : "Block")
                                 </a>
-                                <button class="btn btn-secondary"
+                                <a class="btn btn-secondary"
                                         data-bs-toggle="tooltip"
                                         data-bs-placement="bottom"
                                         title="Make appointment"
@@ -50,13 +50,13 @@
                                         asp-action="MakeAppointment"
                                         asp-route-patientEmail="@p.Email">
                                     <i class="fas fa-calendar-day"></i>
-                                </button>
-                                <button class="btn btn-secondary"
+                                </a>
+                                <a class="btn btn-secondary"
                                         asp-controller="HospitalAdmin"
                                         asp-action="PatientProfile"
                                         asp-route-email="@p.Email">
                                     <i class="fas fa-info-circle"></i>
-                                </button>
+                                </a>
                             </div>
                         </td>
                     </tr>

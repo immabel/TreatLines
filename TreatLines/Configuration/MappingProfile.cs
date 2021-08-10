@@ -44,14 +44,21 @@ namespace TreatLines.Configuration
                 opt => opt.MapFrom(src => src.CreationDate.ToString("d")));
 
             CreateMap<RequestToCreatePatient, RequestToCreatePatientViewDTO>();
+            CreateMap<RequestToCreatePatient, PatientRegistrationDTO>();
             CreateMap<RequestToCreatePatientViewDTO, RequestInfoToCreatePatientModel>()
                 .ForMember(
                 dest => dest.DateOfRequestCreation,
                 opt => opt.MapFrom(src => src.DateOfRequestCreation.ToString("g")))
                 .ForMember(
+                dest => dest.DateOfBirth,
+                opt => opt.MapFrom(src => src.DateOfBirth.ToString("d")))
+                .ForMember(
                 dest => dest.FullName,
                 opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName));
-            CreateMap<RequestToCreatePatientModel, RequestToCreatePatientDTO>();
+            CreateMap<RequestToCreatePatientModel, RequestToCreatePatientDTO>()
+                .ForMember(
+                dest => dest.DateOfBirth,
+                opt => opt.MapFrom(src => DateTimeOffset.Parse(src.DateOfBirth)));
             CreateMap<RequestToCreatePatientDTO, RequestToCreatePatient>();
 
             CreateMap<Hospital, HospitalInfoDTO>()
@@ -91,13 +98,6 @@ namespace TreatLines.Configuration
                 dest => dest.Blocked,
                 opt => opt.MapFrom(src => src.Blocked ? 1 : 0))
                 .ReverseMap();
-            CreateMap<User, DoctorProfileInfoDTO>()
-                .ForMember(
-                dest => dest.RegistrationDate,
-                opt => opt.MapFrom(src => src.RegistrationDate.ToString("d")))
-                .ForMember(
-                dest => dest.Blocked,
-                opt => opt.MapFrom(src => src.Blocked ? 1 : 0));
 
             CreateMap<DoctorInfoDTO, DoctorModel>()
                 .ForMember(
@@ -110,9 +110,19 @@ namespace TreatLines.Configuration
                 opt => opt.MapFrom(src => src.UserId))
                 .ForMember(
                 dest => dest.DateOfBirth,
-                opt => opt.MapFrom(src => src.DateOfBirth.ToString("d")));
+                opt => opt.MapFrom(src => src.DateOfBirth.ToString("d")))
+                .ForMember(
+                dest => dest.RegistrationDate,
+                opt => opt.MapFrom(src => src.User.RegistrationDate.ToString("d")))
+                .ForMember(
+                dest => dest.Blocked,
+                opt => opt.MapFrom(src => src.User.Blocked ? 1 : 0));
 
-            CreateMap<PatientInfoDTO, PatientModel>();
+            CreateMap<PatientInfoDTO, PatientModel>()
+                .ForMember(
+                dest => dest.FullName,
+                opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName));
+            CreateMap<PatientInfoDTO, PatientProfileInfoHospAdminModel>().ReverseMap();
             CreateMap<Patient, PatientInfoDTO>()
                 .ForMember(
                 dest => dest.DateOfBirth,
