@@ -19,10 +19,10 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#doctors_hospAdmin').DataTable();
 });
-/*$(document).ready(function () {
-    $('#doctors_hospAdmin').DataTable();
-});
 $(document).ready(function () {
+    $('#patients_hospAdmin').DataTable();
+});
+/*$(document).ready(function () {
     $('#doctors_hospAdmin').DataTable();
 });
 $(document).ready(function () {

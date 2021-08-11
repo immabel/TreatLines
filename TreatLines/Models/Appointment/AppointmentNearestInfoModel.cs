@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 
 namespace TreatLines.Models.Appointment
 {
-    public class AppointmentNearestInfoModel
+    public class AppointmentNearestInfoModel : AppointmentFutureInfoDoctorModel
     {
-        public string PatientEmail { get; set; }
-        public int? AppointmentId { get; set; }   
-        public string DateTime { get; set; }
+        public int? AppointmentId { get; set; }
         public int? PrescriptionId { get; set; }
         public string Description { get; set; }
     }

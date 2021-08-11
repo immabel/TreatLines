@@ -13,6 +13,8 @@ namespace TreatLines.Controllers
     {
         private readonly IDoctorService doctorService;
 
+        private readonly IAppointmentService appointmentService;
+
         private readonly IScheduleService scheduleService;
 
         private readonly IPatientService patientService;
@@ -21,12 +23,14 @@ namespace TreatLines.Controllers
 
         public PatientController(
             IScheduleService scheduleService,
+            IAppointmentService appointmentService,
             IPatientService patientService,
             IDoctorService doctorService,
             IMapper mapper)
         {
             this.doctorService = doctorService;
             this.patientService = patientService;
+            this.appointmentService = appointmentService;
             this.scheduleService = scheduleService;
             this.mapper = mapper;
         }
@@ -36,7 +40,7 @@ namespace TreatLines.Controllers
             string patId = "";
             string patientEmail = "";
             var patientInfo = await patientService.GetPatientInfoAsync(patId);
-            var prescription = patientService.GetLatestPrescriptionByPatientEmail(patientEmail);
+            var prescription = appointmentService.GetLatestPrescriptionByPatientEmail(patientEmail);
 
             var result = mapper.Map<PatientProfileInfoModel>(patientInfo);
             result.Appointment.Description = prescription.Description;

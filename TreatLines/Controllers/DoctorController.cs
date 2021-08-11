@@ -17,7 +17,7 @@ using TreatLines.Models.Tables;
 
 namespace TreatLines.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class DoctorController : Controller
     {
         private readonly IDoctorService doctorService;
@@ -26,25 +26,29 @@ namespace TreatLines.Controllers
 
         private readonly IPatientService patientService;
 
+        private readonly IAppointmentService appointmentService;
+
         private readonly IMapper mapper;
 
         public DoctorController(
             IScheduleService scheduleService,
-         IPatientService patientService,
-        IDoctorService doctorService,
+            IPatientService patientService,
+            IAppointmentService appointmentService,
+            IDoctorService doctorService,
             IMapper mapper)
         {
             this.doctorService = doctorService;
             this.patientService = patientService;
+            this.appointmentService = appointmentService;
             this.scheduleService = scheduleService;
             this.mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
-            string docId = "E8D13331-62AB-463E-A283-6493B68A3622";
-            var docInfo = await doctorService.GetDoctorInfoAsync(docId);
-            var schedInfo = scheduleService.GetScheduleInfoByIdAsync(docInfo.ScheduleId);
+            string email = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
+            var docInfo = await doctorService.GetDoctorInfoByEmailAsync(email);
+            var schedInfo = await scheduleService.GetScheduleInfoByIdAsync(docInfo.ScheduleId);
 
             var result = mapper.Map<DoctorProfileInfoModel>(docInfo);
             result.Schedule = mapper.Map<ScheduleInfoModel>(schedInfo);
@@ -54,24 +58,24 @@ namespace TreatLines.Controllers
 
         public IActionResult GetUpcomingAppointments()
         {
-            string docEmail = "alaska.thunderfuck@gmail.com";
-            var appoints = doctorService.GetFutureAppointmentsByDoctorEmail(docEmail);
+            string email = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
+            var appoints = appointmentService.GetFutureAppointmentsByDoctorEmail(email);
             var result = mapper.Map<IEnumerable<AppointmentFutureInfoDoctorModel>>(appoints);
             return View(result);
         }
 
         public IActionResult Patients()
         {
-            string docEmail = "alaska.thunderfuck@gmail.com";
-            var patients = doctorService.GetDoctorPatientsByEmail(docEmail);
+            string email = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
+            var patients = doctorService.GetDoctorPatientsByEmail(email);
             var result = mapper.Map<IEnumerable<PatientModel>>(patients);
             return View(result);
         }
 
         public async Task<IActionResult> PatientProfile(string email)
         {
-            string docId = "E8D13331-62AB-463E-A283-6493B68A3622";
-            var appointment = doctorService.GetNearestAppointment(docId, email);
+            string docEmail = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
+            var appointment = appointmentService.GetNearestAppointment(docEmail, email);
             var patInfo = await patientService.GetPatientInfoByEmailAsync(email);
             var result = mapper.Map<PatientProfileInfoModel>(patInfo);
             result.Appointment = mapper.Map<AppointmentNearestInfoModel>(appointment);
@@ -81,15 +85,14 @@ namespace TreatLines.Controllers
 
         public async Task<IActionResult> MakeAppointment(string patientEmail)
         {
-            int hospId = 1;
-            string docEmail = "alaska.thunderfuck@gmail.com";
+            string docEmail = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
             patientEmail = "de.tox@gmail.com";
             AppointmentCreationModel appointment = new AppointmentCreationModel
             {
                 DoctorEmail = docEmail,
                 PatientEmail = patientEmail
             };
-            var patEmails = patientService.GetPatientsEmailsByHospitalId(hospId);
+            var patEmails = doctorService.GetPatientsEmailsByDoctorEmail(docEmail);
             var freeDateTime = await doctorService.GetFreeDateTimesByDoctorEmailAsync(docEmail);
 
             appointment.PatientsEmails = patEmails;
@@ -99,34 +102,33 @@ namespace TreatLines.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateDoctorInfo(DoctorProfileInfoHospAdminModel model)
+        public async Task<IActionResult> UpdateDoctorInfo(DoctorProfileInfoModel model)
         {
             if (ModelState.IsValid)
             {
                 var doctor = mapper.Map<DoctorProfileInfoDTO>(model);
                 await doctorService.UpdateDoctorAsync(doctor);
-                return View("DoctorProfile");
+                return RedirectToAction("Index");
             }
-            return View("DoctorProfile", model);
+            return View("Index", model);
         }
 
-        [HttpPost]
         public async Task<IActionResult> CancelAppointment(int? id)
         {
-            await doctorService.CancelAppointmentAsync((int)id);
+            await appointmentService.CancelAppointmentAsync((int)id);
             return RedirectToAction("GetUpcomingAppointments");
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpsertPrescription(AppointmentNearestInfoModel model)
+        public async Task<IActionResult> UpsertPrescription(PatientProfileInfoModel model)
         {
             if (ModelState.IsValid)
             {
-                var prescDTO = mapper.Map<PrescriptionDTO>(model);
-                await patientService.UpsertPrescriptionByAppointmentIdAsync(prescDTO);
-                return RedirectToAction("PatientProfile", new { email = model.PatientEmail });
+                var prescDTO = mapper.Map<PrescriptionDTO>(model.Appointment);
+                await appointmentService.UpsertPrescriptionByAppointmentIdAsync(prescDTO);
+                return RedirectToAction("PatientProfile", new { email = model.Appointment.PatientEmail });
             }
-            return RedirectToAction("PatientProfile", new { email = model.PatientEmail });
+            return RedirectToAction("PatientProfile", new { email = model.Appointment.PatientEmail });
         }
     }
 }

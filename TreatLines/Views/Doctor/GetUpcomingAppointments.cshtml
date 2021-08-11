@@ -3,52 +3,67 @@
 <div class="container p-1">
     <div class="row my-2">
         <div class="col-6">
-            <h5 class="mt-2 mb-4">Upcoming appointments</h5>
+            <h4 class="mt-2 mb-2">Upcoming appointments</h4>
         </div>
     </div>
-    @if (Model.Count() == 0)
-    {
-        <div>
-            <p class="mt-2 mb-2">No appointments!</p>
-        </div>
-    }
-    else
-    {
-        @foreach (var a in Model)
+    <div class="row">
+        @if (Model.Count() == 0)
         {
-            <div class="card bg-light mb-3" style="max-width: 20rem;">
-                <div class="card-header">
-                    <h6>
-                        @a.DateTimeAppointment
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <p class="card-text">@a.PatientEmail</p> <br />
-                    <p class="card-text">@a.FullName</p> <br />
-                </div>
-                <div class="card-footer">
-                    <div class="row my-1">
-                        <div class="col-4">
-                            @if (a.Canceled == 1)
+            <div>
+                <p class="mt-2 mb-2">No appointments!</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var a in Model)
+            {
+                <div class="card bg-light mb-1 mx-4 px-0" style="max-width: 17rem;">
+                    <div class="card-header">
+                        <h5 class="my-1">
+                            @a.DateTimeAppointment
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text text-info mb-1">@a.PatientEmail</p>
+                        <p class="card-text mb-1">@a.FullName</p>
+                        <div class="row" style="height: 28px">
+                            @if (a.Price > a.PriceWithDiscount)
                             {
-                                <p class="text-danger">Canceled</p>
+                                <div class="col-5">
+                                    <p class="card-text m-0">
+                                        <s>@a.Price</s>
+                                    </p><br />
+                                </div>
                             }
-                            else
-                            {
-                                @*id="btnDocCancel"*@
-                                <button type="button"
-                                        class="btn btn-outline-danger"
-                                        asp-controller="Doctor"
-                                        asp-action="CancelAppointment"
-                                        asp-route-id="@a.Id">
-                                    Cancel
-                                </button>
-                            }
+                            <div class="col-6">
+                                <p class="card-text text-info m-0">@a.PriceWithDiscount</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer" style="height: 60px">
+                        <div class="row my-1">
+                            <div class="col-6">
+                                @if (a.Canceled == 1)
+                                {
+                                    <p class="text-danger m-0">Canceled</p>
+                                }
+                                else
+                                {
+                                    @*id="btnDocCancel"*@
+                                    <a type="button"
+                                       class="btn btn-outline-danger"
+                                       asp-controller="Doctor"
+                                       asp-action="CancelAppointment"
+                                       asp-route-id="@a.Id">
+                                        Cancel
+                                    </a>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         }
-    }
+    </div>
 </div>
 

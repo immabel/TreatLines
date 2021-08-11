@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using TreatLines.DAL.Entities;
 using TreatLines.DAL.Interfaces;
 
@@ -66,6 +67,18 @@ namespace TreatLines.DAL.Repositories
                 .ToArray();
         }
 
+        public IEnumerable<DoctorPatient> GetAppointmentsByPatientEmail(string email)
+        {
+            return context.Set<DoctorPatient>()
+                .Include(dp => dp.Patient.User)
+                .Include(dp => dp.Doctor.User)
+                .Include(dp => dp.Appointment)
+                .Include(dp => dp.Appointment.Prescription)
+                .Where(dp => dp.Patient.User.Email.Equals(email))
+                .AsNoTracking()
+                .ToArray();
+        }
+
         public IEnumerable<DoctorPatient> GetAppointmentsInfoForDoctorByPatientId(string id)
         {
             return context.Set<DoctorPatient>()
@@ -80,10 +93,31 @@ namespace TreatLines.DAL.Repositories
         {
             return context.Set<DoctorPatient>()
                 .Include(dp => dp.Appointment)
+                .ThenInclude(a => a.Prescription)
                 .Where(dp => dp.DoctorId.Equals(docId) && dp.PatientId.Equals(patId))
                 .Select(dp => dp.Appointment)
                 .AsNoTracking()
                 .ToArray();
+        }
+
+        public async Task<Patient> GetPatientByEmailAsync(string email)
+        {
+            return await context.Set<DoctorPatient>()
+                .Include(dp => dp.Patient)
+                .ThenInclude(p => p.User)
+                .Where(dp => dp.Patient.User.Email.Equals(email))
+                .Select(dp => dp.Patient)
+                .FirstAsync();
+        }
+
+        public async Task<Doctor> GetDoctorByEmailAsync(string email)
+        {
+            return await context.Set<DoctorPatient>()
+                .Include(dp => dp.Doctor)
+                .ThenInclude(p => p.User)
+                .Where(dp => dp.Doctor.User.Email.Equals(email))
+                .Select(dp => dp.Doctor)
+                .FirstAsync();
         }
     }
 }

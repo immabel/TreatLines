@@ -23,7 +23,7 @@ namespace TreatLines.BLL.Services
 
         private readonly IScheduleService scheduleService;
 
-        private readonly IRepository<Appointment> appointmentRepository;
+        private readonly IAppointmentService appointmentService;
 
         private readonly IDoctorPatientRepository doctorPatientRepository;
 
@@ -35,7 +35,7 @@ namespace TreatLines.BLL.Services
             UserRepository userRepository,
             IDoctorRepository doctorRepository,
             IScheduleService scheduleService,
-            IRepository<Appointment> appointmentRepository,
+            IAppointmentService appointmentService,
             IDoctorPatientRepository doctorPatientRepository,
             IRepository<Hospital> hospitalRepository,
             IMapper mapper)
@@ -43,7 +43,7 @@ namespace TreatLines.BLL.Services
             this.userRepository = userRepository;
             this.doctorRepository = doctorRepository;
             this.scheduleService = scheduleService;
-            this.appointmentRepository = appointmentRepository;
+            this.appointmentService = appointmentService;
             this.doctorPatientRepository = doctorPatientRepository;
             this.hospitalRepository = hospitalRepository;
             this.mapper = mapper;
@@ -98,7 +98,9 @@ namespace TreatLines.BLL.Services
                     Email = p.User.Email,
                     FirstName = p.User.FirstName,
                     LastName = p.User.LastName,
-                    Blocked = p.User.Blocked ? 1 : 0                    
+                    Blocked = p.User.Blocked ? 1 : 0,
+                    PhoneNumber = p.User.PhoneNumber,
+                    RegistrationDate = p.User.RegistrationDate.ToString("d")
                 });
             var pat1 = patients
                 .GroupBy(p => p.Id);
@@ -121,45 +123,6 @@ namespace TreatLines.BLL.Services
             return mapper.Map<ScheduleInfoDTO>(schedule);
         }
 
-        public async Task AddAppointment(AppointmentCreationDTO appointmentDto)
-        {
-            Appointment appointment = new Appointment
-            {
-                DateTimeAppointment = appointmentDto.DateTimeAppointment
-            };
-            await appointmentRepository.AddAsync(appointment);
-            await appointmentRepository.SaveChangesAsync();
-
-            var patientId = userRepository.FindByEmailAsync(appointmentDto.PatientEmail).Result.Id;
-            var doctorId = userRepository.FindByEmailAsync(appointmentDto.DoctorEmail).Result.Id;
-
-            await doctorPatientRepository.AddAsync(new DoctorPatient
-            {
-                DoctorId = doctorId,
-                PatientId = patientId,
-                AppointmentId = appointment.Id
-            });
-            await doctorPatientRepository.SaveChangesAsync();
-        }
-
-        public IEnumerable<AppointmentFutureInfoDTO> GetFutureAppointmentsByDoctorEmail(string email)
-        {
-            var appointInfo = doctorPatientRepository
-                .GetAppointmentsByDoctorEmail(email);
-            var tempAppoints = appointInfo
-                .Where(ap => ap.Appointment.DateTimeAppointment.CompareTo(DateTimeOffset.Now) > 0)
-                .Select(apInfo => new AppointmentFutureInfoDTO
-                {
-                    Id = (int)apInfo.AppointmentId,
-                    DateTimeAppointment = apInfo.Appointment.DateTimeAppointment.ToString("g"),
-                    PatientEmail = apInfo.Patient.User.Email,
-                    FirstName = apInfo.Patient.User.FirstName,
-                    LastName = apInfo.Patient.User.LastName,
-                    Canceled = apInfo.Appointment.Canceled ? 1 : 0
-                });
-            return tempAppoints;
-        }
-
         public async Task UpdateDoctorAsync(DoctorProfileInfoDTO doctor)
         {
             User user = await userRepository.FindByEmailAsync(doctor.Email);
@@ -174,44 +137,10 @@ namespace TreatLines.BLL.Services
             doctorTemp.Price = doctor.Price;
             doctorTemp.Education = doctor.Education;
             doctorTemp.Experience = doctor.Experience;
-            doctorTemp.ScheduleId = doctor.ScheduleId;
+            if (doctor.ScheduleId != 0)
+                doctorTemp.ScheduleId = doctor.ScheduleId;
             doctorRepository.Update(doctorTemp);
             await doctorRepository.SaveChangesAsync();
-        }
-
-        public async Task CancelAppointmentAsync(int id)
-        {
-            var appoint = await appointmentRepository.GetByIdAsync(id);
-            appoint.Canceled = true;
-            appointmentRepository.Update(appoint);
-            await appointmentRepository.SaveChangesAsync();
-        }
-
-        public IEnumerable<AppointmentInfoDTO> GetLastAppointmentsByPatientId(string id)
-        {
-            TimeSpan ts = new TimeSpan(-1, 30, 0);
-            var appointInfo = doctorPatientRepository.GetAppointmentsInfoForDoctorByPatientId(id);
-            if ((appointInfo.Count() == 1 || appointInfo.Count() == 0) && appointInfo.First().Appointment == null)
-                return null;
-            var appointmentsInfo = appointInfo.Where(ap => ap.Appointment.DateTimeAppointment.Subtract(DateTimeOffset.Now).CompareTo(ts) < 0)
-                .Select(apInfo => new AppointmentInfoDTO
-                {
-                    Id = (int)apInfo.AppointmentId,
-                    DateTimeAppointment = apInfo.Appointment.DateTimeAppointment.ToString("g"),
-                    PrescriptionId = apInfo.Appointment.PrescriptionId == null ? 0 : (int)apInfo.Appointment.PrescriptionId,
-                    Prescription = apInfo.Appointment.Prescription == null ? "-" : apInfo.Appointment.Prescription.Description
-                });                
-            return appointmentsInfo;
-        }
-
-        public AppointmentDTO GetNearestAppointment(string doctorId, string patientEmail)
-        {
-            TimeSpan ts = new TimeSpan(-1, 30, 0);
-            var patientId = userRepository.FindByEmailAsync(patientEmail).Result.Id;
-            Appointment appointment = doctorPatientRepository.GetAppointments(doctorId, patientId)
-                .Where(ap => ap.DateTimeAppointment.Subtract(DateTimeOffset.Now).CompareTo(ts) > 0)
-                .FirstOrDefault();
-            return mapper.Map<AppointmentDTO>(appointment);
         }
 
         public async Task<IEnumerable<FreeDateTimesDTO>> GetFreeDateTimesByDoctorEmailAsync(string email)
@@ -221,7 +150,7 @@ namespace TreatLines.BLL.Services
             TimeSpan startTime = TimeSpan.Parse(schedule.StartTime.ToString("t"));
             TimeSpan endTime = TimeSpan.Parse(schedule.EndTime.ToString("t"));
 
-            var appointments = GetFutureAppointmentsByDoctorEmail(email).Select(dt => dt.DateTimeAppointment).ToArray();
+            var appointments = appointmentService.GetFutureAppointmentsByDoctorEmail(email).Select(dt => dt.DateTimeAppointment).ToArray();
 
             //IDictionary<string, string[]> busyDateTime = new Dictionary<string, string[]>();
             IDictionary<string, IList<string>> busyDateTime = new Dictionary<string, IList<string>>();
@@ -301,6 +230,14 @@ namespace TreatLines.BLL.Services
             }
             doctorRepository.Update(doctorTemp);
             await doctorRepository.SaveChangesAsync();
+        }
+
+        public IEnumerable<string> GetPatientsEmailsByDoctorEmail(string email)
+        {
+            var patientsEmails = doctorPatientRepository.GetDoctorPatientsByEmail(email)
+                .Select(p => p.User.Email)
+                .Distinct();
+            return patientsEmails;
         }
     }
 }

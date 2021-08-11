@@ -4,11 +4,9 @@ using System.Text;
 
 namespace TreatLines.BLL.DTOs.Appointment
 {
-    public class AppointmentInfoDTO
+    public class AppointmentInfoDTO : AppointmentDTO
     {
-        public int Id { get; set; }
-        public string DateTimeAppointment { get; set; }
-        public int PrescriptionId { get; set; }
-        public string Prescription { get; set; }
+        public int? PrescriptionId { get; set; }
+        public string Description { get; set; }
     }
 }

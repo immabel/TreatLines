@@ -2,42 +2,50 @@
 
 <section class="my-5">
     @*<div class="container-lg border px-5 pt-3">*@
-        <div class="card border-primary mb-3">
+        <div class="card col-md-10 border-info mx-auto">
             <div class="card-header">
-                <div class="row my-2">
+                <div class="row">
                     <div class="col-6">
-                        <h3 class="mt-2 mb-4">User Profile</h3>
+                        <h3 class="mt-2">User Profile</h3>
                     </div>
                     <div class="col-3 offset-3">
                         <a class="btn btn-secondary nav-link"
-                           asp-controller="HospitalAdmin"
+                           asp-controller="Doctor"
                            asp-action="MakeAppointment">
                             Make appointment
                         </a>
                     </div>
                 </div>
             </div>
-            <form asp-controller="HospitalAdmin" asp-action="UpdateDoctorInfo" method="post">
-                <div class="card-body">
+            <form asp-controller="Doctor" asp-action="UpdateDoctorInfo" method="post">
+                <div class="card-body pb-2">
                     <div class="form-group row my-2">
                         <div class="col-2">
                             <label>Name: </label>
                         </div>
-                        <div class="col-2">
-                            <input class="form-control p-0" asp-for="FirstName">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="FirstName">
                         </div>
                         <div class="col-2">
                             <label>Surname: </label>
                         </div>
-                        <div class="col-2">
-                            <input class="form-control p-0" asp-for="LastName">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="LastName">
                         </div>
-                    </div>@*class="form-control-plaintext p-0"*@
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-2">
+                            <label>Registration date: </label>
+                        </div>
+                        <div class="col-4">
+                            <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="RegistrationDate">
+                        </div>
+                    </div>
                     <div class="form-group row my-2">
                         <div class="col-2">
                             <label>Email: </label>
                         </div>
-                        <div class="col-3">
+                        <div class="col-4">
                             <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Email">
                         </div>
                     </div>
@@ -45,8 +53,8 @@
                         <div class="col-2">
                             <label>Phone number: </label>
                         </div>
-                        <div class="col-2">
-                            <input class="form-control p-0" asp-for="PhoneNumber" />
+                        <div class="col-3">
+                            <input class="form-control" asp-for="PhoneNumber" />
                         </div>
                     </div>
                     <div class="form-group row my-2">
@@ -54,72 +62,63 @@
                             <label>Date of birth: </label>
                         </div>
                         <div class="col-2">
-                            <input class="form-control p-0" asp-for="DateOfBirth" />
+                            <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="DateOfBirth" />
                         </div>
                     </div>
                     <div class="form-group row my-2">
                         <div class="col-2">
                             <label>Position: </label>
                         </div>
-                        <div class="col-2">
+                        <div class="col-3">
                             <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Position">
                         </div>
-                        <div class="col-2">
+                        <div class="col-3">
                             <label>Appointment price: </label>
                         </div>
                         <div class="col-2">
                             <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Price">
                         </div>
                     </div>
-                    <div class="form-group row my-2">
+                    <div class="form-group row my-2 ms-1">
                         <div class="form-check">
                             @if (Model.OnHoliday)
-                            {
-                                <input class="form-check-input" disabled="" type="checkbox" checked="">
-                            }
-                            else
-                            {
-                                <input class="form-check-input" disabled="" type="checkbox">
-                            }
-                            <label class="form-check-label" for="flexCheck" asp-for="OnHoliday">
+            {
+                <input type="hidden" asp-for="OnHoliday">
+            }
+                            <input class="form-check-input bg-info" disabled="" type="checkbox" id="onHolidayDoc" asp-for="OnHoliday">
+                            <label class="form-check-label" for="onHolidayDoc">
                                 On holiday
                             </label>
                         </div>
                     </div>
                     <div class="form-group row my-2">
-                        <div class="col-2">
+                        <div class="col-12">
                             <label>Education: </label>
-                        </div>
-                        <div class="col-6">
-                            <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Education">
+                            <textarea class="form-control" rows="3" asp-for="Education"></textarea>
                         </div>
                     </div>
                     <div class="form-group row my-2">
-                        <div class="col-2">
+                        <div class="col-12">
                             <label>Experience: </label>
-                        </div>
-                        <div class="col-6">
-                            <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Experience">
+                            <textarea class="form-control" rows="3" asp-for="Experience"></textarea>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="row my-2">
-                        <div class="col-6">
-                            <h5 class="mt-2 mb-4">Schedule</h5>
-                        </div>
+                <div class="card-body pt-1">
+                    <div class="row mb-2">
+                            <h5>Schedule</h5>
                     </div>
                     <div class="form-group row my-2">
                         <div class="col-2">
                             <label>Start time: </label>
                         </div>
-                        <div class="col-3">
+                        <div class="col-1">
                             <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Schedule.StartTime">
                         </div>
                         <div class="col-2">
                             <label>End time: </label>
                         </div>
-                        <div class="col-3">
+                        <div class="col-1">
                             <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Schedule.EndTime">
                         </div>
                     </div>
@@ -127,18 +126,17 @@
                         <div class="col-2">
                             <label>Work days: </label>
                         </div>
-                        <div class="col-3">
-                            @*<input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Schedule.WorkDays">*@
-                                @foreach(var day in Model.Schedule.WorkDays)
-            {
+                        <div class="col-6">
+                            @foreach (var day in Model.Schedule.WorkDays)
+                            {
                                 <span class="badge rounded-pill bg-info">@day</span>
-            }
+                            }
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
                     <div class="form-group col-4 my-1">
-                        <button type="submit" class="btn btn-secondary mb-3">Save changes</button>
+                        <button type="submit" class="btn btn-secondary">Save changes</button>
                     </div>
                 </div>
             </form>

@@ -1,8 +1,8 @@
 ﻿@model TreatLines.Models.Appointment.AppointmentCreationModel
 
-<section class="my-5">
+<section class="my-5 mx-5">
     <div class="row">
-        <div class="col-8">
+        <div class="col-6 ms-auto">
             @foreach (var dateTime in Model.FreeDatesTime)
             {
             <div class="row mt-1">
@@ -19,7 +19,7 @@
             </div>
             }
         </div>
-        <div class="col-4">
+        <div class="col-4 me-auto">
             <form asp-controller="HospitalAdmin" asp-action="MakeAppointment" method="post">
                 <div class="card bg-light mb-3" style="max-width: 20rem;">
                     @*<div class="card-header">
@@ -35,11 +35,11 @@
                             <input type="hidden" asp-for="DoctorEmail" />
                         }
                         <div class="form-group">
-                            <label for="selectPatient" class="form-label mt-4">Patient email</label>
+                            <label for="selectPatient" class="form-label">Patient email</label>
                             <select class="form-select" id="selectPatient" asp-for="PatientEmail">
                                 @foreach (var email in Model.PatientsEmails)
                                 {
-                                    <option value="@email">email</option>
+                                    <option value="@email">@email</option>
                                 }
                             </select>
                         </div>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TreatLines.BLL.DTOs.Admin;
+using TreatLines.BLL.DTOs.Appointment;
 using TreatLines.BLL.DTOs.Auth;
 using TreatLines.BLL.DTOs.Doctor;
 using TreatLines.BLL.DTOs.Hospital;
@@ -11,9 +12,11 @@ using TreatLines.BLL.DTOs.HospitalAdmin;
 using TreatLines.BLL.DTOs.HospitalCreate;
 using TreatLines.BLL.DTOs.Patient;
 using TreatLines.BLL.DTOs.PatientCreate;
+using TreatLines.BLL.DTOs.Prescription;
 using TreatLines.BLL.DTOs.Schedule;
 using TreatLines.DAL.Entities;
 using TreatLines.Models;
+using TreatLines.Models.Appointment;
 using TreatLines.Models.Auth;
 using TreatLines.Models.ProfileInfo;
 using TreatLines.Models.Requests;
@@ -103,7 +106,8 @@ namespace TreatLines.Configuration
                 .ForMember(
                 dest => dest.FullName,
                 opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName));
-            CreateMap<DoctorProfileInfoDTO, DoctorProfileInfoHospAdminModel>();
+            CreateMap<DoctorProfileInfoDTO, DoctorProfileInfoHospAdminModel>().ReverseMap();
+            CreateMap<DoctorProfileInfoDTO, DoctorProfileInfoModel>().ReverseMap();
             CreateMap<Doctor, DoctorProfileInfoDTO>()
                 .ForMember(
                 dest => dest.Id,
@@ -123,6 +127,7 @@ namespace TreatLines.Configuration
                 dest => dest.FullName,
                 opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName));
             CreateMap<PatientInfoDTO, PatientProfileInfoHospAdminModel>().ReverseMap();
+            CreateMap<PatientInfoDTO, PatientProfileInfoModel>().ReverseMap();
             CreateMap<Patient, PatientInfoDTO>()
                 .ForMember(
                 dest => dest.DateOfBirth,
@@ -154,6 +159,24 @@ namespace TreatLines.Configuration
                 .ForMember(
                 dest => dest.DateOfBirth,
                 opt => opt.MapFrom(src => DateTimeOffset.Parse(src.DateOfBirth)));
+
+            CreateMap<Appointment, AppointmentDTO>()
+                .ForMember(
+                dest => dest.DateTimeAppointment,
+                opt => opt.MapFrom(src => src.DateTimeAppointment.ToString("g")));
+            CreateMap<Appointment, AppointmentInfoDTO>()
+                .ForMember(
+                dest => dest.DateTimeAppointment,
+                opt => opt.MapFrom(src => src.DateTimeAppointment.ToString("g")));
+            CreateMap<AppointmentInfoDTO, AppointmentNearestInfoModel>()
+                .ForMember(
+                dest => dest.AppointmentId,
+                opt => opt.MapFrom(src => src.Id));
+            CreateMap<AppointmentNearestInfoModel, PrescriptionDTO>();
+            CreateMap<AppointmentFutureInfoDTO, AppointmentFutureInfoDoctorModel>()
+                .ForMember(
+                dest => dest.FullName,
+                opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName));
         }
     }
 }

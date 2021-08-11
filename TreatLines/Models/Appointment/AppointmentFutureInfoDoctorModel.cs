@@ -11,5 +11,7 @@ namespace TreatLines.Models.Appointment
         public string PatientEmail { get; set; }
         public string FullName { get; set; }
         public int Canceled { get; set; }
+        public decimal Price { get; set; }
+        public decimal PriceWithDiscount { get; set; }
     }
 }

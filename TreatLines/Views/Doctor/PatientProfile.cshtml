@@ -2,13 +2,13 @@
 
 <section class="my-5">
     @*<div class="container-lg border px-5 pt-3">*@
-    <div class="card border-primary mb-3">
+    <div class="card col-md-8 border-primary mx-auto">
         <div class="card-header">
             <div class="row my-2">
                 <div class="col-6">
-                    <h3 class="mt-2 mb-4">Patient Profile</h3>
+                    <h4 class="mt-2 mb-1">Patient Profile</h4>
                 </div>
-                <div class="col-3 offset-3">
+                <div class="col-4 offset-2">
                     <a class="btn btn-secondary nav-link"
                        asp-controller="Doctor"
                        asp-action="MakeAppointment"
@@ -18,15 +18,15 @@
                 </div>
             </div>
         </div>
-        <div class="card-body">
+        <div class="card-body pb-0">
             <div class="row my-2">
-                <div class="col-2">
+                <div class="col-3">
                     <label>Name: </label>
                 </div>
                 <div class="col-3">
                     <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="FirstName">
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                     <label>Surname: </label>
                 </div>
                 <div class="col-3">
@@ -34,29 +34,29 @@
                 </div>
             </div>
             <div class="row my-2">
-                <div class="col-2">
+                <div class="col-3">
                     <label>Email: </label>
                 </div>
                 <div class="col-4">
                     <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Email">
                 </div>
             </div>
-            <div class="row my-2">
-                <div class="col-2">
+            <div class="row my-3">
+                <div class="col-3">
                     <label>Phone number: </label>
                 </div>
                 <div class="col-4">
                     <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="PhoneNumber" />
                 </div>
             </div>
-            <div class="row my-2">
+            <div class="row my-3">
                 <div class="col-2">
                     <label>Blood type: </label>
                 </div>
-                <div class="col-2">
+                <div class="col-1">
                     <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="BloodType" />
                 </div>
-                <div class="col-2">
+                <div class="col-1">
                     <label>Sex: </label>
                 </div>
                 <div class="col-2">
@@ -67,20 +67,38 @@
         @if (Model.Appointment != null)
         {
             <form asp-controller="Doctor" asp-action="UpsertPrescription" method="post">
-                <div class="card-body">
+                <div class="card-body pt-0">
                     <div class="form-group row my-2">
                         <input type="hidden" asp-for="Appointment.PatientEmail" />
                         <input type="hidden" asp-for="Appointment.AppointmentId" />
                         <input type="hidden" asp-for="Appointment.PrescriptionId" />
-                        <h4>Appointment</h4>
-                        <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Appointment.DateTime" />
+                        <h5>Appointment</h5>
+                        <div class="col-4">
+                            <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Appointment.DateTimeAppointment" />
+                        </div>
                     </div>
                     <div class="form-group row my-2">
-                        <p class="text-info">Prescription: </p>
-                        <textarea class="form-control" rows="3" asp-for="Appointment.Description"></textarea>
+                        <div class="col-2 pe-0">
+                            <label>Price: </label>
+                        </div>
+                        @if (Model.Appointment.Price > Model.Appointment.PriceWithDiscount)
+                        {
+                            <div class="col-2 px-0">
+                                <s>@Model.Appointment.Price</s>
+                            </div>
+                        }
+                        <div class="col-2 px-0">
+                            <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Appointment.PriceWithDiscount" />
+                        </div>
+                    </div>
+                    <div class="form-group row my-2">
+                        <div class="col-12">
+                            <p class="text-info">Prescription: </p>
+                            <textarea class="form-control" rows="3" asp-for="Appointment.Description"></textarea>
+                        </div>
                     </div>
                     <div class="form-group col-4 my-1">
-                        <button type="submit" class="btn btn-secondary mb-3">Save changes</button>
+                        <button type="submit" class="btn btn-secondary mb-1">Save changes</button>
                     </div>
                 </div>
             </form>
