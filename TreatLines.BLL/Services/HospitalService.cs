@@ -195,6 +195,23 @@ namespace TreatLines.BLL.Services
             return hospitalId;
         }
 
+        public async Task<IEnumerable<DoctorInfoDTO>> GetDoctorsByPatientEmailAsync(string email)
+        {
+            var hospId = patientRepository.GetByEmailAsync(email).Result.HospitalId;
+            var hospital = await hospitalRepository.GetByIdAsync(hospId);
+            var doctors = GetDoctorsByHospital(hospital)
+                .Where(d => d.Blocked != 1);
+            return doctors;
+        }
+
+        public IEnumerable<string> GetDoctorsEmailsByPatientEmail(string email)
+        {
+            var hospId = patientRepository.GetByEmailAsync(email).Result.HospitalId;
+            var docsEmails = doctorRepository.GetDoctors(hospId)
+                .Select(d => d.User.Email);
+            return docsEmails;
+        }
+
         /*public IEnumerable<ScheduleInfoDTO> GetSchedulesByHospAdmin(string email)
         {
             int hospId = GetHospitalIdByHospAdmin(email);

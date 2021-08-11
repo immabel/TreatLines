@@ -21,6 +21,8 @@ namespace TreatLines.BLL.Interfaces
         Task<HospitalAdminInfoDTO> GetHospitalAdminProfileInfoAsync(string email);
         IEnumerable<DoctorInfoDTO> GetDoctorsByHospital(Hospital hospital);
         IEnumerable<DoctorInfoDTO> GetDoctorsByHospitalAdmin(string email);
+        Task<IEnumerable<DoctorInfoDTO>> GetDoctorsByPatientEmailAsync(string email);
+        IEnumerable<string> GetDoctorsEmailsByPatientEmail(string email);
         IEnumerable<PatientInfoDTO> GetPatientsByHospitalAdmin(string email);
         Task UpdateHospitalAdminInfoAsync(HospitalAdminInfoDTO adminDTO);
         int GetHospitalIdByHospAdmin(string email);

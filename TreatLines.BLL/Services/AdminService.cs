@@ -48,9 +48,10 @@ namespace TreatLines.BLL.Services
 
                 Server server = new Server("NATALI\\SQLEXPRESS");
                 backup.Devices.AddDevice(@"C:\Users\Natali\Desktop\Marina\StudyingNIX\MainProject\backup\TrLinesDB.bak", DeviceType.File);
+                //backup.Devices.AddDevice(@"C:\test\TrLinesDB.bak", DeviceType.File);
                 backup.BackupSetName = "trLinesDbBackup";
                 backup.BackupSetDescription = "trLinesDbBackup";
-                backup.ExpirationDate = DateTime.Today.AddDays(10);
+                //backup.ExpirationDate = DateTime.Today.AddDays(10);
                 backup.Initialize = false;
                 backup.SqlBackup(server);
             }

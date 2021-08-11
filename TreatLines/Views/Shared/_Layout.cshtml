@@ -12,7 +12,7 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
-                <partial name="_LoginPartial.cshtml"/>
+            <partial name="_LoginPartial.cshtml" />
         </nav>
     </header>
     <div class="container">
@@ -30,6 +30,7 @@
     @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>*@
     <script type="text/javascript" src="~/js/tables.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

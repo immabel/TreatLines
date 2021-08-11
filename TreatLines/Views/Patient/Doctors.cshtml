@@ -1,0 +1,57 @@
+﻿@model IEnumerable<TreatLines.Models.Tables.DoctorModel>
+
+<br />
+<div class="container row p-0 m-0">
+    <div class="row my-2">
+        <div class="col-6">
+            <h2 class="text-info">Doctors</h2>
+        </div>
+    </div>
+    <div class="col-12 border p-3">
+        <table id="doctors_hospAdmin" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone number</th>
+                    <th>Position</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var d in Model)
+                {
+                    <tr>
+                        <td>@d.FullName</td>
+                        <td>@d.Email</td>
+                        <td>@d.PhoneNumber</td>
+                        <td>@d.Position</td>
+                        <td>@(d.OnHoliday == 1 ? "On holiday" : "Working")</td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <a class="btn btn-secondary"
+                                   data-bs-toggle="tooltip"
+                                   data-bs-placement="bottom"
+                                   title="Make appointment"
+                                   asp-controller="Patient"
+                                   asp-action="MakeAppointment"
+                                   asp-route-doctorEmail="@d.Email">
+                                    <i class="fas fa-calendar-day"></i>
+                                </a>
+                                <a class="btn btn-secondary"
+                                   asp-controller="Patient"
+                                   asp-action="DoctorProfile"
+                                   asp-route-email="@d.Email">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+s

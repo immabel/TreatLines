@@ -21,7 +21,7 @@ using TreatLines.Models.Tables;
 
 namespace TreatLines.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class HospitalAdminController : Controller
     {
         private readonly IAuthService authService;

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TreatLines.BLL.DTOs.Appointment;
 using TreatLines.BLL.DTOs.Doctor;
 using TreatLines.BLL.DTOs.Prescription;
 using TreatLines.BLL.Interfaces;
@@ -17,7 +18,7 @@ using TreatLines.Models.Tables;
 
 namespace TreatLines.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class DoctorController : Controller
     {
         private readonly IDoctorService doctorService;
@@ -86,7 +87,8 @@ namespace TreatLines.Controllers
         public async Task<IActionResult> MakeAppointment(string patientEmail)
         {
             string docEmail = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
-            patientEmail = "de.tox@gmail.com";
+            if (patientEmail == null)
+                patientEmail = "de.tox@gmail.com";
             AppointmentCreationModel appointment = new AppointmentCreationModel
             {
                 DoctorEmail = docEmail,
@@ -101,6 +103,12 @@ namespace TreatLines.Controllers
             return View(appointment);
         }
 
+        public async Task<IActionResult> CancelAppointment(int? id)
+        {
+            await appointmentService.CancelAppointmentAsync((int)id);
+            return RedirectToAction("GetUpcomingAppointments");
+        }
+
         [HttpPost]
         public async Task<IActionResult> UpdateDoctorInfo(DoctorProfileInfoModel model)
         {
@@ -113,12 +121,6 @@ namespace TreatLines.Controllers
             return View("Index", model);
         }
 
-        public async Task<IActionResult> CancelAppointment(int? id)
-        {
-            await appointmentService.CancelAppointmentAsync((int)id);
-            return RedirectToAction("GetUpcomingAppointments");
-        }
-
         [HttpPost]
         public async Task<IActionResult> UpsertPrescription(PatientProfileInfoModel model)
         {
@@ -129,6 +131,20 @@ namespace TreatLines.Controllers
                 return RedirectToAction("PatientProfile", new { email = model.Appointment.PatientEmail });
             }
             return RedirectToAction("PatientProfile", new { email = model.Appointment.PatientEmail });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddAppointment(AppointmentCreationModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                string docEmail = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
+                model.DoctorEmail = docEmail;
+                var appointment = mapper.Map<AppointmentCreationDTO>(model);
+                await appointmentService.AddAppointment(appointment);
+                return View("MakeAppointment", model);
+            }
+            return View("MakeAppointment", model);
         }
     }
 }

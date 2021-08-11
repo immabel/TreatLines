@@ -5,31 +5,34 @@
         <div class="col-6 ms-auto">
             @foreach (var dateTime in Model.FreeDatesTime)
             {
-            <div class="row mt-1">
-                <h5>@dateTime.Date</h5>
-                @foreach (var time in dateTime.Times)
-                {
-                    <button id="btnDateTimeAppDoc"
-                            type="button"
-                            class="btn btn-outline-secondary m-1"
-                            style="width: 70px">
-                        @time
-                    </button>
-                }
-            </div>
+                <div class="row mt-1">
+                    <h5>@dateTime.Date</h5>
+                    @foreach (var time in dateTime.Times)
+                        {
+                            var tempId = dateTime.Date + time;
+                        <button id="@tempId"
+                                   type="button"
+                                class="btn btn-outline-secondary AppDateTimeDoc m-1"
+                                style="width: 70px"
+                                @*onclick="onClickAppButton(@dateTime.Date, @time)"*@>
+                            @time
+                        </button>
+                    }
+                </div>
             }
         </div>
         <div class="col-4 me-auto">
-            <form asp-controller="HospitalAdmin" asp-action="MakeAppointment" method="post">
+            <form asp-controller="Doctor" asp-action="AddAppointment" method="post">
                 <div class="card bg-light mb-3" style="max-width: 20rem;">
                     @*<div class="card-header">
                         <h6 id="dateTimeAppoint">@Model.DateTimeAppointment</h6>*@
-                        @if (Model.DateTimeAppointment != null)
+                    @*@if (Model.DateTimeAppointment != null)
                         {
-                            <input id="dateTimeAppInput" type="hidden" asp-for="DateTimeAppointment" />
-                        }
+                            <input id="dateTimeAppDocInput" type="hidden" asp-for="DateTimeAppointment" />
+                        }*@
                     @*</div>*@
                     <div class="card-body">
+                        <input id="dateTimeAppDocInput" type="text" readonly="" asp-for="DateTimeAppointment"/>
                         @if (Model.DoctorEmail != null)
                         {
                             <input type="hidden" asp-for="DoctorEmail" />

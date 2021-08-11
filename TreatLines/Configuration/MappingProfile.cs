@@ -177,6 +177,10 @@ namespace TreatLines.Configuration
                 .ForMember(
                 dest => dest.FullName,
                 opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName));
+            CreateMap<AppointmentCreationModel, AppointmentCreationDTO>()
+                .ForMember(
+                dest => dest.DateTimeAppointment,
+                opt => opt.MapFrom(src => DateTimeOffset.Parse(src.DateTimeAppointment)));
         }
     }
 }
