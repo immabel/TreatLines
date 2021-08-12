@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TreatLines.BLL.DTOs.Appointment;
 using TreatLines.BLL.DTOs.Auth;
 using TreatLines.BLL.DTOs.Doctor;
 using TreatLines.BLL.DTOs.HospitalAdmin;
@@ -21,7 +22,7 @@ using TreatLines.Models.Tables;
 
 namespace TreatLines.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class HospitalAdminController : Controller
     {
         private readonly IAuthService authService;
@@ -34,6 +35,8 @@ namespace TreatLines.Controllers
 
         private readonly IScheduleService scheduleService;
 
+        private readonly IAppointmentService appointmentService;
+
         private readonly IPatientRegistrationRequestsService patientRegistrationRequestsService;
 
         private readonly IMapper mapper;
@@ -44,6 +47,7 @@ namespace TreatLines.Controllers
             IScheduleService scheduleService,
             IDoctorService doctorService,
             IPatientService patientService,
+            IAppointmentService appointmentService,
             IPatientRegistrationRequestsService patientRegistrationRequestsService,
             IMapper mapper)
         {
@@ -52,6 +56,7 @@ namespace TreatLines.Controllers
             this.scheduleService = scheduleService;
             this.doctorService = doctorService;
             this.patientService = patientService;
+            this.appointmentService = appointmentService;
             this.patientRegistrationRequestsService = patientRegistrationRequestsService;
             this.mapper = mapper;
         }
@@ -101,34 +106,22 @@ namespace TreatLines.Controllers
         {
             string email = "ssadmin@gmail.com";//User.Identity.Name;
             var hospId = hospitalService.GetHospitalIdByHospAdmin(email);
-            /*if (doctorEmail == null)
-            {
-                
-            }
+            var docEmails = doctorService.GetDoctorsEmailsByHospitalId(hospId);
+            var patEmails = patientService.GetPatientsEmailsByHospitalId(hospId);
+            if (doctorEmail == null)
+                doctorEmail = docEmails.First();
             if (patientEmail == null)
-            {
-
-            }*/
+                patientEmail = patEmails.First();
             AppointmentCreationModel appointment = new AppointmentCreationModel
             {
                 DoctorEmail = doctorEmail,
                 PatientEmail = patientEmail
             };
-            var docEmails = doctorService.GetDoctorsEmailsByHospitalId(hospId);
-            var patEmails = patientService.GetPatientsEmailsByHospitalId(hospId);
             appointment.DoctorsEmails = docEmails;
             appointment.PatientsEmails = patEmails;
 
-            IEnumerable<FreeDateTimesDTO> freeDateTime = null;
+            var freeDateTime = await doctorService.GetFreeDateTimesByDoctorEmailAsync(doctorEmail);
 
-            if (doctorEmail != null)
-            {
-                freeDateTime = await doctorService.GetFreeDateTimesByDoctorEmailAsync(doctorEmail);
-            }
-            else
-            {
-                freeDateTime = await doctorService.GetFreeDateTimesByDoctorEmailAsync(docEmails.First());
-            }
             appointment.FreeDatesTime = mapper.Map<IEnumerable<FreeDateTimeModel>>(freeDateTime);
 
             return View(appointment);
@@ -141,8 +134,7 @@ namespace TreatLines.Controllers
             var schedules = scheduleService.GetSchedules(docInfo.HospitalId);
 
             var result = mapper.Map<DoctorProfileInfoHospAdminModel>(docInfo);
-            result.Schedules = mapper.Map<IEnumerable<ScheduleInfoModel>>(schedules);
-            
+            result.Schedules = mapper.Map<IEnumerable<ScheduleInfoModel>>(schedules);            
 
             return View(result);
         }
@@ -166,6 +158,7 @@ namespace TreatLines.Controllers
             var schedules = scheduleService.GetSchedules(hospId);
             var doctor = new DoctorRegistrationModel();
             doctor.Schedules = mapper.Map<IEnumerable<ScheduleInfoModel>>(schedules);
+            doctor.ScheduleId = schedules.First().Id;
             return View(doctor);
         }
 
@@ -226,9 +219,9 @@ namespace TreatLines.Controllers
             {
                 var doctor = mapper.Map<DoctorProfileInfoDTO>(model);
                 await doctorService.UpdateDoctorAsync(doctor);
-                return View("DoctorProfile", model);
+                return RedirectToAction("DoctorProfile", new { email = model.Email });
             }
-            return View("DoctorProfile", model);
+                return RedirectToAction("DoctorProfile", new { email = model.Email });
         }
 
         [HttpPost]
@@ -273,6 +266,18 @@ namespace TreatLines.Controllers
             var hAdmin = mapper.Map<HospitalAdminInfoDTO>(model);
             await hospitalService.UpdateHospitalAdminInfoAsync(hAdmin);
             return View("Index", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddAppointment(AppointmentCreationModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var appointment = mapper.Map<AppointmentCreationDTO>(model);
+                await appointmentService.AddAppointment(appointment);
+                return RedirectToAction("MakeAppointment", new { doctorEmail = model.DoctorEmail, patientEmail = model.PatientEmail });
+            }
+            return RedirectToAction("MakeAppointment", new { doctorEmail = model.DoctorEmail, patientEmail = model.PatientEmail });
         }
     }
 }

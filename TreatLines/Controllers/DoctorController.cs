@@ -61,7 +61,7 @@ namespace TreatLines.Controllers
         {
             string email = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
             var appoints = appointmentService.GetFutureAppointmentsByDoctorEmail(email);
-            var result = mapper.Map<IEnumerable<AppointmentFutureInfoDoctorModel>>(appoints);
+            var result = mapper.Map<IEnumerable<AppointmentFutureInfoModel>>(appoints);
             return View(result);
         }
 
@@ -80,7 +80,7 @@ namespace TreatLines.Controllers
             var patInfo = await patientService.GetPatientInfoByEmailAsync(email);
             var result = mapper.Map<PatientProfileInfoModel>(patInfo);
             result.Appointment = mapper.Map<AppointmentNearestInfoModel>(appointment);
-            result.Appointment.PatientEmail = patInfo.Email;
+            result.Appointment.Email = patInfo.Email;
             return View(result);
         }
 
@@ -128,9 +128,9 @@ namespace TreatLines.Controllers
             {
                 var prescDTO = mapper.Map<PrescriptionDTO>(model.Appointment);
                 await appointmentService.UpsertPrescriptionByAppointmentIdAsync(prescDTO);
-                return RedirectToAction("PatientProfile", new { email = model.Appointment.PatientEmail });
+                return RedirectToAction("PatientProfile", new { email = model.Appointment.Email });
             }
-            return RedirectToAction("PatientProfile", new { email = model.Appointment.PatientEmail });
+            return RedirectToAction("PatientProfile", new { email = model.Appointment.Email });
         }
 
         [HttpPost]
@@ -142,9 +142,9 @@ namespace TreatLines.Controllers
                 model.DoctorEmail = docEmail;
                 var appointment = mapper.Map<AppointmentCreationDTO>(model);
                 await appointmentService.AddAppointment(appointment);
-                return View("MakeAppointment", model);
+                return RedirectToAction("MakeAppointment", new { patientEmail = model.PatientEmail });
             }
-            return View("MakeAppointment", model);
+            return RedirectToAction("MakeAppointment", new { patientEmail = model.PatientEmail });
         }
     }
 }

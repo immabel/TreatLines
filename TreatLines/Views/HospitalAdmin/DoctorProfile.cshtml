@@ -115,40 +115,111 @@
                     <h5>Schedule</h5>
                 </div>
                 <div class="form-group row my-2">
-                    <div class="col-2">
-                        <select id="schedulesId" asp-for="ScheduleId">
+                    <div class="col-2 ps-2">
+                        <select class="form-select" id="schedulesId" asp-for="ScheduleId">
                             @foreach (var item in Model.Schedules)
                             {
                                 <option value="@item.Id">@item.Id</option>
                             }
                         </select>
+                        <span asp-validation-for="ScheduleId" class="text-light"></span>
                     </div>
-                    <div class="col-4">
-                        <div class="row mb-2">
-                            <div class="col-4">
-                                <label>Start time: </label>
-                            </div>
-                            <div class="col-6">
-                                <input class="form-control">
-                            </div>
+                    <div class="col-9">
+                        @foreach (var schedule in Model.Schedules)
+                        {
+                            var none = "d-none";
+                            @if (schedule.Id == Model.ScheduleId)
+                            {
+                                none = "";
+                            }
+                            var scheduleInfoId = "schedule" + schedule.Id;
+                            <div id="@scheduleInfoId" class="row @none scheduleInfoDiv">
+                                <div class="col-6">
+                                    <div class="row mb-2">
+                                        <div class="col-5">
+                                            <label>Start time: </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <label>@schedule.StartTime</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <label>End time: </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <label>@schedule.EndTime</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div class="col-2">
+                            <label>Work days: </label>
                         </div>
-                        <div class="row">
-                            <div class="col-4">
-                                <label>End time: </label>
+                        <div class="col-3">
+                            <select id="workDays" multiple="multiple">
+                            </select>
+                        </div>*@
+                                <div class="col-5">
+                                    <label>Work days: </label>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            @foreach (var day in schedule.WorkDays)
+                                            {
+                                                <span class="badge rounded-pill bg-info">@day</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-6">
-                                <input class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-1">
-                        <label>Work days: </label>
-                    </div>
-                    <div class="col-3">
-                        <select id="workDays" multiple="multiple">
-                        </select>
+                        }
                     </div>
                 </div>
+                <!--<div class="form-group row my-2">
+        <div class="col-2">
+            <select class="form-select" id="schedulesId" asp-for="ScheduleId">
+                @foreach (var item in Model.Schedules)
+                {
+                    <option value="@item.Id">@item.Id</option>
+                }
+            </select>
+        </div>
+        <div class="col-4">
+            <div class="row mb-2">
+                <div class="col-4">
+                    <label>Start time: </label>
+                </div>
+                <div class="col-6">
+                    <input class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label>End time: </label>
+                </div>
+                <div class="col-6">
+                    <input class="form-control">
+                </div>
+            </div>
+        </div>-->
+                @*<div class="col-1">
+            <label>Work days: </label>
+        </div>
+        <div class="col-3">
+            <select id="workDays" multiple="multiple">
+            </select>
+        </div>*@
+                <!--<div class="row my-2">
+            <div class="col-2">
+                <label>Work days: </label>
+            </div>
+            <div class="col-6 classForDays">
+                @foreach (var day in Model.Schedules.ElementAt(Model.ScheduleId).WorkDays)
+                {
+                    <span class="badge rounded-pill bg-info">@day</span>
+                }
+            </div>
+        </div>
+    </div>-->
                 <div class="form-group col-4 my-1">
                     <button type="submit" class="btn btn-secondary mb-1">Save changes</button>
                 </div>

@@ -1,54 +1,75 @@
 ﻿@model TreatLines.Models.Appointment.AppointmentCreationModel
 
-<section class="my-5">
+<section class="my-5 mx-5">
     <div class="row">
-        <div class="col-8">
-            @foreach (var dateTime in Model.FreeDatesTime)
+        <div class="col-6 ms-auto">
+            @if (Model.FreeDatesTime.Count() == 0)
             {
-                <div class="row">
-                    <h5>@dateTime.Date</h5>
-                    @foreach (var time in dateTime.Times)
-                    {
-                        <button type="button" class="btn btn-outline-secondary m-1" style="width: 100px">@time</button>
-                    }
+                <div class="row mt-1">
+                    <h4 class="text-danger">Doctor is on holiday</h4>
                 </div>
             }
-        </div>
-        <div class="col-4">
-            <form asp-controller="HospitalAdmin" asp-action="MakeAppointment" method="post">
-                <div class="card bg-light mb-3" style="max-width: 20rem;">
-                    <div class="card-header">
-                        <h6 id="dateTimeAppoint"></h6>
-                        @if (Model.DateTimeAppointment != null)
+            else
+            {
+                foreach (var dateTime in Model.FreeDatesTime)
+                {
+                    <div class="row mt-1">
+                        <h5>@dateTime.Date</h5>
+                        @foreach (var time in dateTime.Times)
                         {
-                            <input type="hidden" asp-for="DateTimeAppointment" />
+                            var tempId = dateTime.Date + time;
+                            <button id="@tempId"
+                                    type="button"
+                                    class="btn btn-outline-secondary AppDateTimeDoc m-1"
+                                    style="width: 70px">
+                                @time
+                            </button>
                         }
                     </div>
+                }
+            }
+        </div>
+        <div class="col-4 me-auto">
+            <form asp-controller="HospitalAdmin" asp-action="AddAppointment" method="post">
+                <div class="card bg-light mb-3" style="max-width: 20rem;">
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="selectDoctor" class="form-label mt-4">Doctor email</label>
+                            <input id="dateTimeAppDocInput" type="text" readonly="" class="form-control-plaintext" asp-for="DateTimeAppointment" />
+                            <span asp-validation-for="DateTimeAppointment" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="selectDoctor" class="form-label">Doctor email</label>
                             <select class="form-select" id="selectDoctor" asp-for="DoctorEmail">
                                 @foreach (var email in Model.DoctorsEmails)
                                 {
-                                    <option value="@email">email</option>
+                                    <option value="@email">@email</option>
                                 }
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="selectPatient" class="form-label mt-4">Patient email</label>
+                            <label for="selectPatient" class="form-label">Patient email</label>
                             <select class="form-select" id="selectPatient" asp-for="PatientEmail">
                                 @foreach (var email in Model.PatientsEmails)
                                 {
-                                    <option value="@email">email</option>
+                                    <option value="@email">@email</option>
                                 }
                             </select>
                         </div>
                     </div>
                     <div class="card-footer">
                         <div class="col-4">
-                            <button type="submit" class="btn btn-outline-danger">
-                                Submit
-                            </button>
+                            @if (Model.FreeDatesTime.Count() == 0)
+                            {
+                                <button type="submit" disabled="" class="btn btn-outline-danger">
+                                    Submit
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-outline-danger">
+                                    Submit
+                                </button>
+                            }
                         </div>
                     </div>
                 </div>

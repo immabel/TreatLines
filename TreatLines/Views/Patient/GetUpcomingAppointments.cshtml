@@ -26,6 +26,7 @@
                     <div class="card-body">
                         <p class="card-text text-info mb-1">@a.Email</p>
                         <p class="card-text mb-1">@a.FullName</p>
+                        <p class="card-text mb-1"><em>@a.Position</em></p>
                         <div class="row" style="height: 28px">
                             @if (a.Price > a.PriceWithDiscount)
                             {
@@ -49,12 +50,12 @@
                                 }
                                 else
                                 {
-                                    @*id="btnDocCancel"*@
                                     <a type="button"
                                        class="btn btn-outline-danger"
-                                       asp-controller="Doctor"
+                                       asp-controller="Patient"
                                        asp-action="CancelAppointment"
-                                       asp-route-id="@a.Id">
+                                       asp-route-id="@a.Id"
+                           asp-route-profile="0">
                                         Cancel
                                     </a>
                                 }

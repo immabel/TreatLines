@@ -16,7 +16,7 @@ using TreatLines.Models.Tables;
 
 namespace TreatLines.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class PatientController : Controller
     {
         private readonly IDoctorService doctorService;
@@ -51,7 +51,9 @@ namespace TreatLines.Controllers
         {
             string email = "de.tox@gmail.com";//User.Identity.Name;
             var patientInfo = await patientService.GetPatientInfoByEmailAsync(email);
-            var result = mapper.Map<PatientProfileInfoHospAdminModel>(patientInfo);
+            var appointment = appointmentService.GetNearestAppointmentForPatient(email);
+            var result = mapper.Map<PatientProfileInfoModel>(patientInfo);
+            result.Appointment = mapper.Map<AppointmentNearestInfoModel>(appointment);
             return View(result);
         }
 
@@ -86,9 +88,7 @@ namespace TreatLines.Controllers
             string patEmail = "de.tox@gmail.com";//User.Identity.Name;
             var docEmails = hospitalService.GetDoctorsEmailsByPatientEmail(patEmail);
             if (doctorEmail == null)
-            {
                 doctorEmail = docEmails.First();
-            }
             AppointmentCreationModel appointment = new AppointmentCreationModel
             {
                 DoctorEmail = doctorEmail,
@@ -102,16 +102,33 @@ namespace TreatLines.Controllers
             return View(appointment);
         }
 
+        public IActionResult GetUpcomingAppointments()
+        {
+            string email = "de.tox@gmail.com";//User.Identity.Name;
+            var appoints = appointmentService.GetFutureAppointmentsByPatientEmail(email);
+            var result = mapper.Map<IEnumerable<AppointmentFutureInfoModel>>(appoints);
+            return View(result);
+        }
+
+        public async Task<IActionResult> CancelAppointment(int? id, int? profile)
+        {
+            await appointmentService.CancelAppointmentAsync((int)id);
+            if (profile == 0)
+                return RedirectToAction("GetUpcomingAppointments");
+            else
+                return RedirectToAction("Index");
+        }
+
         [HttpPost]
-        public async Task<IActionResult> UpdatePatientInfo(PatientProfileInfoHospAdminModel model)
+        public async Task<IActionResult> UpdatePatientInfo(PatientProfileInfoModel model)
         {
             if (ModelState.IsValid)
             {
                 var patient = mapper.Map<PatientInfoDTO>(model);
                 await patientService.UpdatePatientAsync(patient);
-                return View("PatientProfile", model);
+                return RedirectToAction("Index");
             }
-            return View("PatientProfile", model);
+            return RedirectToAction("Index");
             //return RedirectToAction("PatientProfile", new { email = model.Email });
         }
 
@@ -120,13 +137,13 @@ namespace TreatLines.Controllers
         {
             if (ModelState.IsValid)
             {
-            string patEmail = "de.tox@gmail.com";//User.Identity.Name;
+                string patEmail = "de.tox@gmail.com";//User.Identity.Name;
                 model.PatientEmail = patEmail;
                 var appointment = mapper.Map<AppointmentCreationDTO>(model);
                 await appointmentService.AddAppointment(appointment);
-                return View("MakeAppointment", model);
+                return RedirectToAction("MakeAppointment", new { doctorEmail = model.DoctorEmail });
             }
-            return View("MakeAppointment", model);
+            return RedirectToAction("MakeAppointment", new { doctorEmail = model.DoctorEmail });
         }
     }
 }

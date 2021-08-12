@@ -8,12 +8,7 @@
     $('#doctors_hospAdmin').DataTable();
     $('#patients_hospAdmin').DataTable();
 });
-/*$(document).ready(function () {
-    $('#doctors_hospAdmin').DataTable();
-});
-$(document).ready(function () {
-    $('#doctors_hospAdmin').DataTable();
-});*/
+
 
 
 $('#selectDoctorPatient').on('change', function () {
@@ -21,34 +16,49 @@ $('#selectDoctorPatient').on('change', function () {
     var email = this.value
     $.ajax({
         type: 'GET',
-        url: '/Patient/MakeAppointment?doctorEmail=' + email,
-        /*data: email,
-        success: function () {
-            location.reload();
-        }*/
+        url: '/Patient/MakeAppointment?doctorEmail=' + email
     })
         .done(function (result) {
-            //window.location = "http://localhost:44305/Patient/MakeAppointment?doctorEmail=" + email;
             $('body').html(result);
         });
 });
+
+$('#selectDoctor').on('change', function () {
+    //alert(this.value);
+    var email = this.value
+    var patEmail = $('#selectPatient')[0].value;
+    $.ajax({
+        type: 'GET',
+        url: '/HospitalAdmin/MakeAppointment?doctorEmail=' + email + "&patientEmail=" + patEmail
+    })
+        .done(function (result) {
+            $('body').html(result);
+        });
+});
+
+$('#schedulesId').on('change', function () {
+
+    $('.scheduleInfoDiv').addClass('d-none');
+
+    var id = $(this)[0].value;
+
+    $('#schedule' + id).removeClass('d-none');
+});
+//schedulesId
+//classForDays
 
 $(document).on('click', '.AppDateTimeDoc', function () {
     //alert("test");
     var tempInput = $('#dateTimeAppDocInput')[0];
     if (tempInput.value != "") {
-        var tempId = $.trim(tempInput.value.replace(/\s\s+/g, ''));
-        var tempButton = $('#' + tempId);
-        tempButton.classList.remove("btn-secondary");
-        tempButton.classList.add("btn-outline-secondary");
+        $('.AppDateTimeDoc').removeClass('btn-secondary');
+        $('.AppDateTimeDoc').addClass('btn-outline-secondary');
     }
 
-    alert(this.parentElement.firstElementChild.innerText + " " + this.innerText);
     this.classList.remove("btn-outline-secondary");
     this.classList.add("btn-secondary");
 
     tempInput.value = this.parentElement.firstElementChild.innerText + " " + this.innerText;
-    //tempInput.text(this.parentElement.firstElementChild.innerText + " " + this.innerText);
     
 });
 
@@ -56,12 +66,6 @@ $(document).on('click', '.AppDateTimeDoc', function () {
     alert("test");
 });*/
 
-/*function onClickAppButton(date, time) {
-    $('#dateTimeAppDocInput').value = date + " " + time;
-    //$('#dateTimeAppDocInput').value = val;
-    $(this).removeClass('btn-outline-secondary')
-    $(this).addClass('btn-secondary');
-};*/
 /*
  $('optionsforuser').on('change', function() {
   var form = $(this).closest('form');

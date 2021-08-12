@@ -20,6 +20,10 @@ namespace TreatLines.BLL.Services
 
         private readonly IDoctorPatientRepository doctorPatientRepository;
 
+        private readonly IDoctorRepository doctorRepository;
+        
+        private readonly IPatientRepository patientRepository;
+
         private readonly IRepository<Prescription> prescriptionRepository;
 
         private readonly IMapper mapper;
@@ -29,12 +33,16 @@ namespace TreatLines.BLL.Services
             IRepository<Appointment> appointmentRepository,
             IDoctorPatientRepository doctorPatientRepository,
             IRepository<Prescription> prescriptionRepository,
+            IDoctorRepository doctorRepository,
+            IPatientRepository patientRepository,
             IMapper mapper)
         {
             this.userRepository = userRepository;
             this.appointmentRepository = appointmentRepository;
             this.doctorPatientRepository = doctorPatientRepository;
             this.prescriptionRepository = prescriptionRepository;
+            this.doctorRepository = doctorRepository;
+            this.patientRepository = patientRepository;
             this.mapper = mapper;
         }
 
@@ -42,19 +50,21 @@ namespace TreatLines.BLL.Services
         {
             TimeSpan ts = new TimeSpan(-1, 0, 0);
             var appointInfo = doctorPatientRepository.GetAppointmentsByPatientEmail(email);
-            if (appointInfo == null)
+            if (appointInfo == null || appointInfo.Count() == 0)
                 return null;
             var appointmentsInfo = appointInfo.Where(ap => ap.Appointment.DateTimeAppointment.Subtract(DateTimeOffset.Now).CompareTo(ts) < 0)
                 .Select(apInfo => new PastAppointmentsPatientInfoDTO
                 {
-                    Id = (int)apInfo.AppointmentId,
+                    Id = apInfo.AppointmentId,
                     DateTimeAppointment = apInfo.Appointment.DateTimeAppointment.ToString("g"),
                     DoctorEmail = apInfo.Doctor.User.Email,
                     FirstName = apInfo.Doctor.User.FirstName,
                     LastName = apInfo.Doctor.User.LastName,
-                    DoctorPosition = apInfo.Doctor.Position,
-                    Canceled = apInfo.Appointment.Canceled ? 1 : 0,
-                    Prescription = (apInfo.Appointment.Prescription == null) ? "-" : apInfo.Appointment.Prescription.Description
+                    Position = apInfo.Doctor.Position,
+                    Canceled = apInfo.Appointment.Canceled,
+                    Price = apInfo.Appointment.Price,
+                    PriceWithDiscount = apInfo.Appointment.PriceWithDiscount,
+                    Prescription = (apInfo.Appointment.Prescription == null) ? null : apInfo.Appointment.Prescription.Description
                 });
             return appointmentsInfo;
         }
@@ -63,20 +73,24 @@ namespace TreatLines.BLL.Services
         {
             TimeSpan ts = new TimeSpan(-1, 0, 0);
             var appointInfo = doctorPatientRepository.GetAppointmentsByPatientEmail(email);
-            if (appointInfo == null)
+            if (appointInfo == null || appointInfo.Count() == 0)
                 return null;
-            var appointmentsInfo = appointInfo.Where(ap => ap.Appointment.DateTimeAppointment.Subtract(DateTimeOffset.Now).CompareTo(ts) > 0)
-                .Select(apInfo => new AppointmentPatientFutureInfoDTO
+            var appointments = appointInfo
+                .Where(dp => dp.Appointment.DateTimeAppointment.Subtract(DateTimeOffset.Now).CompareTo(ts) > 0 && !dp.Appointment.Canceled)
+                .OrderBy(ap => ap.Appointment.DateTimeAppointment)
+                .Select(dp => new AppointmentPatientFutureInfoDTO
                 {
-                    Id = (int)apInfo.AppointmentId,
-                    DateTimeAppointment = apInfo.Appointment.DateTimeAppointment.ToString("g"),
-                    DoctorEmail = apInfo.Doctor.User.Email,
-                    FirstName = apInfo.Doctor.User.FirstName,
-                    LastName = apInfo.Doctor.User.LastName,
-                    Position = apInfo.Doctor.Position,
-                    Canceled = apInfo.Appointment.Canceled
+                    Id = dp.AppointmentId,
+                    DateTimeAppointment = dp.Appointment.DateTimeAppointment.ToString("g"),
+                    DoctorEmail = dp.Doctor.User.Email,
+                    Price = dp.Appointment.Price,
+                    PriceWithDiscount = dp.Appointment.PriceWithDiscount,
+                    FirstName = dp.Doctor.User.FirstName,
+                    LastName = dp.Doctor.User.LastName,
+                    Position = dp.Doctor.Position,
+                    Canceled = dp.Appointment.Canceled
                 });
-            return appointmentsInfo;
+            return appointments;
         }
 
         public async Task UpsertPrescriptionByAppointmentIdAsync(PrescriptionDTO prescriptionDTO)
@@ -102,8 +116,8 @@ namespace TreatLines.BLL.Services
 
         public async Task AddAppointment(AppointmentCreationDTO appointmentDto)
         {
-            var patient = await doctorPatientRepository.GetPatientByEmailAsync(appointmentDto.PatientEmail);
-            var doctor = await doctorPatientRepository.GetDoctorByEmailAsync(appointmentDto.DoctorEmail);
+            var patient = await patientRepository.GetByEmailAsync(appointmentDto.PatientEmail);
+            var doctor = await doctorRepository.GetByEmailAsync(appointmentDto.DoctorEmail);
 
             var priceWithDiscount = doctor.Price - (doctor.Price * (decimal)patient.Discount / 100.0M);
 
@@ -131,6 +145,7 @@ namespace TreatLines.BLL.Services
                 .GetAppointmentsByDoctorEmail(email);
             var tempAppoints = appointInfo
                 .Where(ap => ap.Appointment.DateTimeAppointment.CompareTo(DateTimeOffset.Now) > 0)
+                .OrderBy(ap => ap.Appointment.DateTimeAppointment)
                 .Select(apInfo => new AppointmentFutureInfoDTO
                 {
                     Id = (int)apInfo.AppointmentId,
@@ -206,6 +221,15 @@ namespace TreatLines.BLL.Services
             if (result.PrescriptionId != null)
                 result.Description = appointment.Prescription.Description;
             return result;
+        }
+
+        public AppointmentPatientFutureInfoDTO GetNearestAppointmentForPatient(string patientEmail)
+        {
+            var appointments = GetFutureAppointmentsByPatientEmail(patientEmail);
+            if (appointments == null || appointments.Count() == 0)
+                return null;
+            var appointment = appointments.First();
+            return appointment;
         }
     }
 }

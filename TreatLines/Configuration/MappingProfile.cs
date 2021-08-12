@@ -136,7 +136,7 @@ namespace TreatLines.Configuration
 
             CreateMap<ScheduleInfoModel, ScheduleInfoDoctorDTO>();
             CreateMap<ScheduleInfoDTO, ScheduleDoctorInfoModel>();
-            CreateMap<ScheduleInfoDTO, ScheduleInfoModel>();;
+            CreateMap<ScheduleInfoDTO, ScheduleInfoModel>();
             CreateMap<ScheduleDTO, Schedule>()
                 .ForMember(
                 dest => dest.StartTime,
@@ -172,11 +172,25 @@ namespace TreatLines.Configuration
                 .ForMember(
                 dest => dest.AppointmentId,
                 opt => opt.MapFrom(src => src.Id));
-            CreateMap<AppointmentNearestInfoModel, PrescriptionDTO>();
-            CreateMap<AppointmentFutureInfoDTO, AppointmentFutureInfoDoctorModel>()
+            CreateMap<AppointmentPatientFutureInfoDTO, AppointmentNearestInfoModel>()
                 .ForMember(
                 dest => dest.FullName,
-                opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName));
+                opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName))
+                .ForMember(
+                dest => dest.Email,
+                opt => opt.MapFrom(src => src.DoctorEmail));
+            CreateMap<AppointmentNearestInfoModel, PrescriptionDTO>();
+            CreateMap<AppointmentFutureInfoDTO, AppointmentFutureInfoModel>()
+                .ForMember(
+                dest => dest.FullName,
+                opt => opt.MapFrom(src => src.LastName + ", " + src.FirstName))
+                .ForMember(
+                dest => dest.Email,
+                opt => opt.MapFrom(src => src.PatientEmail));
+            CreateMap<AppointmentPatientFutureInfoDTO, AppointmentFutureInfoModel>()
+                .ForMember(
+                dest => dest.Email,
+                opt => opt.MapFrom(src => src.DoctorEmail));
             CreateMap<AppointmentCreationModel, AppointmentCreationDTO>()
                 .ForMember(
                 dest => dest.DateTimeAppointment,

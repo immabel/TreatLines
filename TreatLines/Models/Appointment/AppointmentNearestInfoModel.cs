@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TreatLines.Models.Appointment
 {
-    public class AppointmentNearestInfoModel : AppointmentFutureInfoDoctorModel
+    public class AppointmentNearestInfoModel : AppointmentFutureInfoModel
     {
         public int? AppointmentId { get; set; }
         public int? PrescriptionId { get; set; }

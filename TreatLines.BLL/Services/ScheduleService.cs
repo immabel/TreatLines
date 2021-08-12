@@ -45,8 +45,8 @@ namespace TreatLines.BLL.Services
                 .Select(sch => new ScheduleInfoDTO
                 {
                     Id = sch.Id,
-                    StartTime = sch.StartTime.ToString("f"),
-                    EndTime = sch.EndTime.ToString("f"),
+                    StartTime = sch.StartTime.ToString("t"),
+                    EndTime = sch.EndTime.ToString("t"),
                     WorkDays = FromNumbersToDays(sch.WorkDays)
                 });
             return schedules;

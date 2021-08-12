@@ -47,6 +47,7 @@ namespace TreatLines.BLL.Services
             User user = await userRepository.FindByEmailAsync(patient.Email);
             user.FirstName = patient.FirstName;
             user.LastName = patient.LastName;
+            user.PhoneNumber = patient.PhoneNumber;
             await userRepository.UpdateAsync(user);
 
             Patient patientTemp = await patientRepository.GetByEmailAsync(patient.Email);

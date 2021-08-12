@@ -1,72 +1,121 @@
 ﻿@model TreatLines.Models.ProfileInfo.PatientProfileInfoModel
 
 <section class="my-5">
-    @*<div class="container-lg border px-5 pt-3">*@
-    <div class="card border-primary mb-3">
+    <div class="card col-md-9 border-primary mx-auto">
         <div class="card-header">
+            <div class="row my-2">
                 <div class="col-6">
-                    <h3 class="mt-2 mb-4">User Profile</h3>
+                    <h4 class="mt-2 mb-1">Patient Profile</h4>
                 </div>
+                <div class="col-4 offset-2">
+                    <a class="btn btn-secondary nav-link"
+                       asp-controller="Patient"
+                       asp-action="MakeAppointment">
+                        Make appointment
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="row my-2">
-                <div class="col-2">
-                    <label>Name: </label>
+        <div class="card-body pb-0">
+            <form asp-controller="Patient" asp-action="UpdatePatientInfo" method="post">
+                <div class="row my-2">
+                    <div class="col-3">
+                        <label>Name: </label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="FirstName">
+                    </div>
+                    <div class="col-3">
+                        <label>Surname: </label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="LastName">
+                    </div>
                 </div>
-                <div class="col-3">
-                    <input class="form-control p-0" asp-for="FirstName">
+                <div class="row my-2">
+                    <div class="col-3">
+                        <label>Email: </label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Email">
+                    </div>
                 </div>
-                <div class="col-2">
-                    <label>Surname: </label>
+                <div class="row my-3">
+                    <div class="col-3">
+                        <label>Phone number: </label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="PhoneNumber" />
+                    </div>
                 </div>
-                <div class="col-3">
-                    <input class="form-control p-0" asp-for="LastName">
+                <div class="row my-3">
+                    <div class="col-2">
+                        <label>Blood type: </label>
+                    </div>
+                    <div class="col-1">
+                        <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="BloodType" />
+                    </div>
+                    <div class="col-1">
+                        <label>Sex: </label>
+                    </div>
+                    <div class="col-2">
+                        <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Sex" />
+                    </div>
+                    <div class="col-2">
+                        <label>Discount(%): </label>
+                    </div>
+                    <div class="col-1">
+                        <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Discount" />
+                    </div>
                 </div>
-            </div>
-            <div class="row my-2">
-                <div class="col-2">
-                    <label>Email: </label>
+                <div class="form-group col-4 my-1">
+                    <button type="submit" class="btn btn-secondary">Save changes</button>
                 </div>
-                <div class="col-4">
-                    <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Email">
-                </div>
-            </div>
-            <div class="row my-2">
-                <div class="col-2">
-                    <label>Phone number: </label>
-                </div>
-                <div class="col-4">
-                    <input class="form-control p-0" asp-for="PhoneNumber" />
-                </div>
-            </div>
-            <div class="row my-2">
-                <div class="col-2">
-                    <label>Blood type: </label>
-                </div>
-                <div class="col-2">
-                    <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="BloodType" />
-                </div>
-                <div class="col-2">
-                    <label>Sex: </label>
-                </div>
-                <div class="col-2">
-                    <input type="text" readonly="" class="form-control-plaintext p-0" asp-for="Sex" />
-                </div>
-            </div>
+            </form>
         </div>
         @if (Model.Appointment != null)
         {
-                <div class="card-body">
+                <div class="card-body pt-0">
                     <div class="row my-2">
-                        <p class="text-info">Prescription: </p>
-                        <textarea class="form-control" rows="3" asp-for="Appointment.Description"></textarea>
+                        <input type="hidden" asp-for="Appointment.Email" />
+                        <h5>Appointment</h5>
+                        <p class="card-text mb-1">
+                            @Model.Appointment.DateTimeAppointment
+                        </p>
+                        <p class="card-text mb-1"><em>@Model.Appointment.Email</em></p>
+                        <p class="card-text mb-1">@Model.Appointment.FullName</p>
+                        <p class="card-text mb-1">@Model.Appointment.Position</p>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-2 pe-0">
+                            <label>Price: </label>
+                        </div>
+                        @if (Model.Appointment.Price > Model.Appointment.PriceWithDiscount)
+                        {
+                            <div class="col-2 px-0">
+                                <s>@Model.Appointment.Price</s>
+                            </div>
+                        }
+                        <div class="col-2 px-0">
+                            <p class="card-text mb-1">@Model.Appointment.PriceWithDiscount</p>
+                        </div>
+                    </div>
+                    <div class="col-4 my-1">
+                        <a type="button"
+                           class="btn btn-outline-danger"
+                           asp-controller="Patient"
+                           asp-action="CancelAppointment"
+                           asp-route-id="@Model.Appointment.Id"
+                           asp-route-profile="1">
+                            Cancel
+                        </a>
                     </div>
                 </div>
         }
         else
         {
             <div class="col-6">
-                <p>No prescription</p>
+                <p>No upcoming appointment</p>
             </div>
         }
     </div>

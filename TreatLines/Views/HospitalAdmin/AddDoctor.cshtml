@@ -13,7 +13,7 @@
                     </div>
                     <div class="col-4">
                         <input asp-for="FirstName" class="form-control" />
-                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                        <span asp-validation-for="FirstName" class="text-light"></span>
                     </div>
                 </div>
                 <div class="form-group row my-2">
@@ -22,7 +22,7 @@
                     </div>
                     <div class="col-4">
                         <input asp-for="LastName" class="form-control" />
-                        <span asp-validation-for="LastName" class="text-danger"></span>
+                        <span asp-validation-for="LastName" class="text-light"></span>
                     </div>
                 </div>
                 <div class="form-group row my-2">
@@ -31,7 +31,7 @@
                     </div>
                     <div class="col-4">
                         <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <span asp-validation-for="Email" class="text-light"></span>
                     </div>
                 </div>
                 <div class="form-group row my-2">
@@ -40,7 +40,7 @@
                     </div>
                     <div class="col-4">
                         <input asp-for="PhoneNumber" class="form-control" />
-                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        <span asp-validation-for="PhoneNumber" class="text-light"></span>
                     </div>
                 </div>
                 <div class="form-group row my-2">
@@ -52,13 +52,14 @@
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                         </select>
+                        <span asp-validation-for="Sex" class="text-light"></span>
                     </div>
                     <div class="col-2">
                         <label for="sex" class="form-label">Date of birth: </label>
                     </div>
                     <div class="col-3">
                         <input asp-for="DateOfBirth" class="form-control" />
-                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                        <span asp-validation-for="DateOfBirth" class="text-light"></span>
                     </div>
                 </div>
                 <div class="form-group row my-2">
@@ -67,12 +68,14 @@
                     </div>
                     <div class="col-3">
                         <input class="form-control" asp-for="Position">
+                        <span asp-validation-for="Position" class="text-light"></span>
                     </div>
                     <div class="col-3">
                         <label>Appointment price: </label>
                     </div>
                     <div class="col-3">
                         <input class="form-control" asp-for="Price">
+                        <span asp-validation-for="Price" class="text-light"></span>
                     </div>
                 </div>
                 <div class="form-group row my-2">
@@ -80,6 +83,7 @@
                         <label class="mb-1">Education: </label>
                         <textarea class="form-control" rows="3" asp-for="Education"></textarea>
                     </div>
+                    <span asp-validation-for="Education" class="text-light"></span>
                 </div>
                 <div class="form-group row my-2">
                     <div class="col-12">
@@ -92,37 +96,55 @@
                 </div>
                 <div class="form-group row my-2">
                     <div class="col-2 ps-2">
-                        <select id="schedulesId" asp-for="ScheduleId">
+                        <select class="form-select" id="schedulesId" asp-for="ScheduleId">
                             @foreach (var item in Model.Schedules)
                             {
                                 <option value="@item.Id">@item.Id</option>
                             }
                         </select>
+                        <span asp-validation-for="ScheduleId" class="text-light"></span>
                     </div>
-                    <div class="col-4">
-                        <div class="row mb-2">
-                            <div class="col-5">
-                                <label>Start time: </label>
+                    <div class="col-9">
+                        @foreach (var schedule in Model.Schedules)
+                        {
+                            var none = "d-none";
+                            @if (schedule.Id == Model.ScheduleId)
+                            {
+                                none = "";
+                            }
+                            var scheduleInfoId = "schedule" + schedule.Id;
+                            <div id="@scheduleInfoId" class="row @none scheduleInfoDiv">
+                                <div class="col-6">
+                                    <div class="row mb-2">
+                                        <div class="col-5">
+                                            <label>Start time: </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <label>@schedule.StartTime</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <label>End time: </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <label>@schedule.EndTime</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-5">
+                                    <label>Work days: </label>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            @foreach (var day in schedule.WorkDays)
+                                            {
+                                                <span class="badge rounded-pill bg-info">@day</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-6">
-                                <input class="form-control">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-5">
-                                <label>End time: </label>
-                            </div>
-                            <div class="col-6">
-                                <input class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <label>Work days: </label>
-                    </div>
-                    <div class="col-3">
-                        <select id="workDays" multiple="multiple">
-                        </select>
+                        }
                     </div>
                 </div>
                 <div class="form-group row my-1">
@@ -134,3 +156,7 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

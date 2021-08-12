@@ -13,8 +13,7 @@
                         <button id="@tempId"
                                    type="button"
                                 class="btn btn-outline-secondary AppDateTimeDoc m-1"
-                                style="width: 70px"
-                                @*onclick="onClickAppButton(@dateTime.Date, @time)"*@>
+                                style="width: 70px">
                             @time
                         </button>
                     }
@@ -24,15 +23,8 @@
         <div class="col-4 me-auto">
             <form asp-controller="Doctor" asp-action="AddAppointment" method="post">
                 <div class="card bg-light mb-3" style="max-width: 20rem;">
-                    @*<div class="card-header">
-                        <h6 id="dateTimeAppoint">@Model.DateTimeAppointment</h6>*@
-                    @*@if (Model.DateTimeAppointment != null)
-                        {
-                            <input id="dateTimeAppDocInput" type="hidden" asp-for="DateTimeAppointment" />
-                        }*@
-                    @*</div>*@
                     <div class="card-body">
-                        <input id="dateTimeAppDocInput" type="text" readonly="" asp-for="DateTimeAppointment"/>
+                        <input id="dateTimeAppDocInput" type="text" readonly="" class="form-control-plaintext" asp-for="DateTimeAppointment"/>
                         @if (Model.DoctorEmail != null)
                         {
                             <input type="hidden" asp-for="DoctorEmail" />

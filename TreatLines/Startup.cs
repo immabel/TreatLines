@@ -70,7 +70,7 @@ namespace TreatLines
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Doctor}/{action=MakeAppointment}/{id?}");
+                    pattern: "{controller=User}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }

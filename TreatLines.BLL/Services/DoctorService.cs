@@ -145,14 +145,19 @@ namespace TreatLines.BLL.Services
 
         public async Task<IEnumerable<FreeDateTimesDTO>> GetFreeDateTimesByDoctorEmailAsync(string email)
         {
-            var schedId = doctorRepository.GetByEmailAsync(email).Result.ScheduleId;
+            var doctor = await doctorRepository.GetByEmailAsync(email);
+            if (doctor.OnHoliday || doctor.User.Blocked)
+                return null;
+            var schedId = doctor.ScheduleId;
             Schedule schedule = await scheduleService.GetByIdAsync((int)schedId);
             TimeSpan startTime = TimeSpan.Parse(schedule.StartTime.ToString("t"));
             TimeSpan endTime = TimeSpan.Parse(schedule.EndTime.ToString("t"));
 
-            var appointments = appointmentService.GetFutureAppointmentsByDoctorEmail(email).Select(dt => dt.DateTimeAppointment).ToArray();
+            var appointments = appointmentService.GetFutureAppointmentsByDoctorEmail(email)
+                .Where(ap => ap.Canceled != true)
+                .Select(dt => dt.DateTimeAppointment)
+                .ToArray();
 
-            //IDictionary<string, string[]> busyDateTime = new Dictionary<string, string[]>();
             IDictionary<string, IList<string>> busyDateTime = new Dictionary<string, IList<string>>();
             foreach (var appoint in appointments)
             {
@@ -163,7 +168,6 @@ namespace TreatLines.BLL.Services
                 busyDateTime[date].Add(time);
             }
 
-            //IDictionary<string, string[]> allDateTime = new Dictionary<string, string[]>();
             IDictionary<string, IList<string>> allDateTime = new Dictionary<string, IList<string>>();
             DateTimeOffset dateTimeNow = DateTimeOffset.Now;
 
@@ -186,7 +190,6 @@ namespace TreatLines.BLL.Services
                 dateTimeNow = dateTimeNow.AddDays(1);
             }
 
-            //IDictionary<string, string[]> freeDateTime = new Dictionary<string, string[]>();
             IDictionary<string, IList<string>> freeDateTime = new Dictionary<string, IList<string>>();
 
             foreach (var dateTimeAll in allDateTime)
