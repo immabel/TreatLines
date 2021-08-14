@@ -22,7 +22,7 @@ using TreatLines.Models.Tables;
 
 namespace TreatLines.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class HospitalAdminController : Controller
     {
         private readonly IAuthService authService;
@@ -63,7 +63,8 @@ namespace TreatLines.Controllers
 
         public async Task<IActionResult> Index()
         {
-            string email = "ssadmin@gmail.com";//User.Identity.Name;
+            string email = User.Identity.Name;
+            //string email = "ssadmin@gmail.com";//User.Identity.Name;
             var hospAdm = await hospitalService.GetHospitalAdminProfileInfoAsync(email);
             var result = mapper.Map<HospitalAdminProfileInfoModel>(hospAdm);
             return View(result);
@@ -71,7 +72,8 @@ namespace TreatLines.Controllers
 
         public async Task<IActionResult> Requests()
         {
-            string email = "ssadmin@gmail.com";//User.Identity.Name;
+            string email = User.Identity.Name;
+            //string email = "ssadmin@gmail.com";//User.Identity.Name;
             var hospId = hospitalService.GetHospitalIdByHospAdmin(email);
             var requests = await patientRegistrationRequestsService.GetAllRequestsAsync(hospId);
             var result = mapper.Map<IEnumerable<RequestInfoToCreatePatientModel>>(requests);
@@ -80,7 +82,8 @@ namespace TreatLines.Controllers
 
         public IActionResult HospitalAdmins()
         {
-            string email = "ssadmin@gmail.com";//User.Identity.Name;
+            string email = User.Identity.Name;
+            //string email = "ssadmin@gmail.com";//User.Identity.Name;
             var hospAdms = hospitalService.GetHospitalAdminsByHospAdmin(email);
             var result = mapper.Map<IEnumerable<HospitalAdminModel>>(hospAdms);
             return View(result);
@@ -88,7 +91,8 @@ namespace TreatLines.Controllers
 
         public IActionResult Doctors()
         {
-            string email = "ssadmin@gmail.com";//User.Identity.Name;
+            string email = User.Identity.Name;
+            //string email = "ssadmin@gmail.com";//User.Identity.Name;
             var doctors = hospitalService.GetDoctorsByHospitalAdmin(email);
             var result = mapper.Map<IEnumerable<DoctorModel>>(doctors);
             return View(result);
@@ -96,7 +100,8 @@ namespace TreatLines.Controllers
 
         public IActionResult Patients()
         {
-            string email = "ssadmin@gmail.com";//User.Identity.Name;
+            string email = User.Identity.Name;
+            //string email = "ssadmin@gmail.com";//User.Identity.Name;
             var patients = hospitalService.GetPatientsByHospitalAdmin(email);
             var result = mapper.Map<IEnumerable<PatientModel>>(patients);
             return View(result);
@@ -104,7 +109,8 @@ namespace TreatLines.Controllers
 
         public async Task<IActionResult> MakeAppointment(string doctorEmail, string patientEmail)
         {
-            string email = "ssadmin@gmail.com";//User.Identity.Name;
+            string email = User.Identity.Name;
+            //string email = "ssadmin@gmail.com";//User.Identity.Name;
             var hospId = hospitalService.GetHospitalIdByHospAdmin(email);
             var docEmails = doctorService.GetDoctorsEmailsByHospitalId(hospId);
             var patEmails = patientService.GetPatientsEmailsByHospitalId(hospId);
@@ -153,7 +159,8 @@ namespace TreatLines.Controllers
 
         public IActionResult AddDoctor()
         {
-            string email = "ssadmin@gmail.com";//User.Identity.Name;
+            string email = User.Identity.Name;
+            //string email = "ssadmin@gmail.com";//User.Identity.Name;
             var hospId = hospitalService.GetHospitalIdByHospAdmin(email);
             var schedules = scheduleService.GetSchedules(hospId);
             var doctor = new DoctorRegistrationModel();
@@ -172,7 +179,8 @@ namespace TreatLines.Controllers
         {
             if (ModelState.IsValid)
             {
-                string email = "ssadmin@gmail.com";//User.Identity.Name;
+                string email = User.Identity.Name;
+                //string email = "ssadmin@gmail.com";//User.Identity.Name;
                 var hospId = hospitalService.GetHospitalIdByHospAdmin(email);
                 var hospAdm = mapper.Map<HospitalAdminRegistrationDTO>(model);
                 hospAdm.HospitalId = hospId;
@@ -187,7 +195,8 @@ namespace TreatLines.Controllers
         {
             if (ModelState.IsValid)
             {
-                string email = "ssadmin@gmail.com";//User.Identity.Name;
+                string email = User.Identity.Name;
+                //string email = "ssadmin@gmail.com";//User.Identity.Name;
                 var hospId = hospitalService.GetHospitalIdByHospAdmin(email);
                 var doc = mapper.Map<DoctorRegistrationDTO>(model);
                 doc.HospitalId = hospId;
@@ -202,7 +211,8 @@ namespace TreatLines.Controllers
         {
             if (ModelState.IsValid)
             {
-                string email = "ssadmin@gmail.com";//User.Identity.Name;
+                string email = User.Identity.Name;
+                //string email = "ssadmin@gmail.com";//User.Identity.Name;
                 var hospId = hospitalService.GetHospitalIdByHospAdmin(email);
                 var patient = mapper.Map<PatientRegistrationDTO>(model);
                 patient.HospitalId = hospId;
@@ -265,7 +275,7 @@ namespace TreatLines.Controllers
         {
             var hAdmin = mapper.Map<HospitalAdminInfoDTO>(model);
             await hospitalService.UpdateHospitalAdminInfoAsync(hAdmin);
-            return View("Index", model);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

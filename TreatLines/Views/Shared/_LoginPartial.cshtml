@@ -43,19 +43,25 @@
             }
             else if (role.Equals("Doctor"))
             {
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Doctor" asp-action="Patients">Patients</a>
-                    </li>
-                </ul>
+        <ul class="navbar-nav flex-grow-1">
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Doctor" asp-action="Patients">Patients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Doctor" asp-action="GetUpcomingAppointments">Patients</a>
+            </li>
+        </ul>
             }
             else
             {
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Patient" asp-action="Doctors">Patients</a>
-                    </li>
-                </ul>
+        <ul class="navbar-nav flex-grow-1">
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Patient" asp-action="Doctors">Patients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Patient" asp-action="GetUpcomingAppointments">Patients</a>
+            </li>
+        </ul>
             }
 
             <ul class="navbar-nav">

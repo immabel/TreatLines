@@ -15,7 +15,7 @@ namespace TreatLines.Models.ProfileInfo
         public string Education { get; set; }
         public string DateOfBirth { get; set; }
         public string Sex { get; set; }
-        public int ScheduleId { get; set; }
+        public int? ScheduleId { get; set; }
         public IEnumerable<ScheduleInfoModel> Schedules { get; set; }
     }
 }

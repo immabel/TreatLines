@@ -90,12 +90,7 @@ namespace TreatLines.Areas.Identity.Pages.Account
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 var user = await _userManager.FindByEmailAsync(Input.Email);
-                if (user.Blocked)
-                {
-                    ModelState.AddModelError(string.Empty, "This user is blocked.");
-                    return Page();
-                }
-                if (result.Succeeded)
+                if (result.Succeeded && !user.Blocked)
                 {
                     string role = null;
                     if (user != null)
@@ -103,17 +98,22 @@ namespace TreatLines.Areas.Identity.Pages.Account
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl + role); ;
                 }
-                if (result.RequiresTwoFactor)
+                if (result.RequiresTwoFactor && !user.Blocked)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                 }
-                if (result.IsLockedOut)
+                if (result.IsLockedOut && !user.Blocked)
                 {
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
+                    if (user.Blocked)
+                    {
+                        ModelState.AddModelError(string.Empty, "This user is blocked.");
+                        return Page();
+                    }
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }

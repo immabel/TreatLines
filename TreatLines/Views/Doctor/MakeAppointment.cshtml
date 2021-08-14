@@ -3,21 +3,30 @@
 <section class="my-5 mx-5">
     <div class="row">
         <div class="col-6 ms-auto">
-            @foreach (var dateTime in Model.FreeDatesTime)
+            @if (Model.FreeDatesTime.Count() == 0)
             {
                 <div class="row mt-1">
-                    <h5>@dateTime.Date</h5>
-                    @foreach (var time in dateTime.Times)
+                    <h4 class="text-danger">Doctor is on holiday</h4>
+                </div>
+            }
+            else
+            {
+                foreach (var dateTime in Model.FreeDatesTime)
+                {
+                    <div class="row mt-1">
+                        <h5>@dateTime.Date</h5>
+                        @foreach (var time in dateTime.Times)
                         {
                             var tempId = dateTime.Date + time;
-                        <button id="@tempId"
-                                   type="button"
-                                class="btn btn-outline-secondary AppDateTimeDoc m-1"
-                                style="width: 70px">
-                            @time
-                        </button>
-                    }
-                </div>
+                            <button id="@tempId"
+                                    type="button"
+                                    class="btn btn-outline-secondary AppDateTimeDoc m-1"
+                                    style="width: 70px">
+                                @time
+                            </button>
+                        }
+                    </div>
+                }
             }
         </div>
         <div class="col-4 me-auto">

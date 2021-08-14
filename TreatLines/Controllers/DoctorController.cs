@@ -47,7 +47,8 @@ namespace TreatLines.Controllers
 
         public async Task<IActionResult> Index()
         {
-            string email = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
+            string email = User.Identity.Name;
+            //string email = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
             var docInfo = await doctorService.GetDoctorInfoByEmailAsync(email);
             var schedInfo = await scheduleService.GetScheduleInfoByIdAsync(docInfo.ScheduleId);
 
@@ -59,7 +60,8 @@ namespace TreatLines.Controllers
 
         public IActionResult GetUpcomingAppointments()
         {
-            string email = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
+            string email = User.Identity.Name;
+            //string email = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
             var appoints = appointmentService.GetFutureAppointmentsByDoctorEmail(email);
             var result = mapper.Map<IEnumerable<AppointmentFutureInfoModel>>(appoints);
             return View(result);
@@ -67,7 +69,8 @@ namespace TreatLines.Controllers
 
         public IActionResult Patients()
         {
-            string email = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
+            string email = User.Identity.Name;
+            //string email = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
             var patients = doctorService.GetDoctorPatientsByEmail(email);
             var result = mapper.Map<IEnumerable<PatientModel>>(patients);
             return View(result);
@@ -75,7 +78,8 @@ namespace TreatLines.Controllers
 
         public async Task<IActionResult> PatientProfile(string email)
         {
-            string docEmail = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
+            string docEmail = User.Identity.Name;
+            //string docEmail = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
             var appointment = appointmentService.GetNearestAppointment(docEmail, email);
             var patInfo = await patientService.GetPatientInfoByEmailAsync(email);
             var result = mapper.Map<PatientProfileInfoModel>(patInfo);
@@ -86,7 +90,8 @@ namespace TreatLines.Controllers
 
         public async Task<IActionResult> MakeAppointment(string patientEmail)
         {
-            string docEmail = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
+            string docEmail = User.Identity.Name;
+            //string docEmail = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
             if (patientEmail == null)
                 patientEmail = "de.tox@gmail.com";
             AppointmentCreationModel appointment = new AppointmentCreationModel
@@ -138,7 +143,8 @@ namespace TreatLines.Controllers
         {
             if (ModelState.IsValid)
             {
-                string docEmail = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
+                string docEmail = User.Identity.Name;
+                //string docEmail = "alaska.thunderfuck@gmail.com";//User.Identity.Name;
                 model.DoctorEmail = docEmail;
                 var appointment = mapper.Map<AppointmentCreationDTO>(model);
                 await appointmentService.AddAppointment(appointment);

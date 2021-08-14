@@ -16,7 +16,7 @@ using TreatLines.Models.Tables;
 
 namespace TreatLines.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class PatientController : Controller
     {
         private readonly IDoctorService doctorService;
@@ -49,7 +49,8 @@ namespace TreatLines.Controllers
 
         public async Task<IActionResult> Index()
         {
-            string email = "de.tox@gmail.com";//User.Identity.Name;
+            string email = User.Identity.Name;
+            //string email = "de.tox@gmail.com";//User.Identity.Name;
             var patientInfo = await patientService.GetPatientInfoByEmailAsync(email);
             var appointment = appointmentService.GetNearestAppointmentForPatient(email);
             var result = mapper.Map<PatientProfileInfoModel>(patientInfo);
@@ -59,7 +60,8 @@ namespace TreatLines.Controllers
 
         public async Task<IActionResult> Doctors()
         {
-            string email = "de.tox@gmail.com";//User.Identity.Name;
+            string email = User.Identity.Name;
+            //string email = "de.tox@gmail.com";//User.Identity.Name;
             var doctors = await hospitalService.GetDoctorsByPatientEmailAsync(email);
             var result = mapper.Map<IEnumerable<DoctorModel>>(doctors);
             return View(result);
@@ -83,9 +85,15 @@ namespace TreatLines.Controllers
             return View();
         }
 
+        public IActionResult HospitalProfile()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> MakeAppointment(string doctorEmail)
         {
-            string patEmail = "de.tox@gmail.com";//User.Identity.Name;
+            string patEmail = User.Identity.Name;
+            //string patEmail = "de.tox@gmail.com";//User.Identity.Name;
             var docEmails = hospitalService.GetDoctorsEmailsByPatientEmail(patEmail);
             if (doctorEmail == null)
                 doctorEmail = docEmails.First();
@@ -104,7 +112,8 @@ namespace TreatLines.Controllers
 
         public IActionResult GetUpcomingAppointments()
         {
-            string email = "de.tox@gmail.com";//User.Identity.Name;
+            string email = User.Identity.Name;
+            //string email = "de.tox@gmail.com";//User.Identity.Name;
             var appoints = appointmentService.GetFutureAppointmentsByPatientEmail(email);
             var result = mapper.Map<IEnumerable<AppointmentFutureInfoModel>>(appoints);
             return View(result);
@@ -129,7 +138,6 @@ namespace TreatLines.Controllers
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Index");
-            //return RedirectToAction("PatientProfile", new { email = model.Email });
         }
 
         [HttpPost]

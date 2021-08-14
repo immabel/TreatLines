@@ -9,8 +9,6 @@
     $('#patients_hospAdmin').DataTable();
 });
 
-
-
 $('#selectDoctorPatient').on('change', function () {
     //alert(this.value);
     var email = this.value
